@@ -1,0 +1,122 @@
+[
+  {
+    "id": "01-mundo-hud",
+    "title": "Bairro, casa e HUD",
+    "file": "01-mundo-hud.png",
+    "description": "Praça mais aberta, casa da família, vizinhos e caminhos conectados. Exploração no jogo permanece vista de cima e em quatro direções.",
+    "dimensions": [
+      1672,
+      941
+    ],
+    "bytes": 3414557,
+    "sha256": "dfb0bda56c8cdf07b72cfef3b26ffcd3a4ce6bad76fef84cea53bff2196b06c8"
+  },
+  {
+    "id": "02-criacao-personagem",
+    "title": "Criação de personagem",
+    "file": "02-criacao-personagem.png",
+    "description": "Corte, roupa, bolsa e cores independentes. A aparência escolhida acompanha o personagem. Nenhum Z-Link antes da entrega.",
+    "dimensions": [
+      1671,
+      941
+    ],
+    "bytes": 2051416,
+    "sha256": "b207bad1b98d7b522f50071e8fac84774b5fbec400b281763359f2c9cbea9d4e"
+  },
+  {
+    "id": "03-cortes-roupas",
+    "title": "Cortes e modelos de roupa",
+    "file": "03-cortes-roupas.png",
+    "description": "Cinco cortes por gênero e cinco modelos de roupa. Silhuetas diferentes, sem usar faixas ou simples recolorações como substitutos.",
+    "dimensions": [
+      1672,
+      941
+    ],
+    "bytes": 2179792,
+    "sha256": "8f94c7489d8005676c9e2df5d6471fa78e01b33ef8dd6057388ec780576cc546"
+  },
+  {
+    "id": "04-historia-laboratorio",
+    "title": "Lira, vínculo e possessão",
+    "file": "04-historia-laboratorio.png",
+    "description": "Lira caminha até o laboratório durante a história, entrega o relógio e contém o primeiro vínculo descontrolado. Depois ensina recuperação e Zimondex.",
+    "dimensions": [
+      1672,
+      941
+    ],
+    "bytes": 3099430,
+    "sha256": "5ec4b91cc5f918eed093ebd3a1cec4789140f6ef4701c0522ec1dcb90d2212fb"
+  },
+  {
+    "id": "05-transformacao-ovo",
+    "title": "Transformação e retorno",
+    "file": "05-transformacao-ovo.png",
+    "description": "Ativação no pulso, casulo completo, rachaduras e emergência. Proposta: 7–9 segundos para transformar e 3–4 para retornar; tempos impressos são rascunhos.",
+    "dimensions": [
+      1672,
+      941
+    ],
+    "bytes": 2736094,
+    "sha256": "f39c1ab8a239c90cb574242db8c0cd1a0ef7893f7da384491de5d6b5f8f2e360"
+  },
+  {
+    "id": "06-combate-diagonal",
+    "title": "Combate no laboratório",
+    "file": "06-combate-diagonal.png",
+    "description": "Câmera diagonal, humanos como identidades do HUD, ícones elementais, vantagem e pastas. Somente Impacto e uma técnica elemental no início; sem Defender.",
+    "dimensions": [
+      1672,
+      941
+    ],
+    "bytes": 2705108,
+    "sha256": "9e27944621e5048be8b7ad106a2567739c1e17f68ddbe5c15ad34d5413fc5538"
+  },
+  {
+    "id": "07-bolsa-menu",
+    "title": "Bolsa e menu",
+    "file": "07-bolsa-menu.png",
+    "description": "Grade de 24 slots, categorias, quantidades, descrição e equipamentos-chave. A visão Todos reúne itens; as categorias individuais deverão filtrar corretamente.",
+    "dimensions": [
+      1672,
+      941
+    ],
+    "bytes": 2093521,
+    "sha256": "d06f694c87c5c5a1387e3ba4e8da6eefed37526ecfca0264cfb01735a6b19b5a"
+  },
+  {
+    "id": "08-zimondex-missoes",
+    "title": "Zimondex e missões",
+    "file": "08-zimondex-missoes.png",
+    "description": "Desconhecido em silhueta, avistado com olho, alma vinculada com selo próprio. Pequenas missões de conversa, família e vizinhança.",
+    "dimensions": [
+      1671,
+      941
+    ],
+    "bytes": 2187449,
+    "sha256": "05ac5d08e729ba541e4de1b5834980ccea8ca7ea5c512c045928fd5835fb2116"
+  },
+  {
+    "id": "09-ataques-movimento",
+    "title": "Ataques e movimento",
+    "file": "09-ataques-movimento.png",
+    "description": "Poses de preparação, impulso, contato e retorno. Caminhada em quatro direções. Lira em repouso, piscando e virando para conversar.",
+    "dimensions": [
+      1672,
+      941
+    ],
+    "bytes": 2801562,
+    "sha256": "589f47b2a6cdf97d674f2686395eebc365d82d3b07ec932e6d041234b476bf89"
+  },
+  {
+    "id": "10-tela-entrada",
+    "title": "Tela de entrada",
+    "file": "10-tela-entrada.png",
+    "description": "Wallpaper com os personagens aprovados e espírito elemental. Entrada, configurações, créditos e volumes separados de música e ambiente.",
+    "dimensions": [
+      1672,
+      941
+    ],
+    "bytes": 2804667,
+    "sha256": "29d6bcd73e311cef4491709bbfd6e4868daacd04ceb57449fe078a96bcd649e1"
+  }
+]
