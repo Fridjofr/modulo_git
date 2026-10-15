@@ -1,0 +1,50 @@
+[
+  {
+    "file": "01-batalha-lira-verdrax.png",
+    "description": "Combate: braços de Verdrax Ascendido e olhos vermelhos na possessão.",
+    "kind": "previa-visual-conceitual",
+    "sha256": "00cc0ef0589f8750162ad83bd3576a785aaf2998fb25c3005b46cf6ea7b4f552",
+    "width": 1672,
+    "height": 941
+  },
+  {
+    "file": "02-menu-esc.png",
+    "description": "Menu lateral: Zimondex primeiro, nomes revisados e marca ZIMONS.",
+    "kind": "previa-visual-conceitual",
+    "sha256": "459de1de204276c0ff2da086acf8ea54dbdeb774b8cd0dc1fc2a357f7b5a9228",
+    "width": 1672,
+    "height": 941
+  },
+  {
+    "file": "03-personalizacao.png",
+    "description": "Personalização: cinco penteados, cinco modelos de roupa e prévias direcionais.",
+    "kind": "previa-visual-conceitual",
+    "sha256": "6b30819ea92610fea9ea9304b77a8a4fa24144aa3ffce683d159c05f292dc67a",
+    "width": 1672,
+    "height": 941
+  },
+  {
+    "file": "04-ataques-possessao-lira.png",
+    "description": "Storyboard: golpes, anatomia dos braços, possessão e retorno após a derrota.",
+    "kind": "previa-visual-conceitual",
+    "sha256": "2f544707962ad8760415c4f989a4796cc3c7be143c0ef15062926a7c98dfac31",
+    "width": 1672,
+    "height": 941
+  },
+  {
+    "file": "05-zimondex-bolsa.png",
+    "description": "Zimondex e Bolsa representadas como telas independentes.",
+    "kind": "previa-visual-conceitual",
+    "sha256": "268156a5e07e2deee497d4c6012f5200cf000a7cf2a975432f1cccfcc7adf82c",
+    "width": 1672,
+    "height": 941
+  },
+  {
+    "file": "06-entrada.png",
+    "description": "Entrada ZIMONS: protagonistas sem Z-Link antes da entrega narrativa.",
+    "kind": "previa-visual-conceitual",
+    "sha256": "3d07d2a9f7b376aedebf40f90799d736a1e9cb52ae4e222fd2a11177fc7e41e9",
+    "width": 1672,
+    "height": 941
+  }
+]
