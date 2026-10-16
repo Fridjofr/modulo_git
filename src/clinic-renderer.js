@@ -71,7 +71,10 @@ export class ClinicRenderer {
     const r = CLINIC.chair;
     g.save();
     g.beginPath();
-    g.rect(r.x + 9, r.y + 44, r.w - 8, 8);
+    // Clip the diagonal near arm only, not the seat through the thighs.
+    for (const [i, point] of [[5,35],[16,33],[51,41],[51,50],[41,49],[5,42]].entries())
+      g[i ? "lineTo" : "moveTo"](r.x + point[0], r.y + point[1]);
+    g.closePath();
     g.clip();
     this.prop(g, this.chair, r);
     g.restore();
@@ -95,12 +98,12 @@ export class ClinicRenderer {
       return;
     }
     const index = p.bend < 0.6 ? 1 : 0,
-      hip = index ? [393, 557] : [560, 588],
+      hip = index ? [413, 639] : [580, 670],
       f = this.lira[index],
       unit = 0.11;
     g.save();
     g.imageSmoothingEnabled = false;
-    g.translate(mix(238, seat.x, p.back), mix(275, seat.y + 2, p.bend));
+    g.translate(mix(238, seat.x, p.back), mix(275, seat.y, p.bend));
     g.scale(-unit, unit);
     g.drawImage(f.canvas, -hip[0], -hip[1]);
     g.restore();

@@ -4,7 +4,7 @@ import { chromium } from "playwright-core";
 import { existsSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 const target = new URL(
-  "../docs/review/lote01/marco-a-r2/sprites/",
+  process.env.ZIMONS_REVIEW_SPRITES || "../docs/review/lote01/marco-a-r2/sprites/",
   import.meta.url,
 );
 await mkdir(target, { recursive: true });

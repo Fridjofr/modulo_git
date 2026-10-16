@@ -1,3 +1,4 @@
+import { battleEnvironment } from "./battle-environment.js";
 import { MAPS } from "./maps.js";
 import { drawLabDamage } from "./scene-staging.js";
 import { WORLD_SIZE, FOREST_POINTS, questTarget } from "./world.js";
@@ -814,11 +815,10 @@ export class Renderer {
   drawBattle(state, battle, now, fx, reducedMotion = false) {
     const ctx = this.battle;
     ctx.imageSmoothingEnabled = false;
-    this.assets.tiles.draw(ctx, { ...state, world: battle.world }, now);
-    for (const o of MAPS[battle.world].objects.filter(
-      (o) => !o.ground && o.y < 320,
-    ))
-      this.assets.tiles.object(ctx, o, state);
+    const environment = this.assets.images[
+      battleEnvironment(battle.world, state.story.flags)
+    ];
+    ctx.drawImage(environment, 0, 0, 1280, 720);
     this.battlePoints = BATTLE_MARKS;
     const actors = ["opponent", "player"].map((side) => {
       const transformed = battleForm(battle, side, fx, now);

@@ -59,6 +59,8 @@ export class CharacterAtlas {
   constructor(images) {
     this.cache = new Map();
     this.baseCache = new Map();
+    this.registrations = new Map();
+
     this.heads = {};
     this.bodies = {};
     const columns = [0, 174, 325, 472, 628, 778, 930, 1081, 1235, 1387, 1536],
@@ -172,7 +174,7 @@ export class CharacterAtlas {
       }
     }
   }
-  tint(source, a, isHead) {
+  tint(source, a, isHead, dir = "down") {
     const c = make(),
       g = c.getContext("2d");
     g.drawImage(source, 0, 0);
@@ -195,11 +197,12 @@ export class CharacterAtlas {
           gr > 80 &&
           b > 48 &&
           r > gr * 1.2 &&
-          b > gr * 0.56
+          b > gr * 0.56 &&
+          (!isHead || y >= (dir === "up" ? 98 : 67))
         ) {
           material = "skin";
           base = 185;
-        } else if (isHead && warm && r < 210 && gr < 160) {
+        } else if (isHead && warm) {
           material = "hair";
           base = 85;
         } else if (!isHead && r > 130 && gr > 95 && b < gr * 0.8) {
@@ -258,13 +261,33 @@ export class CharacterAtlas {
     }
     return c;
   }
+  registration(gender, dir, index, assets) {
+    const key = [gender,dir,index%4].join(":");
+    if (this.registrations.has(key)) return this.registrations.get(key);
+    const meta=assets.meta[gender], source=assets.images[gender+":skin"];
+    const landmark=(frame) => {
+      const r=meta.directions[dir][frame], c=make(), g=c.getContext("2d");
+      g.drawImage(source,r[0],r[1],192,192,0,0,192,192);
+      const d=g.getImageData(0,0,192,192).data;
+      let x=0,y=0,n=0;
+      for(let py=94;py<107;py++)for(let px=80;px<113;px++)if(d[(py*192+px)*4+3]>220){x+=px;y+=py;n++;}
+      const head={x:n?x/n:96,y:n?y/n:103};
+      return {head};
+    };
+    const origin=landmark(0), current=landmark(index%4), result={
+      headX:Math.round(current.head.x-origin.head.x),headY:Math.round(current.head.y-origin.head.y),
+      // Source frames are already registered by the torso at x96 / feet180.
+      bodyX:0,bodyY:0,
+    };
+    this.registrations.set(key,result);
+    return result;
+  }
   frame(gender, dir, index, a, zlink, assets) {
     const key = JSON.stringify([gender, dir, index, a, zlink]);
     if (this.cache.has(key)) return this.cache.get(key);
     // Keep the complete approved animated body and its own limbs. Costumes are
     // material overlays; neither legs nor boots come from a different anatomy.
-    const originalKey =
-      a.style && assets.meta[gender + "-short"] ? gender + "-short" : gender;
+    const originalKey = a.style && assets.meta[gender + "-short"] ? gender + "-short" : gender;
     const meta = assets.meta[originalKey],
       rect = meta.directions[dir][index % 4];
     const c = make(),
@@ -303,7 +326,7 @@ export class CharacterAtlas {
             192,
           );
         bg.drawImage(layer, 0, 0);
-        if (["skin", "top", "bottom"].includes(material))
+        if (["skin", "top", "bottom", "hair"].includes(material))
           layers[material] = layer;
       }
       base = { canvas, layers };
@@ -349,11 +372,13 @@ export class CharacterAtlas {
         cg = layer.getContext("2d");
       cg.imageSmoothingEnabled = false;
       // The authored collar aligns at y102; texture keeps its native aspect.
-      cg.drawImage(costume, 0, 6);
+      const registration = this.registration(originalKey, dir, index, assets);
+      cg.drawImage(costume, registration.bodyX, 6 + registration.bodyY);
       const mask = make(),
         mg = mask.getContext("2d");
-      mg.drawImage(base.layers.top, 0, 0);
-      mg.drawImage(base.layers.skin, 0, 0);
+      mg.drawImage(base.canvas, 0, 0);
+      mg.globalCompositeOperation = "destination-out";
+      mg.drawImage(base.layers.hair, 0, 0);
       cg.globalCompositeOperation = "destination-in";
       cg.drawImage(mask, 0, 0);
       g.save();
@@ -364,14 +389,16 @@ export class CharacterAtlas {
       g.restore();
     }
     if (a.style) {
-      // Explicit chin/collar registration replaces the long stacked neck stubs.
+      const registration = this.registration(originalKey, dir, index, assets);
+      const head = this.tint(this.heads[gender][a.style][DIRS.indexOf(dir)], a, true, dir);
+      // Each authored head is fitted uniformly around the chin, then follows
+      // the approved walking frame's head landmark. No limb is stretched.
+      const scale = gender === "male" ? 1.12 : 1.08;
       g.clearRect(0, 0, 192, 96);
-      const head = this.tint(
-        this.heads[gender][a.style][DIRS.indexOf(dir)],
-        a,
-        true,
-      );
-      g.drawImage(head, 0, 0);
+      g.drawImage(head,
+        Math.round(96 - 96 * scale + registration.headX),
+        Math.round(106 - 106 * scale + registration.headY),
+        Math.round(192 * scale), Math.round(192 * scale));
     }
     assets.drawBag(g, dir, a);
     if (zlink) {

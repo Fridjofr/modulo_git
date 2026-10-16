@@ -1,0 +1,95 @@
+/* Review A3: clean Academy instrument panels. Attack timing and actor art stay intact. */
+#battle { --combat-ink:#173449; --combat-muted:#526e7d; }
+#battle .combat-stat {
+  top:28px; bottom:auto; width:29%; max-width:410px; min-width:0;
+  padding:15px 19px 12px; border:1px solid #d5e3e9; border-radius:3px 15px 3px 15px;
+  background:linear-gradient(125deg,#f8fbf9f5,#e5eff3f2);
+  box-shadow:0 5px 20px #071e3030,inset 0 1px #fff; color:var(--combat-ink);
+}
+#battle .player-stat { left:28px; right:auto; }
+#battle .enemy-stat { right:28px; left:auto; }
+#battle .combat-stat:before { left:19px; top:-1px; width:54px; height:3px; background:#b89752; box-shadow:62px 0 #7ebec9; }
+#battle .combat-stat strong { font:750 clamp(13px,1.35vw,22px)/1.3 Manrope; letter-spacing:0; padding-right:55px; color:var(--combat-ink); }
+#battle .combat-stat > div:first-child { gap:7px; }
+#battle .combat-stat > div:first-child > span { gap:8px; flex-wrap:wrap; }
+#battle .combat-stat .stat-level { top:15px; right:18px; padding:3px 6px; font:750 11px Manrope; color:#6c572f; background:#e9dfc4; border:1px solid #beaa7955; border-radius:4px; }
+#battle .combat-stat .type-pill { color:#254355; border:1px solid #7b9daa66; background:#ffffff99; font:650 10px Manrope; padding:3px 6px; }
+#battle .combat-stat > div:first-child .form-state { color:#506d7b; font:650 9px Manrope; letter-spacing:.04em; }
+#battle .combat-stat > div:first-child .form-state.possessed { color:#982f46; background:#f3dce1; border-color:#d49ba9; }
+#battle .combat-stat .hp-track { height:7px; margin-top:12px; background:#c7d8dc; border:0; border-radius:5px; box-shadow:none; }
+#battle .hp-track i { background:linear-gradient(90deg,#278b79,#6bb49b); }
+#battle .hp-track i.low { background:linear-gradient(90deg,#c95760,#ea9b8c); }
+#battle .combat-stat .stat-numbers { margin-top:5px; color:#284957; font:650 10px Manrope; }
+#battle .combat-stat .stat-numbers > span:last-child { color:#a04451; }
+#battle .combat-stat .energy-track { margin-top:7px; height:4px; border-radius:4px; background:#c7d8e1; }
+#battle .energy-track i { background:linear-gradient(90deg,#367eab,#77c9df); }
+#battle .combat-stat small { margin-top:4px; color:#3d687d; font:600 9px Manrope; }
+#battle .experience-line { display:none; }
+#battle .arena-header { top:20px; left:34%; right:34%; justify-content:center; align-items:center; flex-direction:column; gap:7px; pointer-events:none; }
+#battle .arena-header .eyebrow { font:750 10px Manrope; letter-spacing:.1em; color:#234a60; padding:6px 10px; border:1px solid #abc5d399; border-radius:4px; background:#f1f7f5e8; }
+#battle #turn-label { color:#304f60; font:650 10px Manrope; letter-spacing:.025em; padding:4px 7px; background:#f0f6f3d9; border-radius:4px; text-align:center; }
+#battle .battle-bottom { left:24px; right:24px; bottom:20px; height:23%; max-height:23%; min-height:0; display:grid; grid-template-columns:32% minmax(0,1fr); gap:0; padding:0; border:1px solid #c8dae3; border-radius:14px 4px 14px 4px; background:linear-gradient(130deg,#f8fbfaf7,#e8f0f4f5); box-shadow:0 4px 20px #09293e44; color:var(--combat-ink); }
+#battle .battle-bottom:before { display:none; }
+#battle .combat-log { width:auto; min-width:0; height:100%; padding:18px 22px; border:0; border-right:1px solid #b5cdd6; border-radius:0; box-shadow:none; background:none; color:var(--combat-ink); }
+#battle .combat-log .tiny { font:750 10px/1.45 Manrope; letter-spacing:.06em; color:#567789; }
+#battle .combat-log p { font:600 clamp(12px,1.1vw,17px)/1.6 Manrope; color:#173b50; margin:9px 0; }
+#battle .combat-log .quiet { position:static; font:600 10px Manrope; color:#547689; border:0; padding:0; background:none; }
+#battle .battle-actions { width:100%; height:100%; min-height:0; padding:12px 16px; border:0; border-radius:0; box-shadow:none; background:none; display:block; }
+#battle .folder-heading { height:28px; margin:0 0 8px; padding:0 0 7px; border-bottom:1px solid #b9cfd8; color:#244d64; }
+#battle .folder-heading > span { font:750 11px Manrope; letter-spacing:.08em; }
+#battle .folder-heading > button { padding:3px 7px; color:#426678; border:1px solid #a9c3cf; background:#f9fcfc; border-radius:4px; font:650 10px Manrope; flex-direction:row; }
+#battle .command-grid { grid-template-columns:repeat(2,minmax(0,1fr)); height:calc(100% - 36px); gap:10px; }
+#battle .command-menu { height:100%; gap:9px; }
+#battle .battle-actions .command-menu > button,
+#battle .battle-actions .move-card,
+#battle .battle-actions .bag-command > button,
+#battle .battle-actions .exit-command > button {
+  position:relative; min-height:0; height:100%; padding:10px 15px; border:1px solid #aac3cf; border-left:3px solid #7babb9; border-radius:7px; background:linear-gradient(110deg,#fff,#e4eef3); box-shadow:0 2px 3px #20465a12; color:#1f4357; transform:none;
+}
+#battle .battle-actions .move-card { justify-content:center; }
+#battle .battle-actions .move-card.elemental { border-left-color:var(--battle-element); background:linear-gradient(110deg,#f3f9f4,#e4eff0); }
+#battle .battle-actions .command-menu > button:first-child { border-left-color:#b39558; }
+#battle .command-menu strong, #battle .move-card > span { color:#20465b; font:750 clamp(13px,1.25vw,20px) Manrope !important; letter-spacing:0; }
+#battle .command-menu .menu-icon { color:#638c9e; }
+#battle .command-menu > button:first-child .menu-icon { color:#a08647; }
+#battle .command-menu button small { color:#5b7989; font:500 10px Manrope !important; }
+#battle .move-card small { display:flex; flex-wrap:wrap; gap:7px; margin-top:8px; color:#4b6b7b; font:600 10px Manrope; }
+#battle .move-card .type-pill { color:#36566a; background:#ffffffb3; border-color:#b9cfd5; font:650 10px Manrope; }
+#battle .affinity { color:#5a7886; } #battle .affinity.advantage { color:#247854; } #battle .affinity.resisted { color:#a2554c; }
+#battle .move-cost { color:#376982; }
+#battle .battle-actions kbd { background:#d9e6ec; color:#436579; border:1px solid #b4cad5; }
+#battle .battle-actions button:hover:not(:disabled) { background:#fff; border-color:#408da9; box-shadow:0 0 0 1px #408da944; transform:none; }
+#battle .battle-actions button:focus-visible { outline:2px solid #277c9e; outline-offset:2px; }
+#battle #battle-speed { position:fixed; top:auto; right:auto; bottom:calc(23% + 31px); left:26px; padding:8px 15px; width:64px; height:36px; border:1px solid #b9cdd7; border-radius:7px; background:#f5faf7f5; color:#204a61; box-shadow:0 3px 10px #163f532c; font:750 16px Manrope; pointer-events:auto; }
+@media (max-height:600px) {
+ #battle .combat-stat { top:14px; padding:9px 12px 7px; width:29%; }
+ #battle .player-stat { left:15px; } #battle .enemy-stat { right:15px; }
+ #battle .combat-stat strong { font-size:12px; }
+ #battle .combat-stat .stat-level { top:10px; right:10px; font-size:9px; }
+ #battle .combat-stat > div:first-child { gap:4px; }
+ #battle .combat-stat > div:first-child .form-state { font-size:7px; }
+ #battle .combat-stat .type-pill { font-size:8px; padding:2px 4px; }
+ #battle .combat-stat .hp-track { margin-top:7px; height:5px; }
+ #battle .combat-stat .stat-numbers { font-size:8px; margin-top:3px; }
+ #battle .combat-stat .energy-track { margin-top:4px; height:3px; }
+ #battle .combat-stat small { font-size:8px; margin-top:2px; }
+ #battle .arena-header { top:12px; } #battle .arena-header .eyebrow, #battle #turn-label { font-size:8px; }
+ #battle .battle-bottom { left:13px; right:13px; bottom:10px; height:25%; max-height:25%; grid-template-columns:30% minmax(0,1fr); }
+ #battle .combat-log { padding:9px 12px; } #battle .combat-log .tiny { font-size:8px; } #battle .combat-log p { font-size:10px; line-height:1.45; margin:4px 0; } #battle .combat-log .quiet { font-size:8px; }
+ #battle .battle-actions { padding:7px 10px; } #battle .folder-heading { height:21px; margin-bottom:5px; padding-bottom:4px; } #battle .folder-heading > span,#battle .folder-heading > button { font-size:9px; }
+ #battle .command-grid { height:calc(100% - 26px); gap:7px; }
+ #battle .battle-actions .move-card, #battle .battle-actions .command-menu > button { padding:5px 9px; }
+ #battle .command-menu strong, #battle .move-card > span { font-size:11px !important; } #battle .move-card small { font-size:8px; gap:5px; margin-top:4px; } #battle .move-card .type-pill { font-size:8px; }
+ #battle .command-menu button small { font-size:8px !important; }
+ #battle #battle-speed { bottom:calc(25% + 18px); left:15px; width:52px; height:29px; font-size:13px; padding:4px 8px; }
+}
+
+#battle .combat-stat strong, #battle .combat-stat .stat-numbers, #battle .combat-stat small { text-shadow:none; }
+#battle .combat-stat:before { display:block; }
+#battle .combat-stat .hp-track { background:#c7d8dc !important; box-shadow:none; height:7px !important; }
+/* Older v11 styles used fixed absolute children and forced white labels. */
+#battle .arena-header { position:absolute !important; height:auto; }
+#battle .arena-header .eyebrow, #battle #turn-label { position:static; inset:auto; text-shadow:none; }
+#battle .combat-stat .stat-level { color:#695329 !important; background:#e9dfc4 !important; border:1px solid #beaa7955 !important; }
+#battle .combat-stat > div:first-child .type-pill { color:#2d6177; background:#f7fbfd; }
+#battle .battle-bottom { width:auto; }

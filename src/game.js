@@ -1595,6 +1595,8 @@ function updateBattleUI() {
   }
   $("energy-fill").style.width = `${(p.energy / (p.maxEnergy || 60)) * 100}%`;
   $("energy-label").textContent = `${p.energy} / ${p.maxEnergy || 60} MP`;
+  $("enemy-energy-fill").style.width = `${(e.energy / (e.maxEnergy || 60)) * 100}%`;
+  $("enemy-energy-label").textContent = `${e.energy} / ${e.maxEnergy || 60} MP`;
   const progress = formProgress(state, battle.starter);
   $("experience-label").textContent =
     `EXP ${progress.xp} / ${xpToNext(p.level)}`;

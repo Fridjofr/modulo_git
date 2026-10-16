@@ -25,10 +25,14 @@ export class Assets {
         files.set(`${key}:${region}`, file);
     for (const [key, file] of Object.entries({
       forestV11: "assets/world/v11/forest.png",
-      gymV11: "assets/world/v11/gym.png",
+      gymV11: "assets/world/review-a3/gym-map.png",
       corridorV11: "assets/world/review-a2/corridor.png",
       academyApproved: "assets/world/academy.png",
-      labApproved: "assets/world/laboratory.png",
+      labApproved: "assets/world/review-a3/laboratory-map.png",
+      battleLab: "assets/world/review-a3/laboratory-battle.png",
+      battleLabDamaged: "assets/world/review-a3/laboratory-battle-damaged.png",
+      battleGym: "assets/world/review-a3/gym-battle.png",
+      battleCourtyard: "assets/world/courtyard-battle.png",
       clinicApproved: "assets/world/review-a2/infirmary-floor.png",
       clinicProps: "assets/world/review-a2/clinic-props.png",
       maraWalk: "assets/characters/review-a2/mara-walk.png",

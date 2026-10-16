@@ -4,14 +4,14 @@
 export const CLINIC = Object.freeze({
   bed: { x: 306, y: 150, w: 108, h: 174 },
   blanket: { x: 320, y: 214, w: 80, h: 86 },
-  chair: { x: 184, y: 230, w: 52, h: 70 },
-  seat: { x: 212, y: 269 },
+  chair: { x: 184, y: 243, w: 52, h: 70 },
+  seat: { x: 212, y: 283 },
   playerApproach: [438, 263],
   playerRest: [360, 240],
   liraApproach: [260, 303],
   liraRest: [230, 303],
   bedCollision: [306, 150, 108, 174],
-  chairCollision: [184, 230, 52, 58],
+  chairCollision: [184, 243, 52, 58],
 });
 export const smooth = (t) => {
   t = Math.max(0, Math.min(1, t));
