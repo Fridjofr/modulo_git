@@ -1,4 +1,4 @@
-import { drawHumanGait } from "./human-rig.js";
+import { drawClothing } from "./appearance.js";
 import { PALETTES } from "./model.js";
 const DIRS = ["down", "left", "right", "up"];
 const make = (w = 192, h = 192) =>
@@ -58,6 +58,7 @@ const clean = (image, rect) => {
 export class CharacterAtlas {
   constructor(images) {
     this.cache = new Map();
+    this.baseCache = new Map();
     this.heads = {};
     this.bodies = {};
     const columns = [0, 174, 325, 472, 628, 778, 930, 1081, 1235, 1387, 1536],
@@ -123,8 +124,10 @@ export class CharacterAtlas {
           // One scale for all views of this cut prevents head-size changes on turns.
           if (row === 0) {
             const ys = skin.map((p) => p[1]).sort((a, b) => a - b);
-            faceScale =
-              34 / Math.max(1, skinBottom - ys[Math.floor(ys.length * 0.02)]);
+            faceScale = Math.min(
+              44 / Math.max(1, skinBottom - ys[Math.floor(ys.length * 0.02)]),
+              101 / (skinBottom - head.t),
+            );
           }
           const scale = faceScale;
           const hc = make(),
@@ -133,7 +136,7 @@ export class CharacterAtlas {
           hg.drawImage(
             head.canvas,
             Math.round(96 - anchor * scale),
-            Math.round(92 - skinBottom * scale),
+            Math.round(106 - skinBottom * scale),
             Math.round(head.canvas.width * scale),
             Math.round(head.canvas.height * scale),
           );
@@ -258,33 +261,124 @@ export class CharacterAtlas {
   frame(gender, dir, index, a, zlink, assets) {
     const key = JSON.stringify([gender, dir, index, a, zlink]);
     if (this.cache.has(key)) return this.cache.get(key);
-    const di = Math.max(0, DIRS.indexOf(dir)),
-      head = this.tint(this.heads[gender][a.style || 0][di], a, true),
-      body = this.tint(this.bodies[gender][a.outfit || 0][di], a, false);
+    // Keep the complete approved animated body and its own limbs. Costumes are
+    // material overlays; neither legs nor boots come from a different anatomy.
+    const originalKey =
+      a.style && assets.meta[gender + "-short"] ? gender + "-short" : gender;
+    const meta = assets.meta[originalKey],
+      rect = meta.directions[dir][index % 4];
     const c = make(),
       g = c.getContext("2d");
     g.imageSmoothingEnabled = false;
-    const bob = 0;
-    drawHumanGait(g, body, dir, index);
-    // Bags are behind back hair and use the same 192px anchor as every other component.
-    assets.drawBag(g, dir, a);
-    g.drawImage(head, 0, bob);
-    if (zlink) {
+    const baseKey = JSON.stringify([
+      originalKey,
+      dir,
+      index,
+      a.skin,
+      a.top,
+      a.bottom,
+      a.accent,
+      a.hair,
+    ]);
+    let base = this.baseCache.get(baseKey);
+    if (!base) {
+      const canvas = make(),
+        bg = canvas.getContext("2d"),
+        layers = {};
+      bg.imageSmoothingEnabled = false;
+      bg.drawImage(assets.images[originalKey], ...rect, 0, 0, 192, 192);
+      for (const material of ["skin", "top", "bottom", "accent", "hair"]) {
+        const layer = make();
+        layer
+          .getContext("2d")
+          .drawImage(
+            assets.images[originalKey + ":" + material],
+            rect[0] + meta.strideWidth * (a[material] || 0),
+            rect[1],
+            192,
+            192,
+            0,
+            0,
+            192,
+            192,
+          );
+        bg.drawImage(layer, 0, 0);
+        if (["skin", "top", "bottom"].includes(material))
+          layers[material] = layer;
+      }
+      base = { canvas, layers };
+      this.baseCache.set(baseKey, base);
+      if (this.baseCache.size > 96)
+        this.baseCache.delete(this.baseCache.keys().next().value);
+    }
+    g.drawImage(base.canvas, 0, 0);
+    if (a.legwear)
+      drawClothing(g, { ...a, outfit: 0 }, dir, index, base.layers);
+    if (a.outfit) {
+      const costume = this.tint(
+        this.bodies[gender][a.outfit][DIRS.indexOf(dir)],
+        a,
+        false,
+      );
+      const skin = base.layers.skin
+        .getContext("2d")
+        .getImageData(0, 0, 192, 192).data;
+      const pixels = g.getImageData(0, 0, 192, 192),
+        d = pixels.data;
+      const sleeve = rgb(
+        PALETTES[a.outfit === 4 ? "accent" : "top"][
+          a[a.outfit === 4 ? "accent" : "top"] || 0
+        ],
+      );
+      // Sleeve fabric follows the source arm exactly, including both stride
+      // extremes. Keep the anatomical neck and every exposed finger intact.
+      for (let y = 108; y < 134; y++)
+        for (let x = 48; x < 144; x++) {
+          const n = (y * 192 + x) * 4;
+          if (skin[n + 3] < 220) continue;
+          const shade =
+            0.64 +
+            Math.min(
+              0.3,
+              ((d[n] * 0.3 + d[n + 1] * 0.59 + d[n + 2] * 0.11) / 255) * 0.34,
+            );
+          for (let k = 0; k < 3; k++) d[n + k] = Math.round(sleeve[k] * shade);
+        }
+      g.putImageData(pixels, 0, 0);
+      const layer = make(),
+        cg = layer.getContext("2d");
+      cg.imageSmoothingEnabled = false;
+      // The authored collar aligns at y102; texture keeps its native aspect.
+      cg.drawImage(costume, 0, 6);
+      const mask = make(),
+        mg = mask.getContext("2d");
+      mg.drawImage(base.layers.top, 0, 0);
+      mg.drawImage(base.layers.skin, 0, 0);
+      cg.globalCompositeOperation = "destination-in";
+      cg.drawImage(mask, 0, 0);
       g.save();
-      g.translate(32, bob);
-      assets.drawLink(g, dir);
+      g.beginPath();
+      g.rect(0, 107, 192, 32);
+      g.clip();
+      g.drawImage(layer, 0, 0);
       g.restore();
     }
-    const pixels = g.getImageData(0, 0, 192, 192).data;
-    let top = 180;
-    for (let y = 0; y < 180; y++) {
-      let count = 0;
-      for (let x = 50; x < 142; x++)
-        if (pixels[(y * 192 + x) * 4 + 3] > 220) count++;
-      if (count > 2) {
-        top = y;
-        break;
-      }
+    if (a.style) {
+      // Explicit chin/collar registration replaces the long stacked neck stubs.
+      g.clearRect(0, 0, 192, 96);
+      const head = this.tint(
+        this.heads[gender][a.style][DIRS.indexOf(dir)],
+        a,
+        true,
+      );
+      g.drawImage(head, 0, 0);
+    }
+    assets.drawBag(g, dir, a);
+    if (zlink) {
+      g.save();
+      g.translate(32, 0);
+      assets.drawLink(g, dir);
+      g.restore();
     }
     const result = {
       canvas: c,
@@ -292,13 +386,12 @@ export class CharacterAtlas {
       h: 192,
       anchor: 96,
       baseline: 180,
-      referenceHeight: 164,
+      referenceHeight: 174,
     };
     this.cache.set(key, result);
-    if (this.cache.size > 320)
+    if (this.cache.size > 512)
       this.cache.delete(this.cache.keys().next().value);
     return result;
   }
 }
-
 export { clean as extractSprite };

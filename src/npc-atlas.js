@@ -5,7 +5,8 @@ const IDS = ["nico", "nina", "caio", "mara", "aya", "iris"],
 const make = () =>
   Object.assign(document.createElement("canvas"), { width: 192, height: 192 });
 export class NpcAtlas {
-  constructor(image) {
+  constructor(image, images = {}) {
+    this.authored = {};
     this.cache = new Map();
     this.frames = {};
     for (let col = 0; col < IDS.length; col++)
@@ -35,11 +36,58 @@ export class NpcAtlas {
         );
         return c;
       });
+    if (images.maraWalk) this.prepareAuthored("mara", images.maraWalk);
+    if (images.ayaWalk) this.prepareAuthored("aya", images.ayaWalk);
+  }
+  prepareAuthored(id, image) {
+    const cols = [180, 440, 730, 1020, 1350],
+      rows = [0, 285, 543, 803, 1086];
+    const pieces = DIRS.map((dir, row) =>
+      Array.from({ length: 4 }, (_, col) =>
+        extractSprite(image, [
+          cols[col],
+          rows[row],
+          cols[col + 1] - cols[col],
+          rows[row + 1] - rows[row],
+        ]),
+      ),
+    );
+    const scale = 174 / Math.max(...pieces.flat().map((f) => f.b - f.t + 1));
+    this.authored[id] = pieces.map((row) =>
+      row.map((f) => {
+        const c = make(),
+          g = c.getContext("2d");
+        g.imageSmoothingEnabled = false;
+        const w = (f.r - f.l + 1) * scale,
+          h = (f.b - f.t + 1) * scale;
+        g.drawImage(
+          f.canvas,
+          f.l,
+          f.t,
+          f.r - f.l + 1,
+          f.b - f.t + 1,
+          96 - w / 2,
+          180 - h,
+          w,
+          h,
+        );
+        return {
+          canvas: c,
+          w: 192,
+          h: 192,
+          anchor: 96,
+          baseline: 180,
+          referenceHeight: 174,
+        };
+      }),
+    );
   }
   frame(key, dir, index = 0) {
     const id = key.replace("npc:", ""),
       signature = [id, dir, index].join(":");
     if (this.cache.has(signature)) return this.cache.get(signature);
+    if (this.authored[id])
+      return this.authored[id][DIRS.indexOf(dir)][index % 4];
     const source = this.frames[id][DIRS.indexOf(dir)],
       c = make(),
       g = c.getContext("2d"),

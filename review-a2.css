@@ -1,0 +1,220 @@
+@font-face {
+  font-family: Michroma;
+  src: url("assets/fonts/Michroma-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: Manrope;
+  src: url("assets/fonts/Manrope.ttf") format("truetype");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+:root,
+body {
+  font-family: Manrope, system-ui, sans-serif !important;
+}
+button,
+input,
+select,
+textarea,
+.brand,
+.eyebrow,
+.tiny,
+.combat-stat strong,
+.stat-level,
+.folder-heading,
+.command-menu strong,
+.modal-panel h2,
+.menu-profile strong,
+.dex-detail h3,
+#speaker,
+#dialogue-text,
+#cinematic-title {
+  font-family: Manrope, system-ui, sans-serif !important;
+}
+#title .title-copy {
+  top: 27%;
+  left: 7%;
+  width: 35%;
+}
+#title .title-copy h1 {
+  font-family: Michroma, Manrope, sans-serif !important;
+  font-size: clamp(32px, 4.25vw, 80px);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0.13em;
+  margin: 0 0 31px;
+  padding: 0 0 22px;
+  border-bottom: 1px solid #8ab7c556;
+  background: none;
+  color: #e9f3f7;
+  text-shadow: 0 3px 18px #03121c;
+  filter: none;
+}
+#title .title-menu {
+  width: clamp(190px, 19vw, 290px);
+}
+#title .title-menu #title-new {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font: 650 clamp(14px, 1.1vw, 18px) Manrope;
+  background: linear-gradient(110deg, #133548eb, #0a1d2ddc);
+  color: #f4e6be;
+  border: 1px solid #ccb781a6;
+  border-left: 3px solid #dfc68c;
+  border-radius: 3px;
+  padding: 14px 19px;
+  margin: 0 0 15px;
+  box-shadow: 0 8px 24px #03111e66;
+}
+#title .title-menu .quiet {
+  font: 500 clamp(12px, 0.95vw, 16px) Manrope;
+  letter-spacing: 0.025em;
+  padding: 9px 3px;
+  color: #c5d9e4;
+}
+#title .title-menu .quiet:hover {
+  color: #f2e2b4;
+  transform: translateX(3px);
+}
+#title .title-menu button:focus-visible {
+  outline: 2px solid #89cedb;
+  outline-offset: 4px;
+}
+#title .title-footer {
+  font: 500 10px Manrope;
+  letter-spacing: 0.12em;
+  color: #adc5d4;
+}
+#creator .brand {
+  letter-spacing: 0.15em;
+  font-weight: 650;
+}
+#creator h2 {
+  font-family: Manrope !important;
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  font-size: clamp(24px, 2.1vw, 36px);
+}
+#creator h3 {
+  font-family: Manrope !important;
+  font-weight: 650;
+}
+#world #cinematic-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+}
+#world #speaker {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+#world #dialogue-text {
+  font-size: clamp(14px, 1.15vw, 20px);
+  font-weight: 450;
+  line-height: 1.8;
+}
+#world #location-name {
+  font-family: Manrope !important;
+  font-weight: 650;
+  letter-spacing: 0.015em;
+}
+#world #objective {
+  right: 20px;
+  width: 238px;
+  overflow: visible;
+  pointer-events: none;
+  transition: transform 0.32s cubic-bezier(0.22, 0.7, 0.2, 1);
+  will-change: transform;
+}
+#world #objective.collapsed {
+  transform: translateX(calc(100% + 20px));
+}
+#quest-toggle {
+  position: absolute;
+  left: -29px;
+  top: 10px;
+  width: 28px;
+  height: 58px;
+  border: 1px solid #85acb56e;
+  border-right: 0;
+  border-radius: 7px 0 0 7px;
+  background: linear-gradient(90deg, #142f40f5, #102332fa);
+  color: #e7d4a3;
+  pointer-events: auto;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  box-shadow: -4px 3px 12px #020d1833;
+}
+#quest-toggle > span {
+  font: 400 20px Manrope;
+  line-height: 15px;
+}
+#quest-toggle svg {
+  width: 14px;
+  height: 17px;
+}
+#quest-toggle:hover,
+#quest-toggle:focus-visible {
+  background: #22475a;
+  outline: 1px solid #a5e2e9;
+  outline-offset: 2px;
+}
+#world #objective #quest-title {
+  font: 700 13px/1.5 Manrope;
+  letter-spacing: 0;
+}
+#world #objective #quest-text {
+  font: 450 12px/1.65 Manrope;
+  color: #d3e2eb;
+  margin: 8px 0;
+}
+#world #quest-open {
+  font: 600 10px Manrope;
+}
+#quest-content {
+  min-width: 0;
+}
+@media (max-height: 650px) {
+  #title .title-copy {
+    top: 22%;
+  }
+  #title .title-copy h1 {
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+  }
+  #title .title-menu #title-new {
+    padding: 10px 15px;
+    margin-bottom: 9px;
+  }
+  #title .title-menu .quiet {
+    padding: 6px 3px;
+  }
+  #world #objective {
+    width: 176px;
+    right: 12px;
+  }
+  #world #objective.collapsed {
+    transform: translateX(calc(100% + 12px));
+  }
+  #world #objective #quest-title {
+    font-size: 11px;
+  }
+  #world #objective #quest-text {
+    font-size: 10px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #world #objective {
+    transition: none;
+  }
+}

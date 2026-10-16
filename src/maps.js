@@ -1,3 +1,4 @@
+import { CLINIC } from "./clinic-layout.js";
 // Art, collision and thresholds share world coordinates. Original resources remain archived.
 export const TILE = 32;
 const solid = (x, y, w, h, id = null) => ({
@@ -95,9 +96,9 @@ export const MAPS = {
       [584, 600, 112, 95],
     ],
     objects: [
-      solid(302, 158, 117, 163, "clinic-bed"),
+      solid(...CLINIC.bedCollision, "clinic-bed"),
       solid(435, 155, 90, 58, "clinic-monitor"),
-      solid(228, 242, 63, 52, "clinic-chair"),
+      solid(...CLINIC.chairCollision, "clinic-chair"),
       solid(783, 152, 217, 118, "clinic-workstation"),
     ],
     exits: [door("clinic-corridor", 640, 674, "corridor", 210, 230, "Átrio")],

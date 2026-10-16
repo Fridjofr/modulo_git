@@ -69,13 +69,19 @@ test("personalização: cinco cabelos e roupas, quatro direções, pernas ligada
                 failures.push(
                   `${gender}/${dir}/${style}/${outfit}/${frame}: altura inválida ${top}-${bottom}`,
                 );
-              for (const y of [104, 112, 125, 138, 147]) {
+              // Profile knees move off-centre in the approved source. Inspect the full
+              // leg envelope, while neck and torso must still join at the centre.
+              for (const y of [104, 112, 125, 138, 147, 156, 166]) {
                 let filled = 0;
-                for (let x = 87; x < 106; x++)
+                for (
+                  let x = y >= 138 ? 55 : 87;
+                  x < (y >= 138 ? 138 : 106);
+                  x++
+                )
                   if (d[(y * 192 + x) * 4 + 3] > 220) filled++;
                 if (filled < 4)
                   failures.push(
-                    `${gender}/${dir}/${style}/${outfit}/${frame}: peça solta em ${y}`,
+                    `${gender}/${dir}/${style}/${outfit}/${frame}: articulação vazia em ${y}`,
                   );
               }
             }
@@ -209,4 +215,35 @@ test("abertura usa composição única, sem slogan, e preenche a viewport após 
       );
     expect(controls).toBe(true);
   }
+});
+
+test("painel de missão recolhe mantendo a aba acessível, preserva o objetivo e expande por teclado", async ({
+  page,
+}) => {
+  await start(page);
+  const content = page.locator("#quest-content"),
+    toggle = page.locator("#quest-toggle");
+  const text = await content.innerText();
+  await toggle.click();
+  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+  await page.waitForTimeout(400);
+  expect(await content.evaluate((n) => n.inert)).toBe(true);
+  const tab = await toggle.boundingBox();
+  expect(tab.x).toBeGreaterThan(0);
+  expect(tab.x + tab.width).toBeLessThanOrEqual(1441);
+  const panel = await page.locator("#objective").boundingBox();
+  expect(panel.x).toBeGreaterThanOrEqual(1438);
+  await toggle.focus();
+  await page.keyboard.press("Enter");
+  await expect(toggle).toHaveAttribute("aria-expanded", "true");
+  expect(await content.evaluate((n) => n.inert)).toBe(false);
+  expect(await content.innerText()).toBe(text);
+  await page.evaluate(() => document.fonts.ready);
+  expect(
+    await page.evaluate(
+      () =>
+        document.fonts.check("16px Manrope") &&
+        document.fonts.check("40px Michroma"),
+    ),
+  ).toBe(true);
 });

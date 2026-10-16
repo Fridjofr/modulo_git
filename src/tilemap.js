@@ -118,22 +118,6 @@ export class TileWorld {
     g.imageSmoothingEnabled = false;
     if (m.art) {
       g.drawImage(this.images[m.art], 0, 0, ...m.size);
-      if (world === "clinic") {
-        // Authored art is missing the left finial of the rear medical rail.
-        // Complete that single fixture in world space, before actors/occlusion.
-        const x = 317,
-          y = 133;
-        g.fillStyle = "#1a2c3b";
-        g.beginPath();
-        g.arc(x, y, 4.6, 0, Math.PI * 2);
-        g.fill();
-        g.fillStyle = "#c0aa78";
-        g.beginPath();
-        g.arc(x, y, 3.3, 0, Math.PI * 2);
-        g.fill();
-        g.fillStyle = "#e9e1c4";
-        g.fillRect(x - 2, y - 2, 3, 2);
-      }
       this.cache.set(world, c);
       return c;
     }
@@ -227,7 +211,7 @@ export class TileWorld {
         g.strokeStyle = "#d2b675";
         g.lineWidth = 1;
         g.strokeRect(e.x - 66, 104, 132, 23);
-        g.font = "500 11px Sora,sans-serif";
+        g.font = "500 11px Manrope,sans-serif";
         g.textAlign = "center";
         g.fillStyle = "#f6dfaa";
         g.fillText(e.label.replace(" de Lira", "").toUpperCase(), e.x, 120);

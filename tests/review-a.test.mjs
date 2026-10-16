@@ -3,35 +3,29 @@ import assert from "node:assert/strict";
 import { actorCanStand, sceneRoute, clearSegment } from "../src/actor-path.js";
 import { MAPS, mapStand } from "../src/maps.js";
 import { doorStep, doorway } from "../src/doors.js";
+import { CLINIC } from "../src/clinic-layout.js";
 import { stageUpdate } from "../src/scene-staging.js";
 
 test("rotas da enfermaria verificam segmentos completos entre pontos fora da grade", () => {
   const routes = [
     [
       [550.7, 420.3],
-      [
-        [550, 360],
-        [260, 360],
-        [260, 330],
-      ],
+      [[550, 360], [260, 360], CLINIC.liraApproach],
       { world: "clinic", x: 640, y: 640 },
     ],
     [
       [435.3, 520.7],
-      [
-        [435, 345],
-        [360, 345],
-      ],
-      { world: "clinic", x: 260, y: 330 },
+      [[470, 263], CLINIC.playerApproach],
+      { world: "clinic", x: CLINIC.liraApproach[0], y: CLINIC.liraApproach[1] },
     ],
     [
-      [260, 330],
+      CLINIC.liraApproach,
       [
         [540, 360],
         [640, 360],
         [640, 674],
       ],
-      { world: "clinic", x: 360, y: 252 },
+      { world: "clinic", x: CLINIC.playerRest[0], y: CLINIC.playerRest[1] },
     ],
   ];
   for (const [from, goals, other] of routes) {
@@ -55,12 +49,11 @@ test("rotas da enfermaria verificam segmentos completos entre pontos fora da gra
 test("a animação da cadeira termina com Lira em piso livre e continua orientada para a cama", () => {
   const s = { story: { lira: {} } };
   stageUpdate(s, { kind: "lira-sit", start: 0, duration: 900 }, 900);
-  assert.equal(s.story.lira.x, 260);
-  assert.equal(s.story.lira.y, 287);
+  assert.deepEqual([s.story.lira.x, s.story.lira.y], CLINIC.liraRest);
   assert.equal(s.story.lira.dir, "right");
   stageUpdate(s, { kind: "lira-stand", start: 0, duration: 900 }, 900);
-  assert.equal(s.story.lira.y, 330);
-  assert.ok(mapStand("clinic", 260, 330, 11));
+  assert.deepEqual([s.story.lira.x, s.story.lira.y], CLINIC.liraApproach);
+  assert.ok(mapStand("clinic", ...CLINIC.liraApproach, 11));
 });
 test("folhas de portas abrem e fecham sem depender da taxa de quadros", () => {
   for (const fps of [30, 60, 120]) {
@@ -79,15 +72,25 @@ test("folhas de portas abrem e fecham sem depender da taxa de quadros", () => {
       }
     }
 });
-test("aproximação à cama ocorre pela sua extremidade; pose de repouso tem âncora única", () => {
-  const s = { x: 360, y: 345, story: { lira: {} } };
+test("aproximação à cama é lateral; transferência articulada não é caminhada através do móvel", () => {
+  const s = {
+    x: CLINIC.playerApproach[0],
+    y: CLINIC.playerApproach[1],
+    story: { lira: {} },
+  };
   stageUpdate(s, { kind: "bed-lie", start: 0, duration: 1800 }, 0);
-  assert.equal(s.y, 345);
+  assert.deepEqual([s.x, s.y], CLINIC.playerApproach);
+  for (let t = 25; t < 1800; t += 25) {
+    stageUpdate(s, { kind: "bed-lie", start: 0, duration: 1800 }, t);
+    assert.deepEqual([s.x, s.y], CLINIC.playerApproach);
+    assert.equal(s.moving, false);
+    assert.ok(mapStand("clinic", s.x, s.y, 11));
+  }
   stageUpdate(s, { kind: "bed-lie", start: 0, duration: 1800 }, 1800);
-  assert.deepEqual([s.x, s.y], [360, 252]);
+  assert.deepEqual([s.x, s.y], CLINIC.playerRest);
   assert.equal(s.story.resting, true);
   stageUpdate(s, { kind: "bed-rise", start: 0, duration: 1500 }, 1500);
-  assert.deepEqual([s.x, s.y], [360, 345]);
+  assert.deepEqual([s.x, s.y], CLINIC.playerApproach);
   assert.equal(s.story.resting, false);
   assert.ok(mapStand("clinic", s.x, s.y, 11));
 });

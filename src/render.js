@@ -106,6 +106,7 @@ export class Renderer {
     ctx.scale(zoom, zoom);
     ctx.translate(-camera.x, -camera.y);
     this.assets.tiles.draw(ctx, state, now);
+    if (state.world === "clinic") this.assets.clinic.furniture(ctx, state);
     if (state.world === "forest" && state.quest === "forest") {
       const point = questTarget(state);
       if (point)
@@ -156,7 +157,13 @@ export class Renderer {
         this.assets.tiles.object(ctx, { ...e, type: e.propType }, state);
         continue;
       }
-      if (!(e.type === "player" && state.story?.resting))
+      if (
+        !(
+          e.type === "player" &&
+          (state.story?.resting || state.story?.bedPose !== undefined)
+        ) &&
+        !(e.type === "lira" && e.seated)
+      )
         this.shadow(
           ctx,
           e.x,
@@ -174,7 +181,7 @@ export class Renderer {
               ? 1
               : 0;
         if (e.seated || e.seatProgress !== undefined) {
-          this.assets.drawSeatedLira(ctx, e.x, e.y, e.seatProgress ?? 0);
+          this.assets.clinic.seatedLira(ctx, e.seatProgress ?? 1);
           continue;
         }
         if (partialProgress < 1)
@@ -231,7 +238,7 @@ export class Renderer {
             state.quest === "complete" ? "·" : "!",
           );
         if (e.calling) {
-          ctx.font = "500 12px Sora";
+          ctx.font = "500 12px Manrope";
           ctx.textAlign = "center";
           ctx.fillStyle = "#102b3de8";
           ctx.beginPath();
@@ -297,16 +304,11 @@ export class Renderer {
           ctx.restore();
           continue;
         }
-        if (state.story?.resting) {
-          this.assets.sleeping(
-            ctx,
-            state.appearance,
-            e.x,
-            e.y,
-            84,
-            state.zlink,
-            !!state.story.eyesClosed,
-          );
+        if (
+          state.world === "clinic" &&
+          (state.story.resting || state.story.bedPose !== undefined)
+        ) {
+          this.assets.clinic.patient(ctx, state);
           continue;
         }
         const fading =
@@ -374,6 +376,7 @@ export class Renderer {
       }
       ctx.restore();
     }
+    if (state.world === "clinic") this.assets.clinic.blanketLayer(ctx, state);
     if (fx) this.drawFX(ctx, fx, now, reducedMotion);
     ctx.restore();
     this.drawMinimap(
@@ -789,7 +792,7 @@ export class Renderer {
         }
         ctx.stroke();
       }
-      ctx.font = "600 30px Sora, sans-serif";
+      ctx.font = "600 30px Manrope, sans-serif";
       ctx.textAlign = "center";
       ctx.strokeStyle = "#102233";
       ctx.lineWidth = 5;
@@ -797,7 +800,7 @@ export class Renderer {
       ctx.fillStyle = "#fff2da";
       ctx.fillText(`−${fx.damage}`, fx.x, fx.y - 110 - p * 30);
       if (fx.effectiveness && fx.effectiveness !== 1) {
-        ctx.font = "600 13px Sora, sans-serif";
+        ctx.font = "600 13px Manrope, sans-serif";
         ctx.fillStyle = fx.effectiveness > 1 ? "#c7ff99" : "#ffd39e";
         ctx.fillText(
           fx.effectiveness > 1 ? "VANTAGEM" : "RESISTIDO",
@@ -993,7 +996,7 @@ export class Renderer {
         "#ffe1a0",
       );
       if (large) {
-        ctx.font = "600 16px Sora, sans-serif";
+        ctx.font = "600 16px Manrope, sans-serif";
         ctx.fillStyle = "#ffe6ae";
         ctx.textAlign = "center";
         ctx.strokeStyle = "#091b2b";
@@ -1087,7 +1090,7 @@ export class Renderer {
       const p = at(l.x, l.y);
       if (p) {
         ctx.fillStyle = "#f7cc75";
-        ctx.font = "17px Sora";
+        ctx.font = "17px Manrope";
         ctx.textAlign = "center";
         ctx.fillText("✦", p[0], p[1] + 5);
       }

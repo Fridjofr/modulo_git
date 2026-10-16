@@ -1,3 +1,5 @@
+import { CreatureAtlas } from "./creature-atlas.js";
+import { ClinicRenderer } from "./clinic-renderer.js";
 import { NpcAtlas } from "./npc-atlas.js";
 import { setAttackAtlas } from "./effects.js";
 import { PALETTES } from "./model.js";
@@ -24,10 +26,13 @@ export class Assets {
     for (const [key, file] of Object.entries({
       forestV11: "assets/world/v11/forest.png",
       gymV11: "assets/world/v11/gym.png",
-      corridorV11: "assets/world/v11/corridor.png",
+      corridorV11: "assets/world/review-a2/corridor.png",
       academyApproved: "assets/world/academy.png",
       labApproved: "assets/world/laboratory.png",
-      clinicApproved: "assets/world/review-a/infirmary.png",
+      clinicApproved: "assets/world/review-a2/infirmary-floor.png",
+      clinicProps: "assets/world/review-a2/clinic-props.png",
+      maraWalk: "assets/characters/review-a2/mara-walk.png",
+      ayaWalk: "assets/characters/review-a2/aya-walk.png",
       liraSeated: "assets/characters/review-a/lira-seated.png",
       tileTerrain: "assets/tiles/v10/terrain.png",
       tileObjects: "assets/tiles/v10/objects.png",
@@ -62,7 +67,9 @@ export class Assets {
     this.tiles = new TileWorld(this.images);
     this.battle = new BattleAtlas(this.images);
     this.looks = new CharacterAtlas(this.images);
-    this.cast = new NpcAtlas(this.images.npcs);
+    this.creatures = new CreatureAtlas(this.images, this.meta);
+    this.cast = new NpcAtlas(this.images.npcs, this.images);
+    this.clinic = new ClinicRenderer(this);
     const columns = [0, 420, 768, 1110, 1536];
     this.bags = Array.from({ length: 2 }, (_, row) =>
       Array.from({ length: 4 }, (_, col) =>
@@ -151,6 +158,8 @@ export class Assets {
       this.frames.set(cacheKey, f);
       return f;
     }
+    if (["fire", "water", "plant"].includes(key))
+      return this.creatures.frame(key, direction, index);
     if (key.startsWith("npc:")) return this.cast.frame(key, direction, index);
     if (this.looks && appearance && ["male", "female"].includes(key))
       return this.looks.frame(key, direction, index, appearance, zlink, this);

@@ -399,10 +399,10 @@ async function stageAction(kind) {
   const durations = {
     "close-eyes": 1600,
     "spirit-approach": 2600,
-    "bed-rise": 1500,
-    "bed-lie": 1800,
-    "lira-sit": 900,
-    "lira-stand": 900,
+    "bed-rise": 1900,
+    "bed-lie": 2100,
+    "lira-sit": 1500,
+    "lira-stand": 1300,
     "door-open": 620,
     wake: 2600,
     rampage: 8200,
@@ -2576,6 +2576,18 @@ function installEvents() {
     if (!dialogue && !fx && !story.active) showMenu();
   };
   $("dex-button").onclick = showDex;
+  $("quest-toggle").onclick = () => {
+    const panel = $("objective"),
+      button = $("quest-toggle");
+    const closed = panel.classList.toggle("collapsed");
+    button.setAttribute("aria-expanded", String(!closed));
+    button.setAttribute(
+      "aria-label",
+      closed ? "Expandir missão" : "Recolher missão",
+    );
+    button.querySelector("span").textContent = closed ? "‹" : "›";
+    $("quest-content").inert = closed;
+  };
   $("quest-open").onclick = () => {
     if (!dialogue && !fx && !story.active) showJournal();
   };

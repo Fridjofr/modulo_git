@@ -1,3 +1,4 @@
+import { CLINIC } from "./clinic-layout.js";
 const lerp = (a, b, t) => a + (b - a) * t;
 const ease = (t) => {
   t = Math.max(0, Math.min(1, t));
@@ -8,23 +9,30 @@ export function stageUpdate(state, fx, now) {
   const p = Math.max(0, Math.min(1, (now - fx.start) / fx.duration)),
     l = state.story.lira;
   if (fx.kind === "lira-sit" || fx.kind === "lira-stand") {
+    const q = fx.kind === "lira-sit" ? ease(p) : 1 - ease(p);
     l.seated = true;
-    const sitting = fx.kind === "lira-sit" ? ease(p) : 1 - ease(p);
-    l.x = 260;
-    l.y = lerp(330, 287, sitting);
+    l.seatProgress = q;
     l.dir = "right";
-    l.seatProgress = fx.kind === "lira-stand" ? ease(p) : 1 - ease(p);
+    l.x = lerp(CLINIC.liraApproach[0], CLINIC.liraRest[0], ease(q));
+    l.y = CLINIC.liraApproach[1];
+    l.moving = false;
     return;
   }
   if (fx.kind === "bed-rise" || fx.kind === "bed-lie") {
-    const lying = fx.kind === "bed-lie";
-    const q = lying ? ease(p) : 1 - ease(p);
-    // Side access to the mattress. Body articulation belongs to the bed renderer,
-    // not a diagonal interpolation through the monitor/chair and bed frame.
-    state.x = 360;
-    state.y = lerp(345, 252, q);
+    const q = fx.kind === "bed-lie" ? ease(p) : 1 - ease(p);
     state.story.bedPose = q;
-    state.story.resting = q > 0.18;
+    state.story.resting = q === 1;
+    // The only floor position is beside the bed. Patient occupancy is reserved
+    // on the mattress only when the local pose is fully reclined.
+    const point =
+      q === 0
+        ? CLINIC.playerApproach
+        : q === 1
+          ? CLINIC.playerRest
+          : fx.kind === "bed-lie"
+            ? CLINIC.playerApproach
+            : CLINIC.playerRest;
+    [state.x, state.y] = point;
     state.dir = "left";
     state.moving = false;
     return;

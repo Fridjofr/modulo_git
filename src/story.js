@@ -1,3 +1,4 @@
+import { CLINIC } from "./clinic-layout.js";
 import { sceneRoute, actorCanStand } from "./actor-path.js";
 import { FOREST_POINTS } from "./world.js";
 import { MAPS } from "./maps.js";
@@ -160,8 +161,19 @@ export class OpeningStory {
       a.x = oldX;
       a.y = oldY;
       a.moving = false;
+      m.blocked = (m.blocked || 0) + dt;
+      if (m.blocked > 0.12) {
+        m.points = sceneRoute(
+          this.state.world,
+          a,
+          [m.points.at(-1)],
+          this.api.actors().filter((o) => o !== a),
+        );
+        m.blocked = 0;
+      }
       return;
     }
+    m.blocked = 0;
     if (this.following && a === this.state.story.lira) {
       const f = this.following,
         trail = f.trail,
@@ -506,24 +518,11 @@ export class OpeningStory {
           550,
           420,
         );
-        await this.walk(
-          l,
-          [
-            [550, 360],
-            [260, 360],
-            [260, 330],
-          ],
-          150,
-        );
+        await this.walk(l, [[550, 360], [260, 360], CLINIC.liraApproach], 150);
         this.setQuest("medical");
         await this.walk(
           s,
-          [
-            [640, 520],
-            [435, 520],
-            [435, 345],
-            [360, 345],
-          ],
+          [[640, 520], [470, 520], [470, 263], CLINIC.playerApproach],
           150,
         );
         await this.scene(4, 0, 1);
@@ -629,7 +628,13 @@ export class OpeningStory {
       s.story.lira.partial = false;
       s.story.dream = "mist";
       await this.scene(8);
-      await this.location("clinic", 360, 252, 260, 287, "", true);
+      await this.location(
+        "clinic",
+        ...CLINIC.playerRest,
+        ...CLINIC.liraRest,
+        "",
+        true,
+      );
       s.story.dream = false;
       s.story.lira.dir = "right";
       s.story.lira.seated = true;

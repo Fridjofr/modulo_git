@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="v10.css" />
     <link rel="stylesheet" href="v11.css" />
     <link rel="stylesheet" href="review-a.css" />
+    <link rel="stylesheet" href="review-a2.css" />
   </head>
   <body>
     <main id="app" aria-label="Zimons">
@@ -213,6 +214,8 @@
           </div>
         </header>
         <aside id="objective" class="objective panel">
+          <button id="quest-toggle" aria-label="Recolher missão" aria-expanded="true" aria-controls="quest-content"><span aria-hidden="true">›</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v17l-6-4-6 4z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
+          <div id="quest-content">
           <span class="tiny"
             >MISSÃO PRINCIPAL <b id="quest-count">01 / 07</b></span
           ><strong id="quest-title"></strong>
@@ -231,6 +234,7 @@
                 <path d="M3 11 11 3M4 3h7v7" /></svg
             ></span>
           </button>
+          </div>
         </aside>
         <div class="world-bottom">
           <div id="identity" class="identity panel">
