@@ -252,7 +252,7 @@ export class Renderer {
           ctx.fillStyle = "#eafaff";
           ctx.fillText("Por aqui! Vem!", e.x, e.y - 102);
         }
-        this.label("lira", "Lira", e.x, e.y, true);
+        if (!portal) this.label("lira", "Lira", e.x, e.y, true);
       } else if (e.type === "npc") {
         const human = e.human || ["male", "female"].includes(e.sprite);
         const idle = e.moving
@@ -289,7 +289,7 @@ export class Renderer {
             ctx.fillRect(e.x + 8 + i * 3, e.y - 31, 2, 8);
           ctx.restore();
         }
-        this.label(e.id, e.name, e.x, e.y);
+        if (!portal) this.label(e.id, e.name, e.x, e.y);
       } else {
         if (state.story?.pose === "seated") {
           ctx.save();

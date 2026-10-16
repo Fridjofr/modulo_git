@@ -2,46 +2,46 @@
   "events": [
     {
       "name": "closed",
-      "time": 35.112,
+      "time": 23.712,
       "player": [
         652,
-        790
+        760
       ],
       "lira": [
         652,
-        750
+        720
       ],
       "progress": 0
     },
     {
       "name": "moving",
-      "time": 42.5,
+      "time": 29.408,
       "player": [
-        256,
-        674.8153999999995
+        242,
+        545.686799999997
       ],
       "lira": [
-        256,
-        304.830799999999
+        242,
+        309.3435999999997
       ],
-      "progress": 0.08333333333333333
+      "progress": 0.05550000000000485
     },
     {
       "name": "open",
-      "time": 43.096,
+      "time": 29.982,
       "player": [
-        256,
-        620.813000000001
+        242,
+        471.1771999999967
       ],
       "lira": [
-        256,
-        224
+        242,
+        219.50000000000017
       ],
       "progress": 1
     },
     {
       "name": "moving",
-      "time": 50.105,
+      "time": 34.079,
       "player": [
         242,
         94
@@ -50,11 +50,11 @@
         242,
         94
       ],
-      "progress": 0.8333333333333333
+      "progress": 0.9166666666666666
     },
     {
       "name": "closed",
-      "time": 50.775,
+      "time": 34.687,
       "player": [
         242,
         94
@@ -67,11 +67,347 @@
     },
     {
       "name": "clinic",
-      "time": 50.992
+      "time": 34.997
+    }
+  ],
+  "alignment": [
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 309.3435999999997,
+      "direction": "up",
+      "time": 29.403
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 301.6435999999997,
+      "direction": "up",
+      "time": 29.454
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 293.92819999999995,
+      "direction": "up",
+      "time": 29.513
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 286.22819999999996,
+      "direction": "up",
+      "time": 29.557
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 278.54359999999974,
+      "direction": "up",
+      "time": 29.608
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 268.2718000000002,
+      "direction": "up",
+      "time": 29.666
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 260.5718000000002,
+      "direction": "up",
+      "time": 29.712
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 252.87180000000023,
+      "direction": "up",
+      "time": 29.76
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 245.17180000000025,
+      "direction": "up",
+      "time": 29.809
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 237.47180000000026,
+      "direction": "up",
+      "time": 29.882
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 227.21539999999993,
+      "direction": "up",
+      "time": 29.935
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 219.50000000000017,
+      "direction": "up",
+      "time": 29.98
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 215,
+      "direction": "up",
+      "time": 30.029
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 215,
+      "direction": "up",
+      "time": 30.076
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 215,
+      "direction": "up",
+      "time": 30.13
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 215,
+      "direction": "up",
+      "time": 30.178
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 215,
+      "direction": "up",
+      "time": 30.229
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 215,
+      "direction": "up",
+      "time": 30.281
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 215,
+      "direction": "up",
+      "time": 30.326
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 215,
+      "direction": "up",
+      "time": 30.37
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 215,
+      "direction": "up",
+      "time": 30.439
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 215,
+      "direction": "up",
+      "time": 30.484
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 215,
+      "direction": "up",
+      "time": 30.535
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 215,
+      "direction": "up",
+      "time": 30.582
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 215,
+      "direction": "up",
+      "time": 30.625
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 215,
+      "direction": "up",
+      "time": 30.678
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 207.5,
+      "direction": "up",
+      "time": 30.73
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 197.50999999999968,
+      "direction": "up",
+      "time": 30.787
+    },
+    {
+      "actor": "Lira",
+      "x": 242,
+      "y": 190.00999999999968,
+      "direction": "up",
+      "time": 30.83
+    },
+    {
+      "actor": "protagonista",
+      "x": 242,
+      "y": 314.9899999999998,
+      "direction": "up",
+      "time": 32.513
+    },
+    {
+      "actor": "protagonista",
+      "x": 242,
+      "y": 307.4899999999998,
+      "direction": "up",
+      "time": 32.564
+    },
+    {
+      "actor": "protagonista",
+      "x": 242,
+      "y": 300.00499999999954,
+      "direction": "up",
+      "time": 32.608
+    },
+    {
+      "actor": "protagonista",
+      "x": 242,
+      "y": 294.9949999999999,
+      "direction": "up",
+      "time": 32.652
+    },
+    {
+      "actor": "protagonista",
+      "x": 242,
+      "y": 287.4949999999999,
+      "direction": "up",
+      "time": 32.7
+    },
+    {
+      "actor": "protagonista",
+      "x": 242,
+      "y": 279.9949999999999,
+      "direction": "up",
+      "time": 32.746
+    },
+    {
+      "actor": "protagonista",
+      "x": 242,
+      "y": 275,
+      "direction": "up",
+      "time": 32.791
+    },
+    {
+      "actor": "protagonista",
+      "x": 242,
+      "y": 267.5,
+      "direction": "up",
+      "time": 32.837
+    },
+    {
+      "actor": "protagonista",
+      "x": 242,
+      "y": 260,
+      "direction": "up",
+      "time": 32.888
+    },
+    {
+      "actor": "protagonista",
+      "x": 242,
+      "y": 252.5,
+      "direction": "up",
+      "time": 32.935
+    },
+    {
+      "actor": "protagonista",
+      "x": 242,
+      "y": 242.4949999999999,
+      "direction": "up",
+      "time": 33.005
+    },
+    {
+      "actor": "protagonista",
+      "x": 242,
+      "y": 232.48999999999978,
+      "direction": "up",
+      "time": 33.063
+    },
+    {
+      "actor": "protagonista",
+      "x": 242,
+      "y": 222.5,
+      "direction": "up",
+      "time": 33.136
+    },
+    {
+      "actor": "protagonista",
+      "x": 242,
+      "y": 215,
+      "direction": "up",
+      "time": 33.184
+    },
+    {
+      "actor": "protagonista",
+      "x": 242,
+      "y": 210.00500000000065,
+      "direction": "up",
+      "time": 33.238
+    },
+    {
+      "actor": "protagonista",
+      "x": 242,
+      "y": 202.50500000000065,
+      "direction": "up",
+      "time": 33.285
+    },
+    {
+      "actor": "protagonista",
+      "x": 242,
+      "y": 195.00500000000065,
+      "direction": "up",
+      "time": 33.344
+    },
+    {
+      "actor": "protagonista",
+      "x": 242,
+      "y": 185,
+      "direction": "up",
+      "time": 33.394
     }
   ],
   "errors": [],
-  "source": "/tmp/zimons-review-a4/door-visible/page@9f613d85c8e144625c23403e9c2b62ca.webm",
+  "source": "/tmp/zimons-review-a4/door-visible/page@ae9464638f92d9b1f2edc3e55e1fb666.webm",
   "viewport": "1366×1028, salão inteiro visível",
-  "speed": 1
+  "speed": 1,
+  "closedFrame": {
+    "time": 34.479,
+    "meanPixelDifferenceFromClosedReference": 21.0748556998557,
+    "note": "Localização de um quadro real fechado, sem edição de pixels."
+  }
 }

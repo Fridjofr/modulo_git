@@ -2,12 +2,12 @@
   "records": [
     {
       "name": "porta-salao-1x",
-      "source": "/tmp/zimons-review-a4/door-visible/page@9f613d85c8e144625c23403e9c2b62ca.webm",
-      "start": 41,
-      "end": 50.934999999999995,
+      "source": "/tmp/zimons-review-a4/door-visible/page@ae9464638f92d9b1f2edc3e55e1fb666.webm",
+      "start": 27.908,
+      "end": 34.599,
       "speed": 1,
       "viewport": "1366×1028",
-      "note": "Salão inteiro visível durante toda a aproximação, abertura, travessia e fechamento."
+      "note": "Salão inteiro visível durante a aproximação, abertura, travessia e fechamento. Sem interpolação ou aceleração."
     },
     {
       "name": "circulacao-laboratorio-1x",
@@ -49,5 +49,5 @@
       "preparation": "Conversas avançadas pela entrada normal R. Todas as caminhadas e efeitos mantiveram o ritmo normal; sem alteração de estado."
     }
   ],
-  "recording": "Playwright a 25 quadros/s, sem áudio. Porta: viewport 1366×1028 para manter a passagem inteira visível. Laboratório e enfermaria: 1366×768."
+  "recording": "Playwright a 25 quadros/s, sem áudio. Porta: viewport 1366×1028. Laboratório e enfermaria: 1366×768."
 }

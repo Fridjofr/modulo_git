@@ -1,4 +1,4 @@
-import { crossingPoint, doorProgress, doorAuthorized } from "./doors.js";
+import { crossingPoint, doorProgress, doorAuthorized, doorPath } from "./doors.js";
 import { CLINIC } from "./clinic-layout.js";
 import { sceneRoute, actorCanStand } from "./actor-path.js";
 import { FOREST_POINTS } from "./world.js";
@@ -430,12 +430,12 @@ export class OpeningStory {
     const route = sceneRoute(
       s.world,
       l,
-      [[exit.x, exit.y]],
+      doorPath(MAPS[s.world],l,exit),
       this.api.actors().filter((a) => a !== l),
     );
     const lead = [];
     let from = [l.x, l.y],
-      remaining = 160;
+      remaining = authored ? 96 : 160;
     for (const point of route) {
       const length = Math.hypot(point[0] - from[0], point[1] - from[1]);
       if (length >= remaining) {
@@ -457,17 +457,23 @@ export class OpeningStory {
       this.api.actors().filter((a) => a !== s && a !== l),
     );
     this.following = { actor: s, trail, distance: 0 };
-    await this.walk(l, [[exit.x, exit.y]], 154);
+    await this.walk(l, doorPath(MAPS[s.world],l,exit), 154);
     this.following = null;
-    if(authored){s.story.openDoor=exit.id;await this.api.stage("door-open");}
+    if(authored){s.story.openDoor=exit.id;await this.api.stage("door-open");await this.settleDoor(exit,1);}
     await this.crossDoor(l,exit,false);
     l.visible = false;
     s.moving = false;
   }
+  async settleDoor(exit,target) {
+    if(!MAPS[this.state.world].doorSpecs)return;
+    while(Math.abs(doorProgress(this.state.world,exit.id)-target)>.001)
+      await new Promise(requestAnimationFrame);
+  }
   async leaveDoor(actor,exit) {
-    await this.walk(actor,[[exit.x,exit.y]],150);
+    await this.walk(actor,doorPath(MAPS[this.state.world],actor,exit),150);
     this.state.story.openDoor=exit.id;
     await this.api.stage("door-open");
+    await this.settleDoor(exit,1);
     await this.crossDoor(actor,exit);
   }
   async crossDoor(actor,exit,close=true) {
@@ -477,6 +483,9 @@ export class OpeningStory {
     if(close) {
       this.state.story.closingDoor=exit.id;
       await this.api.stage("door-open");
+      await this.settleDoor(exit,0);
+      // Let the fully closed pose render before the map fade begins.
+      await new Promise(resolve=>setTimeout(resolve,120));
       delete this.state.story.closingDoor;
       this.state.story.openDoor=null;
       delete this.state.story.headingDoor;
@@ -496,7 +505,7 @@ export class OpeningStory {
     }
   }
   enterWithLira(to) {
-    const [x, y] = { plaza: [768, 700], corridor: [652, 750] }[to];
+    const [x, y] = { plaza: [768, 700], corridor: [652, 720] }[to];
     Object.assign(this.state.story.lira, {
       world: to,
       x,
@@ -508,7 +517,7 @@ export class OpeningStory {
   }
   async guidedTransition(exit, lx, ly) {
     await this.guideExit(exit);
-    await this.walk(this.state, [[exit.x, exit.y]], 150);
+    await this.walk(this.state, doorPath(MAPS[this.state.world],this.state,exit), 150);
     await this.crossDoor(this.state,exit);
     await this.api.transition("", () => {
       Object.assign(this.state, {

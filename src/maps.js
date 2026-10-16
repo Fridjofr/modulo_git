@@ -51,7 +51,7 @@ export const MAPS = {
         174,
         "corridor",
         652,
-        790,
+        760,
         "Entrada principal",
       ),
       door("plaza-forest", 768, 825, "forest", 1410, 480, "Clareira"),

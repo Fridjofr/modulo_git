@@ -45,12 +45,15 @@ export function sceneRoute(world, start, goals, others = []) {
       (o) =>
         o.visible === false ||
         o.world !== world ||
-        Math.hypot(x - o.x, y - o.y) >= ACTOR_SEPARATION + 3,
+        Math.hypot(x - o.x, y - o.y) >= ACTOR_SEPARATION,
     );
   for (const goal of goals) {
     if (!clear(...goal))
       throw Error(`Destino de cena ocupado: ${world} ${goal}`);
     if (from[0] === goal[0] && from[1] === goal[1]) continue;
+    if(clearSegment(clear,from,goal)){result.push(goal);from=goal;continue;}
+    const direct = connector(clear, from, goal);
+    if (direct) { result.push(...direct); from = goal; continue; }
     const queue = [],
       prev = new Map(),
       prefixes = new Map();

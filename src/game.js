@@ -1,4 +1,4 @@
-import { updateDoors, doorAuthorized, resetDoorStates } from "./doors.js";
+import { updateDoors, doorAuthorized, resetDoorStates, doorPath, approachingDoor } from "./doors.js";
 import { ACTOR_SEPARATION } from "./actor-path.js";
 import { MAPS, objectNear } from "./maps.js";
 import { stageUpdate } from "./scene-staging.js";
@@ -777,12 +777,16 @@ async function useDoor(e) {
     }
   }
   await story.play("PASSAGEM", async () => {
-    s.story.openDoor = e.id;
-    if (!(await story.beforeDoor(e))) await stageAction("door-open");
+    const authored=!!MAPS[from].doorSpecs;
+    if(!authored)s.story.openDoor=e.id;
+    const guided=await story.beforeDoor(e);
+    if(!guided&&!authored)await stageAction("door-open");
     const escorted =
       s.story.lira.visible === false && s.story.lira.world === from;
     if (escorted) s.story.lira.visible = false;
-    await story.walk(s, [[e.x, e.y]], 135);
+    await story.walk(s, doorPath(MAPS[from],s,e), 135);
+    if(authored&&!guided){s.story.openDoor=e.id;await stageAction("door-open");}
+    await story.settleDoor(e,1);
     await story.crossDoor(s,e);
     await story.api.transition(MAPS[e.to].name, () => {
       Object.assign(s, {
@@ -2289,7 +2293,8 @@ function update(realTime) {
       const [timer] = timers.splice(i, 1);
       timer.resolve();
     }
-  const dt = Math.min((time - lastTime) / 1000, 0.05);
+  const clockDt=Math.max(0,(time-lastTime)/1000);
+  const dt = Math.min(clockDt, 0.05);
   lastTime = time;
   if (scene === "creator") drawPreview(time);
   if (scene === "title")
@@ -2325,7 +2330,7 @@ function update(realTime) {
   $("story-skip").hidden =
     scene !== "world" || !story.active || !!modal || !!dialogue?.choices;
   if (scene === "world") {
-    updateDoors(MAPS[state.world],state,dt);
+    updateDoors(MAPS[state.world],state,clockDt);
     story.update(dt);
     stageUpdate(state, fx, time);
     updateNpcs(
@@ -2383,7 +2388,7 @@ function update(realTime) {
       if (moving) walkTime += Math.hypot(state.x - beforeX, state.y - beforeY);
       state.story.openDoor =
         MAPS[state.world].exits.find(
-          (e) => doorAuthorized(state,e) && Math.hypot(state.x - e.x, state.y - e.y) < 100,
+          (e) => doorAuthorized(state,e) && approachingDoor(MAPS[state.world],e,state),
         )?.id || null;
       const target = nearbyInteraction();
       $("interaction").hidden = !target;

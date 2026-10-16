@@ -43,3 +43,52 @@ test('travessia livre aciona a transição física sem exigir E dentro da parede
  setDoorProgress('corridor','corridor-clinic',1);story.checkTriggers();assert.deepEqual(used,['corridor-clinic']);
  resetDoorStates();
 });
+test('a aproximação já fica no eixo antes da zona da porta, sem correção lateral final',async()=>{
+ const {doorPath,doorApproach,approachingDoor}=await import('../src/doors.js');
+ for(const world of ['corridor','lab']){
+  const map=MAPS[world];
+  for(const exit of map.exits){
+   const d=map.doorSpecs.find(d=>d.id===exit.id),actor={x:world==='corridor'?650:850,y:500};
+   const a=doorApproach(map,exit),goals=doorPath(map,actor,exit);
+   assert.equal(a.x,exit.x);assert.ok(Math.abs(a.y-exit.y)>100);
+   const route=sceneRoute(world,actor,goals);let from=[actor.x,actor.y];
+   for(const point of route){
+    assert.ok(clearSegment((x,y)=>mapStand(world,x,y,11),from,point));
+    const steps=Math.ceil(Math.hypot(point[0]-from[0],point[1]-from[1]));
+    for(let n=0;n<=steps;n++){
+     const x=from[0]+(point[0]-from[0])*(n/Math.max(steps,1)),y=from[1]+(point[1]-from[1])*(n/Math.max(steps,1));
+     if(Math.abs(y-exit.y)<100)assert.equal(x,exit.x,world+' '+exit.id+' alinhamento tardio');
+    }from=point;
+   }
+   assert.equal(approachingDoor(map,exit,{x:exit.x+15,y:exit.y+(d.upper?40:-40)}),false);
+   assert.equal(approachingDoor(map,exit,{x:exit.x,y:exit.y+(d.upper?40:-40)}),true);
+  }
+ }
+ resetDoorStates();
+});
+test('a porta não fecha sobre um ocupante que deixa o eixo; chegada ao salão fica fora das folhas',()=>{
+ resetDoorStates();const m=MAPS.corridor,e=m.exits.find(e=>e.id==='corridor-plaza');
+ const s={world:'corridor',quest:'entrance',x:644.5,y:790,story:{flags:{},lira:{visible:false}}};
+ setDoorProgress(m.id,e.id,1);
+ for(let n=0;n<60;n++)updateDoors(m,s,1/60);
+ assert.equal(doorProgress(m.id,e.id),1);assert.ok(mapStand(m.id,s.x,s.y,11));
+ s.y=750;
+ for(let n=0;n<60;n++)updateDoors(m,s,1/60);
+ assert.equal(doorProgress(m.id,e.id),0);
+ const arrival=MAPS.plaza.exits.find(e=>e.to==='corridor');
+ assert.ok(mapStand('corridor',arrival.tx,arrival.ty,11),'chegada não depende de porta aberta');
+ resetDoorStates();
+});
+test('no piso livre, Lira alinha com a porta antes de subir, sem desvio da grade no fim',async()=>{
+ const {doorPath}=await import('../src/doors.js');const m=MAPS.corridor,e=m.exits[0];
+ const actor={world:'corridor',x:652,y:720},other={world:'corridor',x:652,y:760,visible:true};
+ const route=sceneRoute(m.id,actor,doorPath(m,actor,e),[other]);
+ assert.deepEqual(route[0],[e.x,actor.y]);
+ assert.ok(route.slice(1).every(p=>p[0]===e.x));
+ assert.deepEqual(route.at(-1),[e.x,e.y]);
+});
+test('ao sair de outra sala, a rota entra no corredor antes de alinhar com a próxima porta',async()=>{
+ const {doorPath}=await import('../src/doors.js');const m=MAPS.corridor,e=m.exits.find(e=>e.to==='lab');
+ const goals=doorPath(m,{x:290,y:285},e);
+ assert.deepEqual(goals,[[290,335],[e.x,335],[e.x,e.y]]);
+});
