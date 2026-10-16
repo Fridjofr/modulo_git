@@ -8,7 +8,7 @@ const p=await ctx.newPage(),errors=[],checks=[];p.on('pageerror',e=>errors.push(
 try{
  // Preparatory conversations/escorts may use the game's own skip-stage input.
  // Only the subsequent normal-speed laboratory input is delivered as the clip.
- p.fastStory=true;await start(p,{brief:false});await toLab(p);p.fastStory=false;
+ await start(p,{brief:false});await toLab(p);
  await p.locator('#quest-toggle').click();await p.waitForTimeout(350);
  checks.push({name:'inicio',time:(Date.now()-origin)/1000});
  await p.screenshot({path:root+'images/laboratorio-sem-painel.png'});

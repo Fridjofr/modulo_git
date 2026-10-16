@@ -1,6 +1,6 @@
 # ZIMONS
 
-**Revisão Lote 01 · Marco A — aguardando avaliação visual.** Base v0.11.0. Esta revisão não encerra a etapa nem valida os marcos B, C e D. Consulte [diagnóstico, evidências e pendências](docs/review/lote01/marco-a/RELATORIO.md).
+**Revisão Lote 01 · Marco A, revisão 4 — aguardando avaliação visual.** Base v0.11.0. Marco A continua aberto. [Capturas e vídeos reais](docs/review/lote01/marco-a-r4/EVIDENCIAS.md) · [arquivos, testes e pendências](docs/review/lote01/marco-a-r4/RELATORIO.md).
 
 RPG 2D de transformação, com exploração superior, batalhas por turnos e adaptação do **roteiro narrativo 4.1, Capítulo 1 — O Despertar**. O humano é o próprio corpo transformado. O jogo usa sprites animados, não modelos 3D.
 
@@ -41,6 +41,7 @@ As falas são avançadas pelo jogador. **Pular etapa** encerra somente a convers
 | Esc | Menu / voltar |
 | R / Pular etapa | Encerrar somente a etapa narrativa atual |
 | + e − no minimapa | Aproximar / afastar |
+| Aba ao lado da missão | Recolher / expandir o objetivo |
 | V / 1× no combate | Alternar a velocidade, de 1× até 3× |
 | Controle | Direcional/analógico, A confirmar, B voltar; botões conforme indicação de tela |
 

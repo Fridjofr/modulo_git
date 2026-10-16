@@ -1,0 +1,15 @@
+import {readFile,writeFile} from 'node:fs/promises';import {execFile} from 'node:child_process';import {promisify} from 'node:util';
+const run=promisify(execFile),root=new URL('../docs/review/lote01/marco-a-r4/',import.meta.url).pathname;
+const door=JSON.parse(await readFile(root+'videos/porta-percurso.json','utf8'));
+if(door.errors.length)throw Error('A captura da porta contém erros.');
+const start=door.events.find(e=>e.name==='moving').time-1.5,end=door.events.findLast(e=>e.name==='closed').time+.16;
+await run('ffmpeg',['-y','-loglevel','error','-ss',String(start),'-i',door.source,'-t',String(end-start),'-an','-c:v','libx264','-threads','2','-preset','fast','-crf','21','-pix_fmt','yuv420p','-movflags','+faststart',root+'videos/porta-salao-1x.mp4']);
+await run('ffmpeg',['-y','-loglevel','error','-i',root+'videos/porta-salao-1x.mp4','-vf','crop=380:360:100:40,fps=12,split[a][b];[a]palettegen[p];[b][p]paletteuse','-loop','0',root+'videos/porta-salao.gif']);
+const moments=[start,start+1.6,start+2.1,start+3,start+5,start+7.4,start+8.1,end-1.0,end-.55];
+const selected=moments.map(t=>'eq(n,'+Math.round(t*25)+')').join('+');
+await run('ffmpeg',['-y','-loglevel','error','-i',door.source,'-vf',`select='${selected}',crop=380:360:100:40,tile=3x3`,'-frames:v','1',root+'images/sequencia-porta.png']);
+const manifest=JSON.parse(await readFile(root+'videos/ORIGEM.json','utf8'));
+manifest.records[0]={name:'porta-salao-1x',source:door.source,start,end,speed:1,viewport:'1366×1028',note:'Salão inteiro visível durante toda a aproximação, abertura, travessia e fechamento.'};
+manifest.recording='Playwright a 25 quadros/s, sem áudio. Porta: viewport 1366×1028 para manter a passagem inteira visível. Laboratório e enfermaria: 1366×768.';
+await writeFile(root+'videos/ORIGEM.json',JSON.stringify(manifest,null,2));
+console.log('Porta: abertura, travessia e fechamento em',end-start,'s reais');

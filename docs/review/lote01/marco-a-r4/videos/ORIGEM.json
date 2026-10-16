@@ -1,0 +1,53 @@
+{
+  "records": [
+    {
+      "name": "porta-salao-1x",
+      "source": "/tmp/zimons-review-a4/door-visible/page@9f613d85c8e144625c23403e9c2b62ca.webm",
+      "start": 41,
+      "end": 50.934999999999995,
+      "speed": 1,
+      "viewport": "1366×1028",
+      "note": "Salão inteiro visível durante toda a aproximação, abertura, travessia e fechamento."
+    },
+    {
+      "name": "circulacao-laboratorio-1x",
+      "start": 160.158,
+      "end": 167.849,
+      "source": "/tmp/zimons-review-a4/approved-final/video/page@2b7817174a6c387701b8327d95ef6f14.webm",
+      "speed": 1,
+      "note": "Quadros reais. Sem interpolação ou mudança de velocidade. Áudio não capturado."
+    },
+    {
+      "name": "enfermaria-1x",
+      "segments": [
+        {
+          "name": "enfermaria-deitar-sentar-1x",
+          "start": 95.928,
+          "end": 102.56700000000001,
+          "source": "/tmp/zimons-review-a4/approved-final/video/page@2b7817174a6c387701b8327d95ef6f14.webm",
+          "speed": 1,
+          "note": "Quadros reais. Sem interpolação ou mudança de velocidade. Áudio não capturado."
+        },
+        {
+          "name": "enfermaria-levantar-1x",
+          "start": 117.704,
+          "end": 122.704,
+          "source": "/tmp/zimons-review-a4/approved-final/video/page@2b7817174a6c387701b8327d95ef6f14.webm",
+          "speed": 1,
+          "note": "Quadros reais. Sem interpolação ou mudança de velocidade. Áudio não capturado."
+        }
+      ],
+      "speed": 1,
+      "note": "Somente a conversa entre sentar e levantar foi retirada; movimentos em velocidade normal."
+    },
+    {
+      "name": "laboratorio-colisoes-1x",
+      "source": "/tmp/zimons-review-a4/lab-collisions/page@862268e25ef52f9f9596fd68058dd62a.webm",
+      "start": 96.081,
+      "end": 122.82300000000001,
+      "speed": 1,
+      "preparation": "Conversas avançadas pela entrada normal R. Todas as caminhadas e efeitos mantiveram o ritmo normal; sem alteração de estado."
+    }
+  ],
+  "recording": "Playwright a 25 quadros/s, sem áudio. Porta: viewport 1366×1028 para manter a passagem inteira visível. Laboratório e enfermaria: 1366×768."
+}

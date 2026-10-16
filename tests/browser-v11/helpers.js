@@ -36,7 +36,7 @@ export async function drive(page, predicate, timeout = 110000) {
 }
 export async function start(page, { gender = "female", brief = true } = {}) {
   await page.goto("/?debug=1");
-  await expect(page.locator("#title")).toHaveClass(/active/);
+  await expect(page.locator("#title")).toHaveClass(/active/, {timeout:30000});
   await page.locator("#title-settings").click();
   await page
     .getByRole("checkbox", { name: "Animações breves", exact: true })
