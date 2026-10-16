@@ -1,0 +1,20 @@
+
+> zimons-academia@0.2.0 test:e2e
+> playwright test
+
+
+Running 9 tests using 1 worker
+
+(node:7637) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/browser/journey.spec.js:68:1 › jornada real: personalização → missão → Z-Link → transformação → vitória → save (35.7s)
+  ✓  2 tests/browser/journey.spec.js:103:1 › exploradora: todas as opções mudam a prévia, seleção e save preservam aparência (3.7s)
+  ✓  3 tests/browser/journey.spec.js:129:39 › water: transformação no mapa e batalha completas com derrota e nova tentativa (32.2s)
+  ✓  4 tests/browser/journey.spec.js:129:39 › plant: transformação no mapa e batalha completas com derrota e nova tentativa (39.5s)
+  ✓  5 tests/browser/journey.spec.js:161:1 › falha de asset apresenta erro recuperável em vez de tela preta (1.1s)
+  ✓  6 tests/browser/journey.spec.js:167:1 › save corrompido não impede uma nova jornada (1.3s)
+  ✓  7 tests/browser/journey.spec.js:173:1 › sprites: os dois protagonistas animam em quatro direções e todas as opções frontais têm efeito visual (1.0s)
+  ✓  8 tests/browser/journey.spec.js:204:1 › tela pequena horizontal: criação acessível e controles de toque funcionais (2.1s)
+  ✓  9 tests/browser/journey.spec.js:217:1 › enfraquecimento reduz exatamente dois ataques da mentora e expira no fim dos turnos dela (8.0s)
+
+  9 passed (2.1m)

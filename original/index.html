@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZIMONS — Build jogável</title>
+<style>
+body{margin:0;background:#06111d;color:#fff;font-family:Segoe UI,Arial,sans-serif}
+#game{width:1672px;height:941px;position:relative;overflow:hidden;margin:0 auto;background:#000;box-shadow:0 20px 60px rgba(0,0,0,.45)}
+.scene{position:absolute;inset:0;display:none}.scene.active{display:block}
+.panel{background:rgba(3,19,40,.88);border:2px solid #1e9cf0;border-radius:18px;box-shadow:0 12px 28px rgba(0,0,0,.35)}
+button{cursor:pointer;border:none;border-radius:12px;padding:12px 16px;font-weight:800;font-size:18px;background:#ffd24a;color:#08131f;box-shadow:0 4px 0 #af8710}
+button.secondary{background:#163d63;color:#eef7ff;box-shadow:0 4px 0 #102b45}
+button:disabled{opacity:.55;cursor:not-allowed}
+.small{font-size:14px;color:#badcff}
+.bigTitle{font-size:40px;font-weight:900;letter-spacing:.8px}
+#creator{background:radial-gradient(circle at top,#153a63,#08111b 60%)}
+#creator .layout{display:flex;height:100%;padding:32px;gap:28px}
+#creator .left{flex:1;display:flex;flex-direction:column;justify-content:center}
+#creator .right{width:520px;padding:22px}
+#charPreviewWrap{display:flex;gap:36px;align-items:center;justify-content:center}
+.previewCard{width:300px;height:520px;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:.55;transition:.18s}
+.previewCard.selected{opacity:1;outline:3px solid #ffd24a}
+.charCanvas{width:220px;height:320px;image-rendering:pixelated}
+.optionRow{display:flex;justify-content:space-between;margin:10px 0;font-size:18px}
+#mapScene{background:#000}
+#mapBG{position:absolute;inset:0;width:1672px;height:941px;display:block}
+#mapCanvas,#battleCanvas{position:absolute;inset:0}
+.overlayTop{position:absolute;left:16px;top:16px;padding:14px 18px;min-width:420px}
+.overlayObjective{position:absolute;left:18px;bottom:16px;padding:14px 18px;min-width:420px}
+.overlayStatus{position:absolute;right:16px;top:16px;padding:14px 18px;width:380px}
+.overlayHelp{position:absolute;right:16px;bottom:16px;padding:12px 18px;width:300px}
+#interactionHint{position:absolute;left:50%;bottom:110px;transform:translateX(-50%);padding:12px 18px;display:none}
+#dialogOverlay{position:absolute;left:38px;right:38px;bottom:26px;padding:18px;display:none;gap:18px;align-items:flex-start}
+#dialogPortrait{width:140px;height:140px;image-rendering:pixelated;flex:none}
+#dialogContent h3{margin:0 0 6px;font-size:34px;color:#63c0ff}#dialogContent p{margin:0;font-size:20px;line-height:1.35}
+#dialogButtons{margin-top:12px;display:flex;gap:10px}
+#starterScene{background:#05121e}
+#starterBG{position:absolute;inset:0;width:1672px;height:941px}
+.hotspot{position:absolute;border-radius:24px;cursor:pointer}.hotspot.sel{outline:4px solid #ffd24a;box-shadow:0 0 0 10px rgba(255,210,74,.2)}
+#starterPanel{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);padding:18px 22px;width:1000px;display:flex;justify-content:space-between;align-items:center;gap:18px}
+#battleScene{background:linear-gradient(180deg,#112c44,#0a1119 62%)}
+#battleUI{position:absolute;left:0;right:0;bottom:0;padding:18px 22px;display:flex;gap:16px;align-items:flex-end}
+#battleLog{flex:1;padding:16px 18px;min-height:120px}
+#battleActions{width:420px;padding:16px 18px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.statBox{position:absolute;top:18px;padding:14px 16px;width:360px}.playerStat{left:18px}.enemyStat{right:18px;text-align:right}
+.hpbar{height:14px;background:#102840;border-radius:999px;overflow:hidden;margin-top:8px}.hpfill{height:100%;background:linear-gradient(90deg,#50e68f,#bdf57e)}
+#battleEnd{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);padding:28px;display:none;text-align:center;width:860px}
+.hideLogo{position:absolute;left:18px;top:18px;width:350px;height:110px;background:linear-gradient(135deg,rgba(7,24,44,.95),rgba(7,24,44,.75));border-radius:18px}
+</style>
+</head>
+<body>
+<div id="game">
+  <section id="creator" class="scene active">
+    <div class="layout">
+      <div class="left">
+        <div class="bigTitle">Escolha seu explorador</div>
+        <div class="small" style="margin:6px 0 18px">Sprites remodelados, jogabilidade funcional e integração pronta para o projeto.</div>
+        <div id="charPreviewWrap">
+          <div id="femaleCard" class="panel previewCard selected"><canvas id="femalePreview" class="charCanvas" width="220" height="320"></canvas><div style="font-size:28px;font-weight:900">Exploradora</div></div>
+          <div id="maleCard" class="panel previewCard"><canvas id="malePreview" class="charCanvas" width="220" height="320"></canvas><div style="font-size:28px;font-weight:900">Explorador</div></div>
+        </div>
+      </div>
+      <div class="panel right">
+        <div class="bigTitle" style="font-size:32px">Criação funcional</div>
+        <div class="optionRow"><span>Personagem</span><strong id="chosenLabel">Exploradora</strong></div>
+        <div class="optionRow"><span>Z-Link</span><strong>Será obtido na missão</strong></div>
+        <div class="optionRow"><span>Transformação</span><strong>Tecla T após escolher seu Zimon</strong></div>
+        <div class="optionRow"><span>Batalha</span><strong>Desafio da Mentora Lira</strong></div>
+        <div style="margin-top:20px" class="small">
+          Correções incluídas nesta build:<br>
+          • seleção de personagem funcionando<br>
+          • sprites animados no mapa<br>
+          • apenas uma Lira na história<br>
+          • batalha de teste após receber o Z-Link
+        </div>
+        <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap">
+          <button id="chooseFemale">Usar exploradora</button>
+          <button id="chooseMale" class="secondary">Usar explorador</button>
+          <button id="startJourney">Começar jornada</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="mapScene" class="scene">
+    <img id="mapBG" src="assets/map.png" alt="Mapa">
+    <div class="hideLogo"></div>
+    <canvas id="mapCanvas" width="1672" height="941"></canvas>
+    <div class="panel overlayTop"><strong>Academia Zimons</strong><div class="small">WASD / setas para mover • E para interagir • T para transformar (após escolher seu Zimon)</div></div>
+    <div class="panel overlayObjective"><strong id="objectiveTitle">Objetivo</strong><div id="objectiveText" class="small">Encontre a Mentora Lira no lado direito da praça.</div></div>
+    <div class="panel overlayStatus"><strong>Status</strong><div class="small" id="statusLine1">Z-Link: não obtido</div><div class="small" id="statusLine2">Forma ativa: humano</div><div class="small" id="statusLine3">Starter: nenhum</div></div>
+    <div class="panel overlayHelp"><strong>Controles</strong><div class="small">• E perto da Lira: conversar<br>• T: transformar / voltar ao humano<br>• Após escolher o starter, fale com Lira novamente para a batalha.</div></div>
+    <div id="interactionHint" class="panel"><strong>Pressione E para falar com a Mentora Lira</strong></div>
+    <div id="dialogOverlay" class="panel">
+      <canvas id="dialogPortrait" width="140" height="140"></canvas>
+      <div id="dialogContent">
+        <h3>Mentora Lira</h3>
+        <p id="dialogText"></p>
+        <div id="dialogButtons"><button id="dialogNext">Continuar</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="starterScene" class="scene">
+    <img id="starterBG" src="assets/starters.png" alt="Starters">
+    <div class="hotspot" id="pickFire" style="left:190px;top:625px;width:325px;height:250px"></div>
+    <div class="hotspot" id="pickWater" style="left:585px;top:625px;width:325px;height:250px"></div>
+    <div class="hotspot" id="pickPlant" style="left:995px;top:625px;width:325px;height:250px"></div>
+    <div id="starterPanel" class="panel">
+      <div>
+        <div class="small">Escolha seu primeiro Zimon</div>
+        <div id="starterName" style="font-size:36px;font-weight:900;color:#ffd24a">Nenhum selecionado</div>
+        <div id="starterDesc" class="small" style="font-size:18px">Clique em Pyron, Marivon ou Verdrax.</div>
+      </div>
+      <div style="display:flex;gap:12px">
+        <button id="starterBack" class="secondary">Voltar</button>
+        <button id="starterConfirm" disabled>Confirmar starter</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="battleScene" class="scene">
+    <canvas id="battleCanvas" width="1672" height="941"></canvas>
+    <div class="panel statBox playerStat"><strong>Você</strong><div id="playerBattleName" class="small">Humano</div><div class="hpbar"><div id="playerHPBar" class="hpfill" style="width:100%"></div></div><div class="small" id="playerHPText">100 / 100</div></div>
+    <div class="panel statBox enemyStat"><strong>Mentora Lira</strong><div id="enemyBattleName" class="small">Forma de treino</div><div class="hpbar"><div id="enemyHPBar" class="hpfill" style="width:100%"></div></div><div class="small" id="enemyHPText">100 / 100</div></div>
+    <div id="battleUI">
+      <div id="battleLog" class="panel"><strong>Batalha de teste</strong><div id="battleLogText" class="small" style="font-size:18px;margin-top:10px">Lira quer testar sua sintonia. Transforme-se e lute!</div></div>
+      <div id="battleActions" class="panel">
+        <button id="actTransform">Transformar</button>
+        <button id="actAttack">Ataque</button>
+        <button id="actSkill">Técnica</button>
+        <button id="actRetry" class="secondary">Reiniciar batalha</button>
+      </div>
+    </div>
+    <div id="battleEnd" class="panel"><div id="battleEndTitle" style="font-size:42px;font-weight:900;color:#ffd24a">Vitória!</div><div id="battleEndText" style="font-size:22px;line-height:1.4;margin-top:8px">Você concluiu a simulação.</div><div style="margin-top:16px;display:flex;justify-content:center;gap:12px"><button id="battleBackMap" class="secondary">Voltar ao mapa</button></div></div>
+  </section>
+</div>
+<script>
+const meta = {"female": {"down": [[315, 56, 139, 227], [544, 56, 145, 227], [769, 57, 141, 226], [1002, 57, 138, 224]], "right": [[306, 302, 142, 226], [533, 302, 145, 226], [762, 302, 139, 226], [994, 302, 145, 227]], "left": [[312, 551, 140, 224], [546, 551, 143, 224], [771, 551, 137, 224], [1000, 551, 145, 224]], "up": [[309, 793, 139, 230], [544, 793, 142, 230], [763, 793, 141, 230], [997, 793, 144, 230]]}, "male": {"down": [[261, 18, 151, 254], [517, 18, 154, 259], [770, 18, 158, 259], [1030, 18, 160, 259]], "right": [[277, 287, 148, 247], [529, 287, 154, 247], [794, 286, 150, 249], [1052, 288, 147, 246]], "left": [[258, 552, 142, 244], [506, 552, 151, 242], [764, 552, 152, 244], [1023, 552, 146, 246]], "up": [[260, 813, 154, 250], [512, 814, 150, 255], [770, 813, 155, 253], [1033, 814, 151, 256]]}, "lira": {"down": [[313, 52, 139, 235], [529, 53, 138, 235], [764, 51, 140, 237], [985, 51, 141, 237]], "right": [[313, 300, 135, 240], [528, 301, 135, 239], [764, 301, 134, 239], [984, 304, 136, 235]], "left": [[313, 552, 137, 240], [534, 551, 138, 241], [767, 551, 139, 241], [993, 551, 140, 241]], "up": [[314, 805, 136, 232], [534, 805, 136, 235], [763, 802, 138, 238], [989, 805, 137, 235]]}, "fire1": {"down": [[201, 6, 107, 106], [337, 6, 109, 109], [469, 6, 113, 108], [608, 6, 180, 109]], "right": [[203, 128, 135, 100], [355, 129, 143, 97], [517, 129, 142, 97], [684, 123, 233, 104]], "up": [[204, 237, 86, 108], [335, 236, 88, 113], [468, 237, 93, 116], [603, 237, 185, 116]]}, "water1": {"down": [[337, 15, 97, 97], [480, 15, 104, 98], [626, 15, 110, 98], [782, 25, 113, 88]], "right": [[339, 122, 120, 84], [480, 118, 133, 91], [633, 120, 124, 89], [786, 119, 130, 89]], "up": [[324, 219, 114, 88], [473, 220, 103, 92], [620, 222, 109, 87], [772, 223, 110, 88]]}, "plant1": {"down": [[257, 7, 115, 141], [419, 7, 118, 142], [584, 6, 116, 143], [751, 6, 110, 144]], "right": [[205, 147, 139, 123], [370, 150, 149, 119], [550, 152, 158, 117], [746, 153, 167, 117]], "up": [[257, 276, 108, 134], [422, 274, 107, 133], [589, 274, 108, 133], [756, 276, 108, 134]]}};
+const imgs = {};
+const assetList = {
+  female:'assets/female_sheet.png', male:'assets/male_sheet.png', lira:'assets/lira_sheet.png',
+  fire:'assets/fire_sheet.png', water:'assets/water_sheet.png', plant:'assets/plant_sheet.png'
+};
+const starterInfo={fire:{name:'Pyron',desc:'Fogo — feroz, veloz e agressivo.',sheet:'fire1'},water:{name:'Marivon',desc:'Água — ágil, técnico e elegante.',sheet:'water1'},plant:{name:'Verdrax',desc:'Planta — resistente, selvagem e controlado.',sheet:'plant1'}};
+const state={scene:'creator', gender:'female', x:1240, y:620, dir:'down', moving:false, walkFrame:0, lastMove:0, zlink:false, starter:null, transformed:false, battleDone:false, dialogue:null, dialogueIndex:0, battle:{playerHP:100, enemyHP:100, transformed:false, ended:false}};
+const scenes={creator:document.getElementById('creator'), map:document.getElementById('mapScene'), starter:document.getElementById('starterScene'), battle:document.getElementById('battleScene')};
+function loadImages(){
+  const promises=[];
+  for(const [k,src] of Object.entries(assetList)){
+    promises.push(new Promise(res=>{const im=new Image(); im.onload=()=>{imgs[k]=im;res();}; im.src=src;}));
+  }
+  return Promise.all(promises);
+}
+function showScene(name){Object.values(scenes).forEach(s=>s.classList.remove('active')); scenes[name].classList.add('active'); state.scene=name; updateStatus(); if(name==='battle'){resetBattle();}}
+function updateStatus(){
+  document.getElementById('statusLine1').textContent='Z-Link: '+(state.zlink?'obtido':'não obtido');
+  document.getElementById('statusLine2').textContent='Forma ativa: '+(state.transformed?starterInfo[state.starter||'fire']?.name || 'Zimon':'humano');
+  document.getElementById('statusLine3').textContent='Starter: '+(state.starter?starterInfo[state.starter].name:'nenhum');
+  const obj1=!state.zlink?'Encontre a Mentora Lira no lado direito da praça.':(!state.starter?'Escolha seu primeiro Zimon.':(!state.battleDone?'Pressione T para transformar e fale com Lira para a batalha.':'Teste concluído! Você já pode continuar o projeto.'));
+  document.getElementById('objectiveText').textContent=obj1;
+}
+function chooseGender(g){state.gender=g; document.getElementById('chosenLabel').textContent=g==='female'?'Exploradora':'Explorador'; document.getElementById('femaleCard').classList.toggle('selected',g==='female'); document.getElementById('maleCard').classList.toggle('selected',g==='male');}
+function drawSheetFrame(ctx, img, rect, dx, dy, scale=1, flip=false){
+  const [sx,sy,sw,sh]=rect;
+  ctx.save();
+  if(flip){ctx.translate(dx+sw*scale, dy); ctx.scale(-1,1); dx=0;}
+  ctx.drawImage(img,sx,sy,sw,sh,dx,dy,sw*scale,sh*scale);
+  ctx.restore();
+}
+function getAnimFrame(set, dir, frame){
+  const arr=meta[set][dir] || meta[set].down;
+  return arr[Math.floor(frame)%arr.length];
+}
+function drawPreview(){
+  const fp=document.getElementById('femalePreview').getContext('2d'); const mp=document.getElementById('malePreview').getContext('2d');
+  [fp,mp].forEach(c=>{c.clearRect(0,0,220,320);});
+  drawSheetFrame(fp, imgs.female, meta.female.down[1], 42, 20, 1.0);
+  drawSheetFrame(mp, imgs.male, meta.male.down[1], 30, 6, 0.95);
+}
+// Map rendering
+const mapCanvas=document.getElementById('mapCanvas'), mctx=mapCanvas.getContext('2d');
+const battleCanvas=document.getElementById('battleCanvas'), bctx=battleCanvas.getContext('2d');
+const keys={};
+function updateMap(dt){
+  if(state.scene!=='map' || state.dialogue) return;
+  let speed=0.28*dt, moved=false;
+  if(keys['ArrowUp']||keys['w']||keys['W']){state.y-=speed;state.dir='up';moved=true;}
+  if(keys['ArrowDown']||keys['s']||keys['S']){state.y+=speed;state.dir='down';moved=true;}
+  if(keys['ArrowLeft']||keys['a']||keys['A']){state.x-=speed;state.dir='left';moved=true;}
+  if(keys['ArrowRight']||keys['d']||keys['D']){state.x+=speed;state.dir='right';moved=true;}
+  state.x=Math.max(40,Math.min(1600,state.x)); state.y=Math.max(130,Math.min(890,state.y));
+  if(moved){state.lastMove += dt; if(state.lastMove>110){state.walkFrame=(state.walkFrame+1)%4; state.lastMove=0;}} else {state.walkFrame=1; state.lastMove=0;}
+  state.moving=moved;
+  const nearLira = state.x>1260 && state.x<1380 && state.y>585 && state.y<760;
+  document.getElementById('interactionHint').style.display=nearLira ? 'block':'none';
+}
+function renderMap(){
+  mctx.clearRect(0,0,1672,941);
+  let setName, img;
+  if(state.transformed && state.starter){
+    setName=starterInfo[state.starter].sheet;
+    img=imgs[state.starter];
+  } else {
+    setName=state.gender;
+    img=imgs[state.gender];
+  }
+  let dir=state.dir;
+  if(state.transformed && state.starter && dir==='left'){dir='right';}
+  let rect=getAnimFrame(setName, dir==='left' && !meta[setName].left ? 'right' : dir, state.walkFrame);
+  let scale= state.transformed ? 0.55 : 0.48;
+  let dx=state.x-rect[2]*scale/2, dy=state.y-rect[3]*scale*0.84;
+  let flip = (state.transformed && state.starter && state.dir==='left');
+  drawSheetFrame(mctx,img,rect,dx,dy,scale,flip);
+  // ground shadow
+  mctx.fillStyle='rgba(0,0,0,.18)'; mctx.beginPath(); mctx.ellipse(state.x,state.y+6,22,8,0,0,Math.PI*2); mctx.fill();
+}
+function openDialogue(lines, onFinish){
+  state.dialogue={lines, onFinish}; state.dialogueIndex=0; renderDialogue();
+}
+function renderDialogue(){
+  const overlay=document.getElementById('dialogOverlay'); overlay.style.display='flex';
+  document.getElementById('dialogText').textContent=state.dialogue.lines[state.dialogueIndex];
+  const ctx=document.getElementById('dialogPortrait').getContext('2d'); ctx.clearRect(0,0,140,140);
+  drawSheetFrame(ctx, imgs.lira, meta.lira.down[1], 18, 10, 0.75);
+}
+function advanceDialogue(){
+  if(!state.dialogue) return;
+  state.dialogueIndex++;
+  if(state.dialogueIndex>=state.dialogue.lines.length){
+    document.getElementById('dialogOverlay').style.display='none';
+    const cb=state.dialogue.onFinish; state.dialogue=null; if(cb) cb();
+  } else renderDialogue();
+}
+function interactMap(){
+  if(state.scene!=='map') return;
+  if(state.dialogue){advanceDialogue(); return;}
+  const nearLira = state.x>1260 && state.x<1380 && state.y>585 && state.y<760;
+  if(!nearLira) return;
+  if(!state.zlink){
+    openDialogue([
+      'Olá, explorador. Sou a Mentora Lira. Antes de qualquer transformação, você precisa provar sua sintonia.',
+      'Seu potencial é promissor. Estou liberando o seu Z-Link para que você escolha a sua primeira forma Zimon.',
+      'Depois da escolha, volte a falar comigo. Quero ver sua transformação em ação.'
+    ], ()=>{state.zlink=true; updateStatus(); showScene('starter');});
+  } else if(!state.starter){
+    openDialogue(['Você já tem o Z-Link. Agora escolha seu primeiro Zimon para começarmos o teste.'], ()=>showScene('starter'));
+  } else if(!state.battleDone){
+    openDialogue(['Vejo que você já escolheu '+starterInfo[state.starter].name+'. Agora mostre sua sintonia numa batalha de teste!'], ()=>showScene('battle'));
+  } else {
+    openDialogue(['Muito bem. Seu teste foi concluído com sucesso. Agora já podemos expandir o projeto com mais regiões, Zimons e batalhas.']);
+  }
+}
+function toggleTransform(){
+  if(!state.starter || !state.zlink || state.scene!=='map') return;
+  state.transformed=!state.transformed; updateStatus();
+}
+// Starter
+function chooseStarter(k){ state.starter=k; document.querySelectorAll('.hotspot').forEach(h=>h.classList.remove('sel')); document.getElementById('pick'+k[0].toUpperCase()+k.slice(1)).classList.add('sel'); document.getElementById('starterName').textContent=starterInfo[k].name; document.getElementById('starterDesc').textContent=starterInfo[k].desc; document.getElementById('starterConfirm').disabled=false; }
+// battle
+function enemyForStarter(s){ return s==='fire'?'water':(s==='water'?'plant':'fire'); }
+function resetBattle(){
+  state.battle={playerHP:100, enemyHP:100, transformed:false, ended:false, enemy:enemyForStarter(state.starter||'fire')};
+  updateBattleUI(); renderBattle(); document.getElementById('battleEnd').style.display='none'; document.getElementById('battleLogText').textContent='Lira iniciou um teste de combate. Transforme-se para usar o poder do seu Zimon!';
+}
+function updateBattleUI(){
+  document.getElementById('playerBattleName').textContent = state.battle.transformed ? starterInfo[state.starter].name : 'Forma humana';
+  document.getElementById('enemyBattleName').textContent = 'Forma de treino: '+starterInfo[state.battle.enemy].name;
+  document.getElementById('playerHPText').textContent = state.battle.playerHP+' / 100';
+  document.getElementById('enemyHPText').textContent = state.battle.enemyHP+' / 100';
+  document.getElementById('playerHPBar').style.width = Math.max(0,state.battle.playerHP)+'%';
+  document.getElementById('enemyHPBar').style.width = Math.max(0,state.battle.enemyHP)+'%';
+  document.getElementById('actTransform').textContent = state.battle.transformed ? 'Voltar ao humano' : 'Transformar';
+}
+function battleMessage(t){ document.getElementById('battleLogText').textContent=t; }
+function enemyTurn(){
+  if(state.battle.ended) return;
+  const dmg = Math.floor(12+Math.random()*10);
+  state.battle.playerHP=Math.max(0,state.battle.playerHP-dmg);
+  battleMessage('A Mentora Lira comanda '+starterInfo[state.battle.enemy].name+' e acerta você em '+dmg+' pontos.');
+  updateBattleUI();
+  if(state.battle.playerHP<=0) finishBattle(false);
+  renderBattle();
+}
+function finishBattle(win){
+  state.battle.ended=true; state.battleDone=win; document.getElementById('battleEnd').style.display='block';
+  document.getElementById('battleEndTitle').textContent = win ? 'Vitória!' : 'Derrota';
+  document.getElementById('battleEndText').textContent = win ? 'Você venceu a batalha de teste contra a Mentora Lira. O sistema completo agora está pronto para evoluir no Codex.' : 'Você foi derrotado na simulação. Use Reiniciar batalha para tentar novamente.';
+  updateStatus();
+}
+function playerAction(kind){
+  if(state.battle.ended) return;
+  if(kind==='transform'){
+    state.battle.transformed=!state.battle.transformed;
+    battleMessage(state.battle.transformed ? 'Você ativa o Z-Link e se transforma em '+starterInfo[state.starter].name+'!' : 'Você volta à forma humana.');
+    updateBattleUI(); renderBattle(); setTimeout(enemyTurn, 450); return;
+  }
+  if(kind==='attack'){
+    const dmg = state.battle.transformed ? Math.floor(18+Math.random()*9) : Math.floor(6+Math.random()*4);
+    state.battle.enemyHP=Math.max(0,state.battle.enemyHP-dmg);
+    battleMessage((state.battle.transformed?starterInfo[state.starter].name:'Você')+' ataca e causa '+dmg+' de dano.');
+  }
+  if(kind==='skill'){
+    if(!state.battle.transformed){ battleMessage('Você precisa se transformar antes de usar uma técnica Zimon.'); return; }
+    const dmg = Math.floor(24+Math.random()*11);
+    state.battle.enemyHP=Math.max(0,state.battle.enemyHP-dmg);
+    battleMessage('Técnica especial! '+starterInfo[state.starter].name+' libera energia e causa '+dmg+' de dano.');
+  }
+  updateBattleUI(); renderBattle();
+  if(state.battle.enemyHP<=0){finishBattle(true); return;}
+  setTimeout(enemyTurn, 480);
+}
+function renderBattle(){
+  bctx.clearRect(0,0,1672,941);
+  // background arena
+  const g=bctx.createLinearGradient(0,0,0,941); g.addColorStop(0,'#17385a'); g.addColorStop(1,'#0b1016'); bctx.fillStyle=g; bctx.fillRect(0,0,1672,941);
+  bctx.fillStyle='rgba(255,255,255,.04)'; for(let i=0;i<20;i++){ bctx.fillRect(0,460+i*18,1672,2);} 
+  bctx.fillStyle='rgba(80,160,255,.12)'; bctx.beginPath(); bctx.ellipse(480,635,250,80,0,0,Math.PI*2); bctx.fill(); bctx.beginPath(); bctx.ellipse(1210,400,200,65,0,0,Math.PI*2); bctx.fill();
+  // player human or zimon
+  if(state.battle.transformed){
+    const set=starterInfo[state.starter].sheet; const img=imgs[state.starter]; const rect=meta[set].right[1]; drawSheetFrame(bctx,img,rect,260,420,2.2,false);
+  } else { const rect=meta[state.gender].right[1]; drawSheetFrame(bctx,imgs[state.gender],rect,320,460,1.45,false); }
+  // enemy lira + enemy zimon
+  drawSheetFrame(bctx,imgs.lira,meta.lira.left[1],1225,455,1.15,false);
+  const e=state.battle.enemy; const er=meta[starterInfo[e].sheet].left ? meta[starterInfo[e].sheet].left[1] : meta[starterInfo[e].sheet].right[1];
+  drawSheetFrame(bctx,imgs[e],er,1020,250,1.85,true);
+}
+// init events
+['chooseFemale','femaleCard'].forEach(id=>document.getElementById(id).onclick=()=>chooseGender('female'));
+['chooseMale','maleCard'].forEach(id=>document.getElementById(id).onclick=()=>chooseGender('male'));
+document.getElementById('startJourney').onclick=()=>showScene('map');
+document.getElementById('dialogNext').onclick=advanceDialogue;
+document.getElementById('starterBack').onclick=()=>showScene('map');
+document.getElementById('starterConfirm').onclick=()=>{showScene('map'); state.transformed=false; updateStatus(); openDialogue(['Perfeito. '+starterInfo[state.starter].name+' foi registrado no seu Z-Link. Pressione T no mapa para se transformar e depois volte à Lira para a batalha de teste.']);};
+document.getElementById('pickFire').onclick=()=>chooseStarter('fire');
+document.getElementById('pickWater').onclick=()=>chooseStarter('water');
+document.getElementById('pickPlant').onclick=()=>chooseStarter('plant');
+document.getElementById('actTransform').onclick=()=>playerAction('transform'); document.getElementById('actAttack').onclick=()=>playerAction('attack'); document.getElementById('actSkill').onclick=()=>playerAction('skill'); document.getElementById('actRetry').onclick=resetBattle; document.getElementById('battleBackMap').onclick=()=>showScene('map');
+window.addEventListener('keydown',e=>{keys[e.key]=true; if(e.key==='e'||e.key==='E'||e.key==='Enter') interactMap(); if(e.key==='t'||e.key==='T') toggleTransform();});
+window.addEventListener('keyup',e=>keys[e.key]=false);
+let last=performance.now();
+function loop(now){const dt=now-last; last=now; updateMap(dt); if(state.scene==='map') renderMap(); requestAnimationFrame(loop);} 
+loadImages().then(()=>{drawPreview(); chooseGender('female'); showScene('creator'); requestAnimationFrame(loop);});
+</script>
+</body>
+</html>

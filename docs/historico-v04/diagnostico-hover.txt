@@ -1,0 +1,131 @@
+
+> zimons-academia@0.4.0 test:e2e
+> playwright test
+
+
+Running 18 tests using 1 worker
+
+(node:26171) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘   1 tests/browser/dynamics.spec.js:36:1 › três formas, pastas exclusivas, nomes e afinidades nos ataques e Troca com resposta inimiga (2.1m)
+(node:26632) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 tests/browser/dynamics.spec.js:85:1 › NPC caminha, para e olha para o jogador; duelo usa a praça e retorna ao mesmo local (6.4s)
+  ✓   3 tests/browser/dynamics.spec.js:134:1 › música começa com gesto, sintetiza notas e conserva preferência de silêncio (1.8s)
+  ✓   4 tests/browser/dynamics.spec.js:167:1 › sequência completa: provocação, gesto, energia e turno 1 sem ataque gratuito da IA (9.6s)
+  ✓   5 tests/browser/dynamics.spec.js:192:1 › modo sem WebGL mantém batalha jogável e cenário do laboratório (5.0s)
+  ✓   6 tests/browser/dynamics.spec.js:214:1 › penteado muda cabelo e preserva a bolsa; corte curto acompanha o personagem no mapa (2.3s)
+  ✓   7 tests/browser/journey.spec.js:135:1 › jornada real: personalização → missão → Z-Link → transformação → vitória → save (49.3s)
+  ✓   8 tests/browser/journey.spec.js:206:1 › exploradora: todas as opções mudam a prévia, seleção e save preservam aparência (4.7s)
+  ✓   9 tests/browser/journey.spec.js:254:3 › water: transformação no mapa e batalha completas com derrota e nova tentativa (41.6s)
+  ✓  10 tests/browser/journey.spec.js:254:3 › plant: transformação no mapa e batalha completas com derrota e nova tentativa (53.4s)
+  ✓  11 tests/browser/journey.spec.js:343:1 › falha de asset apresenta erro recuperável em vez de tela preta (1.6s)
+  ✓  12 tests/browser/journey.spec.js:358:1 › save corrompido não impede uma nova jornada (1.9s)
+  ✓  13 tests/browser/journey.spec.js:369:1 › sprites: os dois protagonistas animam em quatro direções e todas as opções frontais têm efeito visual (1.4s)
+  ✓  14 tests/browser/journey.spec.js:426:1 › tela pequena horizontal: criação acessível e controles de toque funcionais (3.5s)
+  ✓  15 tests/browser/journey.spec.js:451:1 › enfraquecimento reduz exatamente dois ataques da mentora e expira no fim dos turnos dela (11.3s)
+  ✓  16 tests/browser/refinements.spec.js:35:1 › Batalha, Bolsa e Sair: abertura gratuita, ataque animado, consumo e saída sem recompensa (34.1s)
+  ✓  17 tests/browser/refinements.spec.js:91:1 › materiais dos dois protagonistas: paletas preservam silhueta completa e pivôs nas quatro direções (2.2s)
+  ✓  18 tests/browser/refinements.spec.js:152:1 › praça aberta: humanos e Zimons têm diálogos próprios e Lira é única (10.5s)
+
+
+  1) tests/browser/dynamics.spec.js:36:1 › três formas, pastas exclusivas, nomes e afinidades nos ataques e Troca com resposta inimiga 
+
+    Test timeout of 120000ms exceeded.
+
+    Error: locator.click: Test timeout of 120000ms exceeded.
+    Browser logs:
+
+    <launching> /usr/bin/chromium --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,NetworkTimeServiceQuerying,AimEnabled,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --no-sandbox --enable-unsafe-swiftshader --user-data-dir=/tmp/playwright_chromiumdev_profile-k8nUcD --remote-debugging-pipe --no-startup-window
+    <launched> pid=26183
+    [pid=26183][err] [26183:26183:1014/062957.240462:ERROR:third_party/crashpad/crashpad/util/file/filesystem_posix.cc:63] mkdir : No such file or directory (2)
+    [pid=26183][err] chrome_crashpad_handler: --database is required
+    [pid=26183][err] Try 'chrome_crashpad_handler --help' for more information.
+    [pid=26183][err] [26183:26207:1014/062957.281235:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+    [pid=26183][err] [26183:26207:1014/062957.281291:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+    [pid=26183][err] [26183:26207:1014/062957.284181:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+    [pid=26183][err] [26183:26207:1014/062957.284389:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+    [pid=26183][err] [26183:26207:1014/062957.284405:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+    [pid=26183][err] [26183:26217:1014/062957.288382:ERROR:content/browser/zygote_host/zygote_host_impl_linux.cc:300] Failed to adjust OOM score of renderer with pid 26220: Read-only file system (30)
+    [pid=26183][err] Fontconfig error: No writable cache directories
+    [pid=26183][err] [26183:26207:1014/062957.331511:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+    [pid=26183][err] [26183:26217:1014/062957.332732:ERROR:content/browser/zygote_host/zygote_host_impl_linux.cc:300] Failed to adjust OOM score of renderer with pid 26245: Read-only file system (30)
+    [pid=26183][err] [26183:26183:1014/062957.351956:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+    [pid=26183][err] [26183:26207:1014/062957.352061:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+    [pid=26183][err] [26183:26183:1014/062957.352075:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+    [pid=26183][err] [26183:26207:1014/062957.352097:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+    [pid=26183][err] [26183:26183:1014/062957.356178:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+    [pid=26183][err] [26183:26207:1014/062957.356251:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+    [pid=26183][err] [26183:26207:1014/062957.358605:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+    [pid=26183][err] [26183:26183:1014/062957.358460:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+    [pid=26183][err] [26183:26183:1014/062957.358809:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+    [pid=26183][err] [26183:26207:1014/062957.358814:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+    [pid=26183][err] [26183:26207:1014/062957.359288:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+    [pid=26183][err] [26183:26183:1014/062957.359392:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+    [pid=26183][err] [26183:26183:1014/062957.360052:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.Properties.GetAll: object_path= /org/freedesktop/UPower/devices/DisplayDevice: unknown error type: 
+    [pid=26183][err] [26183:26183:1014/062957.360582:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+    [pid=26183][err] [26183:26207:1014/062957.360633:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+    [pid=26183][err] [26183:26183:1014/062957.362680:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+    [pid=26183][err] [26183:26207:1014/062957.362767:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are "tcp" and on UNIX "unix")
+    [pid=26183][err] [26183:26183:1014/062957.363100:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: 
+    [pid=26183][err] 
+    [pid=26183][err] (process:26183): dconf-CRITICAL **: 06:29:57.385: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+    [pid=26183][err] 
+    [pid=26183][err] (process:26183): dconf-CRITICAL **: 06:29:57.385: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+    [pid=26183][err] 
+    [pid=26183][err] (process:26183): dconf-CRITICAL **: 06:29:57.385: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+    [pid=26183][err] [26183:26217:1014/062957.410422:ERROR:content/browser/zygote_host/zygote_host_impl_linux.cc:300] Failed to adjust OOM score of renderer with pid 26262: Read-only file system (30)
+    [pid=26183][err] [26183:26217:1014/062957.432572:ERROR:content/browser/zygote_host/zygote_host_impl_linux.cc:300] Failed to adjust OOM score of renderer with pid 26271: Read-only file system (30)
+    [pid=26183][err] [26183:26217:1014/062957.433509:ERROR:content/browser/zygote_host/zygote_host_impl_linux.cc:300] Failed to adjust OOM score of renderer with pid 26272: Read-only file system (30)
+    [pid=26183][err] Failed to create secure directory (/home/agent/.config/pulse): Read-only file system
+    [pid=26183][err] [26220:26220:1014/062958.947049:ERROR:gpu/command_buffer/service/gl_utils.cc:431] [.WebGL-0x17fc00d7a200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+    [pid=26183][err] [26220:26220:1014/062959.024935:ERROR:gpu/command_buffer/service/gl_utils.cc:431] [.WebGL-0x17fc00d7a200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+    [pid=26183][err] [26220:26220:1014/062959.047000:ERROR:gpu/command_buffer/service/gl_utils.cc:431] [.WebGL-0x17fc00d7a200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+    [pid=26183][err] [26220:26220:1014/062959.084638:ERROR:gpu/command_buffer/service/gl_utils.cc:431] [.WebGL-0x17fc00d7a200]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+    [pid=26183] <gracefully close start>
+    Call log:
+      - waiting for locator('[data-battle-tab=fight]')
+        - locator resolved to <button data-battle-tab="fight">…</button>
+      - attempting click action
+        2 × waiting for element to be visible, enabled and stable
+          - element is not stable
+        - retrying click action
+        - waiting 20ms
+        2 × waiting for element to be visible, enabled and stable
+          - element is not stable
+        - retrying click action
+          - waiting 100ms
+        198 × waiting for element to be visible, enabled and stable
+            - element is not stable
+          - retrying click action
+            - waiting 500ms
+        - waiting for element to be visible, enabled and stable
+
+
+      25 |   if (await page.locator("#folder-back").isVisible())
+      26 |     await page.locator("#folder-back").click();
+    > 27 |   await page.locator(`[data-battle-tab=${name}]`).click();
+         |                                                   ^
+      28 | }
+      29 | async function lira(page) {
+      30 |   await page.keyboard.press("e");
+        at folder (/workspace/zimons/tests/browser/dynamics.spec.js:27:51)
+        at /workspace/zimons/tests/browser/dynamics.spec.js:80:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/dynamics-três-formas-pasta-c6173--Troca-com-resposta-inimiga/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/dynamics-três-formas-pasta-c6173--Troca-com-resposta-inimiga/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/dynamics-três-formas-pasta-c6173--Troca-com-resposta-inimiga/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/dynamics-três-formas-pasta-c6173--Troca-com-resposta-inimiga/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    tests/browser/dynamics.spec.js:36:1 › três formas, pastas exclusivas, nomes e afinidades nos ataques e Troca com resposta inimiga 
+  17 passed (6.2m)

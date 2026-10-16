@@ -1,0 +1,27 @@
+
+> zimons-academia@0.2.0 test
+> node --test tests/*.test.mjs
+
+✔ tabela completa: 64 confrontos; Cristal tem apenas as cinco vantagens ofensivas propostas (1.836707ms)
+✔ novo explorador começa sem dispositivo, forma ou progressão; aparência fica isolada (0.164703ms)
+✔ cinco elementos básicos têm duas vantagens e duas resistências, com confrontos recíprocos (0.288376ms)
+✔ save round-trip preserva todos os detalhes e rejeita estados inválidos (1.015373ms)
+✔ save fora da área navegável é recuperado em posição segura (0.19615ms)
+✔ colisões não permitem cruzar água, paredes, bancadas ou limites, mesmo com um frame longo (1.916255ms)
+✔ cada direção move apenas um eixo e usa a animação correspondente (0.263039ms)
+✔ humano não pode usar técnicas; energia insuficiente não consome recursos ou vida (0.471448ms)
+✔ defesa reduz apenas o próximo ataque e restaura energia até o máximo (0.293574ms)
+✔ as três técnicas especiais aplicam seus efeitos e respeitam a duração (0.384739ms)
+✔ Pyron: treinamento vencível com energia, técnicas e defesa (0.265232ms)
+✔ Marivon: treinamento vencível com energia, técnicas e defesa (0.153928ms)
+✔ Verdrax: treinamento vencível com energia, técnicas e defesa (0.130864ms)
+✔ recompensa da missão só é entregue uma vez; repetições não multiplicam EXP (0.16234ms)
+✔ metadados corrigidos usam a identidade real e quatro frames por direção (8.553784ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 78.517765

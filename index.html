@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#081724" />
+    <title>ZIMONS · O Despertar</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%2368e5dc' d='M32 0 40 24 64 32 40 40 32 64 24 40 0 32 24 24Z'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="refinements.css" />
+    <link rel="stylesheet" href="convergence.css" />
+    <link rel="stylesheet" href="story.css" />
+    <link rel="stylesheet" href="expedition.css" />
+    <link rel="stylesheet" href="awakening.css" />
+    <link rel="stylesheet" href="release.css" />
+    <link rel="stylesheet" href="revision.css" />
+    <link rel="stylesheet" href="v10.css" />
+    <link rel="stylesheet" href="v11.css" />
+  </head>
+  <body>
+    <main id="app" aria-label="Zimons">
+      <button
+        id="music-button"
+        class="music-button"
+        aria-pressed="true"
+        aria-label="Silenciar música"
+      >
+        ♫ Música ligada
+      </button>
+      <section id="loading" class="scene active loading">
+        <div class="signal-mark">✧</div>
+        <p class="eyebrow">ZIMONS</p>
+        <h1>Estabelecendo conexão</h1>
+        <p id="load-message">Preparando cenários e formas de sincronização…</p>
+        <div class="loading-track"><i></i></div>
+        <button id="reload" hidden>Carregar novamente</button>
+      </section>
+      <section
+        id="title"
+        class="scene title-screen"
+        aria-label="Tela de entrada Zimons"
+      >
+        <div class="title-shade"></div>
+        <div class="title-cast" aria-hidden="true">
+          <canvas data-cast="fire" width="220" height="240"></canvas
+          ><canvas data-cast="female" width="220" height="300"></canvas
+          ><canvas data-cast="plant" width="220" height="240"></canvas
+          ><canvas data-cast="male" width="220" height="300"></canvas
+          ><canvas data-cast="water" width="220" height="240"></canvas>
+        </div>
+        <div class="title-copy">
+          <p class="eyebrow">O DESPERTAR</p>
+          <h1>ZIMONS</h1>
+          <p class="title-tagline">Uma nova forma.<br />O mesmo coração.</p>
+          <p class="title-description">
+            Um chamado na floresta. Um passado perdido.<br />Uma conexão que
+            ainda não tem resposta.
+          </p>
+          <nav class="title-menu" aria-label="Menu principal">
+            <button id="title-continue" class="primary" hidden>
+              Retomar sessão <span>→</span></button
+            ><button id="title-new" class="title-start">
+              Entrar <span>→</span></button
+            ><button id="title-settings" class="quiet">Configurações</button
+            ><button id="title-credits" class="quiet">Créditos</button
+            ><button id="title-help" class="quiet">Como jogar</button>
+          </nav>
+        </div>
+        <footer class="title-footer">
+          <span>ZIMONS · CONEXÃO ALÉM DA EVOLUÇÃO</span
+          ><span>VERSÃO 0.11 · O DESPERTAR</span>
+        </footer>
+      </section>
+      <section
+        id="creator"
+        class="scene creator"
+        aria-label="Criação do protagonista"
+      >
+        <header class="creator-header">
+          <div class="brand"><span>✧</span> ZIMONS</div>
+          <span class="edition">CAPÍTULO 01 <i> / </i> O DESPERTAR</span
+          ><button id="creator-back" class="quiet">← Início</button>
+        </header>
+        <div class="creator-layout">
+          <div class="creator-art">
+            <canvas
+              id="creator-terrain"
+              width="650"
+              height="760"
+              aria-hidden="true"
+            ></canvas>
+            <div
+              class="gender-options"
+              role="group"
+              aria-label="Modelo do protagonista"
+            >
+              <button data-gender="female" aria-pressed="true">
+                <canvas width="110" height="100"></canvas
+                ><span>Exploradora</span>
+              </button>
+              <button data-gender="male" aria-pressed="false">
+                <canvas width="110" height="100"></canvas
+                ><span>Explorador</span>
+              </button>
+            </div>
+            <div class="preview-platform">
+              <div class="orbit orbit-a"></div>
+              <canvas
+                id="preview"
+                width="400"
+                height="340"
+                aria-label="Prévia animada da aparência"
+              ></canvas>
+            </div>
+            <div
+              class="appearance-views"
+              aria-label="Aparência nas quatro direções"
+            >
+              <figure>
+                <canvas width="96" height="100"></canvas>
+                <figcaption>Frente</figcaption>
+              </figure>
+              <figure>
+                <canvas width="96" height="100"></canvas>
+                <figcaption>Direita</figcaption>
+              </figure>
+              <figure>
+                <canvas width="96" height="100"></canvas>
+                <figcaption>Costas</figcaption>
+              </figure>
+              <figure>
+                <canvas width="96" height="100"></canvas>
+                <figcaption>Esquerda</figcaption>
+              </figure>
+            </div>
+            <div class="rotate-buttons">
+              <button
+                id="rotate-left"
+                class="icon-button"
+                aria-label="Girar prévia para a esquerda"
+              >
+                ↶</button
+              ><button
+                id="rotate-right"
+                class="icon-button"
+                aria-label="Girar prévia para a direita"
+              >
+                ↷
+              </button>
+            </div>
+            <label class="name-field" for="player-name"
+              ><span>Nome</span
+              ><input
+                id="player-name"
+                maxlength="18"
+                value="Alex"
+                autocomplete="off"
+                spellcheck="false"
+            /></label>
+          </div>
+          <div class="creation-panel panel">
+            <h2>Seu <em>personagem</em></h2>
+            <div id="customization"></div>
+            <button id="start" class="primary wide">
+              Iniciar jornada <span>→</span>
+            </button>
+            <button id="continue" hidden>Continuar</button>
+            <p id="save-warning" hidden></p>
+          </div>
+        </div>
+        <footer class="creator-footer">
+          <span
+            >EXPLORAÇÃO 2D <b>·</b> COMBATE POR TURNOS <b>·</b> UM NOVO
+            VÍNCULO</span
+          ><span>SETAS &nbsp; + &nbsp; E PARA INTERAGIR</span>
+        </footer>
+      </section>
+      <section id="world" class="scene" aria-label="Exploração da Academia">
+        <div class="cinematic-bar top"></div>
+        <div class="cinematic-bar bottom"></div>
+        <div id="cinematic-title"></div>
+        <canvas
+          id="world-canvas"
+          width="1280"
+          height="720"
+          aria-label="Mapa da Academia, vista superior"
+        ></canvas>
+        <div id="npc-labels" aria-hidden="true"></div>
+        <button id="minimap-button" aria-label="Abrir mapa da região">
+          <canvas id="minimap" width="256" height="256"></canvas
+          ><span class="compass-north" aria-hidden="true">N</span>
+        </button>
+        <div class="minimap-zoom" aria-label="Zoom do minimapa">
+          <button id="minimap-zoom-out" aria-label="Diminuir zoom do minimapa">
+            −</button
+          ><button id="minimap-zoom-in" aria-label="Aumentar zoom do minimapa">
+            +
+          </button>
+        </div>
+        <header class="world-top">
+          <div class="location panel">
+            <span class="tiny">ZIMONS</span
+            ><strong id="location-name">Praça da Convergência</strong
+            ><span class="location-coordinate"
+              >SETOR 01 <b>•</b> EXPLORAÇÃO</span
+            >
+          </div>
+          <div class="world-buttons">
+            <button
+              id="journal-button"
+              class="glass"
+              aria-label="Abrir missões"
+            >
+              ◇ <span>Missões</span></button
+            ><button
+              id="dex-button"
+              class="glass"
+              hidden
+              aria-label="Abrir Zimondex"
+            >
+              ✧ <span>Zimondex</span>
+            </button>
+            <button id="inventory" class="glass" aria-label="Abrir bolsa">
+              ▧ <span>Bolsa</span><kbd>I</kbd></button
+            ><button id="menu" class="glass" aria-label="Abrir menu">
+              ☰ <span>Menu</span><kbd>Esc</kbd>
+            </button>
+          </div>
+        </header>
+        <aside id="objective" class="objective panel">
+          <span class="tiny"
+            >MISSÃO PRINCIPAL <b id="quest-count">01 / 07</b></span
+          ><strong id="quest-title"></strong>
+          <p id="quest-text"></p>
+          <button id="quest-open">
+            Missões <kbd>Q</kbd>
+            <span aria-hidden="true"
+              ><svg
+                width="11"
+                height="11"
+                viewBox="0 0 14 14"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
+                <path d="M3 11 11 3M4 3h7v7" /></svg
+            ></span>
+          </button>
+        </aside>
+        <div class="world-bottom">
+          <div id="identity" class="identity panel">
+            <canvas id="hud-portrait" width="72" height="84"></canvas>
+            <span class="status-glyph">◈</span>
+            <div>
+              <strong id="identity-name"></strong
+              ><span id="identity-form"></span
+              ><small id="health-readout"></small>
+              <div class="world-hp"><i id="world-hp-fill"></i></div>
+            </div>
+            <span id="link-badge" class="link-badge">SEM Z-LINK</span>
+          </div>
+          <div class="controls panel">
+            <kbd>SETAS</kbd> mover <kbd>E</kbd> interagir <kbd>T</kbd> Z-Link
+          </div>
+        </div>
+        <div id="interaction" class="interaction" hidden>
+          <kbd>E</kbd><span></span>
+        </div>
+        <button id="story-skip" class="story-skip" hidden>
+          Pular etapa <kbd>R</kbd>
+        </button>
+        <div id="dialogue" class="dialogue panel" hidden>
+          <canvas id="portrait" width="120" height="140"></canvas>
+          <div class="dialogue-copy">
+            <span class="eyebrow" id="speaker">MENTORA LIRA</span>
+            <p id="dialogue-text"></p>
+            <div id="dialogue-choices"></div>
+            <button id="dialogue-next" class="primary">
+              Continuar <kbd>E</kbd>
+            </button>
+          </div>
+          <span class="dialogue-index" id="dialogue-index"></span>
+        </div>
+        <div id="touch-controls" aria-label="Controles de toque">
+          <div class="dpad">
+            <button data-dir="up" aria-label="Cima">▲</button
+            ><button data-dir="left" aria-label="Esquerda">◀</button
+            ><button data-dir="down" aria-label="Baixo">▼</button
+            ><button data-dir="right" aria-label="Direita">▶</button>
+          </div>
+          <button id="touch-interact">E</button
+          ><button id="touch-transform">T</button>
+        </div>
+      </section>
+      <section
+        id="starters"
+        class="scene starters"
+        aria-label="Escolher forma Zimon"
+      >
+        <header>
+          <span class="eyebrow">Z-LINK / PRIMEIRA SINCRONIZAÇÃO</span>
+          <span class="link-orbit">✧</span>
+          <h1>Qual presença <em>chama por você?</em></h1>
+          <p>
+            Observe cada essência. Lira acompanha sua primeira leitura de
+            compatibilidade.
+          </p>
+        </header>
+        <div class="starter-presentation">
+          <canvas
+            id="starter-stage"
+            width="960"
+            height="420"
+            aria-label="Uma essência de cada vez, sobre a plataforma do laboratório"
+          ></canvas>
+          <div class="starter-grid" id="starter-grid"></div>
+        </div>
+        <aside id="starter-insight" aria-live="polite">
+          <strong>Mentora Lira</strong>
+          <p>Não existe uma resposta certa. Aproxime-se com calma.</p>
+        </aside>
+        <div class="starter-footer">
+          <span id="starter-summary"
+            >Escolha sua forma Primordial para continuar.</span
+          ><button id="confirm-starter" class="primary" disabled>
+            Estabelecer vínculo <span>→</span>
+          </button>
+        </div>
+      </section>
+      <section
+        id="battle"
+        class="scene battle"
+        aria-label="Batalha de treinamento contra Lira"
+      >
+        <canvas
+          id="battle-canvas"
+          width="1280"
+          height="720"
+          aria-label="Arena: um corpo de cada lado"
+        ></canvas>
+        <header class="arena-header">
+          <span class="eyebrow" id="battle-location"
+            >ACADEMIA / SINCRONIZAÇÃO</span
+          ><span id="turn-label">TREINAMENTO</span
+          ><button
+            id="battle-speed"
+            aria-label="Velocidade da batalha: 1 vezes"
+            title="Alternar velocidade da batalha"
+          >
+            1×
+          </button>
+        </header>
+        <div class="combat-stat player-stat panel">
+          <div>
+            <strong id="combat-player"></strong
+            ><span id="combat-player-form"></span>
+          </div>
+          <span class="stat-level" id="combat-level">NV 1</span>
+          <div class="hp-track"><i id="player-hp-fill"></i></div>
+          <div class="stat-numbers">
+            <span id="player-hp"></span><span id="player-status"></span>
+          </div>
+          <div class="energy-track"><i id="energy-fill"></i></div>
+          <small id="energy-label"></small>
+          <div class="experience-line">
+            <span id="experience-label"></span>
+            <div class="xp-track"><i id="experience-fill"></i></div>
+          </div>
+        </div>
+        <div class="combat-stat enemy-stat panel">
+          <div>
+            <strong id="combat-enemy">Zimon</strong
+            ><span id="combat-enemy-form">Forma humana</span>
+          </div>
+          <span class="stat-level" id="combat-enemy-level">NV 5</span>
+          <div class="hp-track"><i id="enemy-hp-fill"></i></div>
+          <div class="stat-numbers">
+            <span id="enemy-hp"></span><span id="enemy-status"></span>
+          </div>
+        </div>
+        <div class="battle-bottom">
+          <div class="combat-log panel">
+            <span class="tiny" id="phase-label">SINCRONIZANDO</span>
+            <p id="next-move" class="next-move"></p>
+            <p id="battle-message" role="status"></p>
+            <button id="battle-history" class="quiet">
+              Ver histórico e elementos
+            </button>
+          </div>
+          <div class="battle-actions panel" id="command-dock">
+            <div id="folder-heading" class="folder-heading" hidden>
+              <button id="folder-back" aria-label="Voltar aos comandos">
+                ← Voltar
+              </button>
+              <span id="folder-title">BATALHA</span
+              ><span class="folder-path">Z-LINK / COMANDOS</span>
+            </div>
+            <nav
+              id="home-panel"
+              class="command-menu"
+              aria-label="Comandos de batalha"
+            >
+              <button data-battle-tab="fight">
+                <span class="menu-icon"
+                  ><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      d="M12 3v18M3 12h18M6 6l12 12M6 18 18 6"
+                    /></svg></span
+                ><span
+                  ><strong>Batalha</strong
+                  ><small>Técnicas de Sincronia</small></span
+                ><kbd>1</kbd>
+              </button>
+              <button data-battle-tab="bag">
+                <span class="menu-icon"
+                  ><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M5 8h14v13H5zM8 8V5a4 4 0 0 1 8 0v3" /></svg></span
+                ><span
+                  ><strong>Bolsa</strong
+                  ><small>Itens de recuperação</small></span
+                ><kbd>B</kbd>
+              </button>
+              <button data-battle-tab="swap">
+                <span class="menu-icon"
+                  ><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      d="m12 3 9 9-9 9-9-9 9-9ZM7 12h10m-5-5v10"
+                    /></svg></span
+                ><span
+                  ><strong>Troca</strong><small>Suas formas Zimon</small></span
+                ><kbd>Z</kbd>
+              </button>
+              <button data-battle-tab="exit">
+                <span class="menu-icon"
+                  ><svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M10 4H4v16h6M13 7l5 5-5 5M8 12h11" /></svg></span
+                ><span
+                  ><strong>Sair</strong><small>Encerrar este duelo</small></span
+                ><kbd>Esc</kbd>
+              </button>
+            </nav>
+            <div id="fight-panel" class="command-grid" hidden>
+              <button data-action="attack" class="move-card">
+                <span>Impacto</span><small id="attack-details"></small
+                ><kbd>1</kbd>
+              </button>
+              <button data-action="skill" class="move-card elemental" hidden>
+                <span id="skill-name"></span><small id="skill-details"></small
+                ><kbd>2</kbd>
+              </button>
+              <button data-action="special" class="move-card primal" hidden>
+                <span id="special-name"></span
+                ><small id="special-details"></small><kbd>3</kbd>
+              </button>
+            </div>
+            <div id="bag-panel" class="bag-command" hidden>
+              <div>
+                <span class="item-icon">▣</span><strong>Tônico vital</strong>
+                <p>Recupera até 40 HP. Usa um turno.</p>
+              </div>
+              <button data-action="tonic">
+                <span>Usar tônico</span><small id="tonic-count"></small>
+              </button>
+            </div>
+            <div id="swap-panel" class="swap-command" hidden>
+              <div id="form-options" class="form-options"></div>
+              <button data-action="transform" class="combat-sync">
+                <span id="transform-label">Retornar ao humano</span></button
+              ><small
+                >A troca usa um turno. Vida proporcional e energia são
+                preservadas.</small
+              >
+            </div>
+            <div id="exit-panel" class="exit-command" hidden>
+              <div>
+                <strong>Encerrar o duelo?</strong>
+                <p>
+                  Este desafio termina com a desistência. Cada colega oferece um
+                  único duelo.
+                </p>
+              </div>
+              <button id="leave-training">Voltar à Academia →</button>
+            </div>
+          </div>
+        </div>
+        <div id="battle-intro" class="battle-intro" hidden>
+          <div>
+            <span id="intro-speaker" class="eyebrow"></span>
+            <p id="intro-text"></p>
+            <span id="intro-stage"></span>
+          </div>
+          <button id="intro-skip">Pular animação →</button>
+        </div>
+        <div id="battle-result" class="result-overlay" hidden>
+          <div class="result-panel panel">
+            <span class="eyebrow">TREINAMENTO ENCERRADO</span>
+            <div class="signal-mark">✧</div>
+            <h1 id="result-title"></h1>
+            <p id="result-text"></p>
+            <div id="rewards" class="rewards"></div>
+            <button id="return-world" class="primary wide">
+              Voltar à Academia →</button
+            ><button id="retry" class="quiet wide">Treinar novamente</button>
+          </div>
+        </div>
+      </section>
+      <div
+        id="modal"
+        class="modal"
+        hidden
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
+        <div class="modal-panel panel">
+          <button
+            id="close-modal"
+            class="close-button"
+            aria-label="Fechar janela"
+          >
+            ×</button
+          ><span class="eyebrow" id="modal-label">ZIMONS</span>
+          <h2 id="modal-title"></h2>
+          <div id="modal-body"></div>
+        </div>
+      </div>
+      <div id="scene-fade" hidden>
+        <span>ZIMONS · O DESPERTAR</span><strong></strong>
+      </div>
+      <div id="toast" class="toast" role="status" hidden></div>
+    </main>
+    <p class="portrait-tip">
+      Para ampliar o mapa, jogue com o aparelho na horizontal.
+    </p>
+    <script type="module" src="src/game.js"></script>
+  </body>
+</html>

@@ -1,0 +1,622 @@
+/* v11: clean instruments and open scene space. */
+:root {
+  --interface-ink: #edf7f7;
+  --signal: #74ebe7;
+  --studio-ink: #273941;
+}
+#world .world-buttons button {
+  border: 0;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  padding: 10px;
+  background: #0a1829b3;
+  box-shadow: 0 1px 7px #0005;
+  color: #ecf6fa;
+}
+#world .world-buttons button span,
+#world .world-buttons button kbd {
+  display: none;
+}
+#world .world-buttons svg {
+  width: 19px;
+  height: 19px;
+}
+#world .location {
+  background: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  padding: 0 !important;
+}
+#world .location strong {
+  font-size: 15px;
+  color: #fff;
+  letter-spacing: 0.03em;
+  text-shadow:
+    0 2px 4px #000,
+    0 0 8px #000;
+}
+#world #objective {
+  background: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0;
+  padding: 8px 3px;
+  width: 230px;
+  backdrop-filter: none !important;
+  pointer-events: none;
+}
+#world #objective:before {
+  display: none;
+}
+#world #objective .tiny,
+#world #quest-count {
+  display: none;
+}
+#world #objective strong {
+  color: #fff;
+  font-size: 13px;
+  text-shadow:
+    0 1px 3px #000,
+    0 0 7px #000;
+}
+#world #objective p {
+  color: #e7f1f1;
+  font-size: 11px;
+  line-height: 1.55;
+  text-shadow:
+    0 1px 3px #000,
+    0 0 6px #000;
+  margin-top: 6px;
+}
+#world #quest-open {
+  border: 0;
+  margin: 3px 0 0;
+  padding: 0;
+  color: #d0e4e7;
+  font-size: 9px;
+  text-shadow: 0 1px 3px #000;
+  pointer-events: auto;
+}
+#world .identity {
+  background: linear-gradient(90deg, #0b1527b3, transparent);
+  padding: 3px 25px 3px 5px;
+  border-radius: 0;
+  box-shadow: none;
+}
+#world #hud-portrait {
+  border: 1px solid #b6dee0;
+  background: #1a3440;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  box-shadow: 0 0 0 3px #0a182833;
+}
+#world .identity strong {
+  font-size: 12px;
+}
+#world .identity small {
+  font-size: 10px;
+}
+.world-hp {
+  height: 3px;
+}
+.minimap-frame {
+  box-shadow: 0 2px 16px #0004 !important;
+}
+/* Customization: an actual assembly studio with pale controls and full-body views. */
+#creator {
+  background: #edf2f4;
+  color: var(--studio-ink);
+}
+#creator .creator-top {
+  color: #273f4a;
+}
+#creator .creator-top a,
+#creator .creator-top button {
+  color: #395966;
+}
+#creator .creator-art {
+  border: 1px solid #a1b5c1;
+  border-radius: 10px;
+  background: #d9e4e9;
+  box-shadow: 0 10px 24px #273f4a14;
+}
+#creator .creator-art:after {
+  box-shadow: inset 0 0 50px #526b7922;
+  background: linear-gradient(0deg, #798f9b33, transparent 55%);
+}
+#creator .creation-panel {
+  border: 0;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 10px 30px #25445215;
+  color: #243e4b;
+}
+#creator h1,
+#creator h2,
+#creator h3,
+#creator .look-collection h3 span,
+#creator .palette-group > span {
+  color: #253e49 !important;
+  text-shadow: none;
+}
+#creator .appearance-choice {
+  background: #eff4f6;
+  border: 1px solid #d3dfe5;
+  border-radius: 7px;
+  box-shadow: none;
+  color: #405863;
+}
+#creator .appearance-choice[aria-pressed="true"] {
+  background: #d9edf1;
+  border-color: #428d9c;
+  box-shadow: inset 0 0 0 1px #428d9c;
+}
+#creator .appearance-choice small {
+  color: #39505d;
+}
+#creator .gender-options button {
+  background: #f7fafbe8;
+  border-color: #a9c0cb;
+  color: #2b4e5d;
+  border-radius: 6px;
+}
+#creator .gender-options button[aria-pressed="true"] {
+  border-color: #438c9f;
+  box-shadow: inset 0 0 0 2px #438c9f;
+}
+#creator .appearance-views figure {
+  background: #e8f0f2b3;
+  border-color: #9bb1bd;
+  border-radius: 5px;
+  color: #294856;
+}
+#creator .name-field {
+  background: #eff5f8ed;
+  color: #385969;
+  border-color: #adc0c9;
+}
+#creator .name-field input {
+  color: #263f4c;
+  background: transparent;
+  border-color: #bdccd2;
+}
+#creator .utility-group button {
+  background: #f1f5f7;
+  border-color: #bdcdd4;
+  color: #345563;
+  border-radius: 6px;
+}
+#creator .utility-group button[aria-pressed="true"] {
+  background: #d9edf1;
+  border-color: #438c9f;
+}
+#creator #start {
+  background: #244e60;
+  color: #fff;
+  border: 0;
+  border-radius: 6px;
+  box-shadow: none;
+}
+#creator .creator-bottom {
+  color: #526b77;
+}
+/* Battle: fine status lines over the scene, not large opaque framed boxes. */
+#battle .arena-header {
+  top: 2%;
+  height: 28px;
+  align-items: center;
+}
+#battle .arena-header .eyebrow {
+  background: none;
+  border: 0;
+  box-shadow: none;
+  color: #fff;
+  font-size: 10px;
+  text-shadow: 0 1px 4px #000;
+  padding: 0;
+}
+#battle #turn-label {
+  font-size: 10px;
+  letter-spacing: 0.07em;
+  background: none;
+  border: 0;
+  color: #effcfc;
+  text-shadow: 0 1px 4px #000;
+}
+#battle .combat-stat {
+  background: linear-gradient(90deg, #071526b8, #07152658, transparent);
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 9px 12px;
+  backdrop-filter: none;
+  width: 27%;
+}
+#battle .combat-stat:before {
+  display: none;
+}
+#battle .combat-stat strong {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #fff;
+  text-shadow: 0 1px 4px #000;
+}
+#battle .player-stat {
+  top: 7%;
+  left: 3%;
+  bottom: auto;
+}
+#battle .enemy-stat {
+  top: 7%;
+  right: 3%;
+  background: linear-gradient(270deg, #071526b8, #07152658, transparent);
+}
+#battle .hp-track {
+  height: 6px !important;
+  border: 0 !important;
+  border-radius: 3px;
+  transform: none !important;
+  background: #05121caa !important;
+  box-shadow: 0 0 0 1px #ffffff33;
+}
+#battle .hp-track i {
+  background: linear-gradient(90deg, #48c39f, #b1f3b2);
+}
+#battle .energy-track {
+  height: 4px;
+  border-radius: 3px;
+  background: #0a1b28aa;
+}
+#battle .stat-numbers,
+#battle .combat-stat small {
+  font-size: 10px;
+  color: #d6e8ec;
+  text-shadow: 0 1px 2px #000;
+}
+.stat-level {
+  border: 0 !important;
+  background: none !important;
+  color: #fff !important;
+}
+#battle .battle-bottom {
+  left: 3%;
+  right: 3%;
+  bottom: 3%;
+  width: 94%;
+  height: 19%;
+  max-height: 19%;
+  grid-template-columns: 0.72fr 1.28fr;
+  gap: 18px;
+  box-shadow: none;
+  background: none;
+  padding: 0;
+}
+#battle .combat-log,
+#battle .battle-actions {
+  background: #0b1825df;
+  border: 1px solid #b4d9df44;
+  border-radius: 8px;
+  box-shadow: 0 5px 20px #0002;
+  padding: 12px;
+}
+#battle .combat-log .tiny {
+  color: #96d9d6;
+  font-size: 8px;
+}
+#battle .combat-log p {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #fff;
+}
+#battle-history {
+  font-size: 9px;
+  color: #a6bec6;
+}
+#battle .command-menu button,
+#battle .move-card {
+  background: #1c303ed9;
+  border: 1px solid #6f9da35c;
+  border-radius: 5px;
+  box-shadow: none;
+  color: #f2f8f9;
+}
+#battle .command-menu button:hover,
+#battle .move-card:hover {
+  background: #315463;
+}
+#battle .move-card.elemental {
+  background: #163b43dc;
+  border-color: #5bbaaf7a;
+}
+#battle #battle-speed {
+  position: absolute;
+  left: 3%;
+  bottom: 23%;
+  top: auto;
+  margin: 0;
+  width: 62px;
+  height: 34px;
+  font-size: 16px;
+  color: #f4fffe;
+  background: #0a1d2ae6;
+  border: 1px solid #8ae3db;
+  border-radius: 7px;
+  z-index: 8;
+  box-shadow: 0 2px 9px #0004;
+}
+#battle .arena-header {
+  position: static !important;
+}
+#battle .arena-header .eyebrow {
+  position: absolute;
+  top: 3%;
+  left: 3%;
+}
+#battle #turn-label {
+  position: absolute;
+  top: 3%;
+  right: 3%;
+}
+#battle .form-state {
+  font-size: 8px;
+  letter-spacing: 0.1em;
+}
+.type-pill {
+  border-radius: 3px !important;
+}
+#scene-fade strong {
+  display: none;
+}
+@media (max-width: 900px), (max-height: 650px) {
+  #world #objective {
+    width: 165px;
+  }
+  #world #objective strong {
+    font-size: 10px;
+  }
+  #world #objective p {
+    font-size: 9px;
+  }
+  #world .world-buttons button {
+    width: 29px;
+    height: 29px;
+    padding: 7px;
+  }
+  #battle .combat-stat strong {
+    font-size: 13px;
+  }
+  #battle .combat-stat {
+    padding: 5px 8px;
+  }
+  #battle .battle-bottom {
+    height: 24%;
+    max-height: 24%;
+    gap: 8px;
+  }
+  #battle #battle-speed {
+    bottom: 30%;
+    width: 48px;
+    height: 27px;
+    font-size: 13px;
+  }
+  #battle .combat-log p {
+    font-size: 10px;
+  }
+  #battle .move-card {
+    padding: 6px;
+  }
+  #battle .arena-header .eyebrow,
+  #battle #turn-label {
+    font-size: 7px;
+  }
+  #creator .creation-panel {
+    padding: 10px;
+  }
+}
+#creator h1 span,
+#creator .name-field span,
+#creator .appearance-views figcaption,
+#creator .utility-group button[aria-pressed="true"],
+#creator .utility-group button[aria-pressed="true"] span {
+  color: #294b5a !important;
+}
+#creator .creator-top button,
+#creator .creator-top a {
+  color: #385e6f !important;
+}
+#creator .gender-options button small,
+#creator .appearance-views small {
+  color: #294b5a !important;
+}
+#battle-canvas,
+#world-canvas {
+  filter: none !important;
+  image-rendering: pixelated !important;
+}
+/* A calibração apresenta uma única essência no ambiente real. */
+#starters {
+  background: #e8edf0;
+  color: #173043;
+  padding: 28px 6%;
+  overflow: auto;
+}
+#starters header {
+  position: relative;
+  max-width: 980px;
+  margin: 0 auto 14px;
+  text-align: left;
+}
+#starters header h1 {
+  font-size: 32px;
+  color: #173043;
+  margin: 8px 0;
+}
+#starters header h1 em {
+  color: #176681;
+}
+#starters header p,
+#starters .eyebrow {
+  color: #486574;
+}
+#starters .link-orbit {
+  display: none;
+}
+.starter-presentation {
+  max-width: 980px;
+  margin: auto;
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid #c6d2d8;
+  background: #f4f7f8;
+}
+#starter-stage {
+  width: 100%;
+  height: min(38vh, 360px);
+  object-fit: cover;
+  display: block;
+  image-rendering: pixelated;
+}
+#starters .starter-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  padding: 0;
+  border-top: 1px solid #c6d2d8;
+}
+#starters .starter-card {
+  min-height: 0;
+  padding: 14px 20px;
+  display: block;
+  border: 0;
+  border-radius: 0;
+  background: #f4f7f8;
+  color: #173043;
+  box-shadow: none;
+  transform: none;
+  text-align: left;
+}
+#starters .starter-card[aria-pressed="true"] {
+  background: #d3e9ec;
+  box-shadow: inset 0 -3px var(--element);
+}
+#starters .starter-card h2 {
+  font-size: 22px;
+  margin: 4px 0;
+  color: #173043;
+}
+#starters .starter-role {
+  font-size: 12px;
+  color: #4c6878;
+}
+#starters .element-tag {
+  position: static;
+  font-size: 10px;
+  color: #356070;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+#starter-insight {
+  max-width: 980px;
+  margin: 14px auto;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: #35505d;
+}
+#starter-insight strong {
+  color: #14536b;
+}
+#starter-insight p {
+  color: #35505d;
+}
+#starters .starter-footer {
+  position: static;
+  max-width: 980px;
+  margin: 18px auto 0;
+  color: #35505d;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+#starters .starter-footer button {
+  background: #19495c;
+  color: #fff;
+  border: 0;
+}
+@media (max-height: 650px) {
+  #starters {
+    padding: 12px 5%;
+  }
+  #starters header h1 {
+    font-size: 24px;
+  }
+  #starters header p {
+    display: none;
+  }
+  #starter-stage {
+    height: 30vh;
+  }
+  #starters .starter-card {
+    padding: 8px 14px;
+  }
+  #starter-insight {
+    margin: 8px auto;
+    font-size: 12px;
+  }
+}
+/* Entrada com ações leves e elenco inteiro dentro do enquadramento. */
+#title .title-menu {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  width: 75%;
+}
+#title .title-menu #title-new {
+  border: 1px solid #e5d7a7;
+  background: linear-gradient(100deg, #f1dfac, #cfad68);
+  padding: 14px 20px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 16px #07142355;
+}
+#title .title-menu .quiet {
+  background: transparent;
+  border: 0;
+  padding: 8px 0;
+  color: #e3edf0;
+}
+#title .title-menu .quiet:hover {
+  color: #ffe3a6;
+  transform: translateX(4px);
+}
+#title .title-cast {
+  right: 5%;
+  left: 48%;
+}
+#title .title-cast [data-cast="water"] {
+  right: 0;
+}
+#title .title-cast [data-cast="male"] {
+  right: 13%;
+}
+@media (max-height: 650px) {
+  #title .title-menu #title-new {
+    padding: 9px 14px;
+  }
+  #title .title-menu .quiet {
+    padding: 4px 0;
+    font-size: 10px;
+  }
+}
+/* Os painéis ocupam toda a coluna; elimina uma largura herdada da HUD antiga. */
+#battle .battle-actions {
+  width: 100%;
+  min-width: 0;
+}

@@ -1,0 +1,42 @@
+
+> zimons-academia@0.9.0 test
+> node --test tests/*.test.mjs
+
+✔ animação física se aproxima na diagonal, atinge no contato e retorna à âncora (1.762566ms)
+✔ nocaute aguarda o impacto visível e redução de movimento mantém o desenho parado (0.346713ms)
+✔ forma muda sob o casulo, respeita humanos já transformados e Lira parcial (0.251912ms)
+✔ tabela completa: 64 confrontos; Cristal tem apenas as cinco vantagens ofensivas propostas (1.260204ms)
+✔ novo explorador começa sem dispositivo, forma ou progressão; aparência fica isolada (0.348806ms)
+✔ cinco elementos básicos têm duas vantagens e duas resistências, com confrontos recíprocos (0.238833ms)
+✔ save round-trip preserva todos os detalhes e rejeita estados inválidos (3.136489ms)
+✔ save fora da área navegável é recuperado em posição segura (0.550124ms)
+✔ colisões não permitem cruzar água, paredes, bancadas ou limites, mesmo com um frame longo (1.696739ms)
+✔ cada direção move apenas um eixo e usa a animação correspondente (0.244792ms)
+✔ humano não pode usar técnicas; energia insuficiente não consome recursos ou vida (0.510836ms)
+✔ Defender foi removido; ataque físico recupera energia sem ultrapassar 60 (0.47323ms)
+✔ as três técnicas especiais aplicam seus efeitos e respeitam a duração (0.563304ms)
+✔ Pyron: treinamento vencível alternando técnicas e recuperação física (0.388565ms)
+✔ Marivon: treinamento vencível alternando técnicas e recuperação física (0.199605ms)
+✔ Verdrax: treinamento vencível alternando técnicas e recuperação física (0.176692ms)
+✔ recompensa não se repete; desafios concluídos não concedem EXP adicional (0.443706ms)
+✔ metadados corrigidos usam a identidade real e quatro frames por direção (12.118785ms)
+✔ nível 5 oferece física e elemental; especial exige nível 8 sem consumir recurso quando bloqueada (0.429115ms)
+✔ Troca conserva a proporção de HP, energia e status, sem cura por alternância (0.639296ms)
+✔ EXP por forma aprende golpes progressivamente e preserva os demais níveis (0.347624ms)
+✔ validação não libera almas não conquistadas nem aceita o progresso antigo como novo prólogo (0.266965ms)
+✔ duelo com aluno dá EXP sem pular missão e não repete tônicos extras (0.220727ms)
+✔ contenção de fire: protagonista perde sob controle do jogador, Lira manifesta somente os braços (0.356968ms)
+✔ contenção de water: protagonista perde sob controle do jogador, Lira manifesta somente os braços (0.140007ms)
+✔ contenção de plant: protagonista perde sob controle do jogador, Lira manifesta somente os braços (0.172365ms)
+✔ todos os pontos de interação são alcançáveis desde as entradas sem atravessar cenário sólido (68.345668ms)
+✔ a permissão de treino não libera Sincronia sozinho fora do laboratório (0.341335ms)
+✔ Lira tenta contato e não revida no primeiro turno da contenção (0.206255ms)
+✔ a plataforma e os antigos aparelhos deixam de bloquear o piso do laboratório (0.174818ms)
+ℹ tests 30
+ℹ suites 0
+ℹ pass 30
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 232.180455

@@ -1,0 +1,59 @@
+/* v0.7: readable field HUD and a traditional journey menu. */
+:root { --ink: #e6f0ed; --muted: #92b0b9; --gold: #e6c983; --aqua: #7bded5; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+#modal[data-kind="menu"] { justify-content: flex-end; padding: 1.8%; background: linear-gradient(90deg,#03111a15,#03111a85); backdrop-filter: blur(3px); }
+#modal[data-kind="menu"] .modal-panel { width: min(430px,95%); max-height: 96%; padding: 24px; border: 1px solid #749d9d7a; border-radius: 18px; background: linear-gradient(145deg,#153748f7,#0a1d2bf9 65%); box-shadow: 0 20px 90px #0009,inset 0 1px #ffffff15; }
+#modal[data-kind="menu"] #modal-label { color: var(--gold); letter-spacing: .18em; }
+#modal[data-kind="menu"] h2 { margin: 7px 0 12px; font: 600 24px Sora,sans-serif; }
+.journey-profile { display: flex; align-items:center; border:1px solid #71c1bd33; border-radius:12px; background:linear-gradient(110deg,#2a54525c,#0c243980); padding:8px 12px 8px 0; margin-bottom:14px; min-height:115px; }
+.journey-profile canvas { width:95px; height:105px; image-rendering:pixelated; flex-shrink:0; }
+.journey-profile h3 { font-size:19px; margin:0 0 7px; color:#f3e8c9; }
+#modal .journey-profile p { font-size:11px; margin:0 0 9px; color:var(--ink); }
+.journey-profile small { color:var(--muted); font-size:10px; }
+#modal[data-kind="menu"] .menu-buttons { display:flex; flex-direction:column; gap:5px; }
+#modal[data-kind="menu"] .menu-buttons button { display:grid; grid-template-columns:36px 1fr 12px; align-items:center; text-align:left; padding:9px 11px; border:1px solid transparent; border-radius:8px; background:#0a1c2b77; color:var(--ink); min-height:48px; }
+#modal[data-kind="menu"] .menu-buttons button:hover, #modal[data-kind="menu"] .menu-buttons button:focus-visible { background:linear-gradient(90deg,#306167b0,#1b384590); border-color:#9edfd173; }
+.journey-glyph { font-size:23px; color:var(--gold); }
+.menu-buttons strong { display:block; font-size:12px; font-weight:600; }
+.menu-buttons small { display:block; color:var(--muted); font-size:9px; margin-top:3px; }
+.journey-footer { display:flex; gap:8px; margin-top:15px; padding-top:14px; border-top:1px solid #8cbdba33; }
+#modal .journey-footer button { font-size:10px; padding:10px; flex:1; }
+#modal .menu-page-back { display:block; border:0; padding:6px 0 12px; font-size:11px; color:var(--aqua); background:transparent; margin-bottom:12px; }
+.bound-form { display:flex; gap:20px; align-items:center; border:1px solid #8be2cc44; border-radius:12px; background:#173d4855; padding:10px; }
+.bound-form canvas { width:42%; height:auto; image-rendering:pixelated; }
+.empty-slot { border:1px dashed #7da4b566; padding:24px; border-radius:12px; }
+#modal .item-row { background:linear-gradient(120deg,#153442,#0b1f30); border:1px solid #8bb6bc40; border-radius:12px; margin:9px 0; padding:15px; }
+.item-icon { border:1px solid #d6c58a66; border-radius:9px; background:#a4cebb0b; color:var(--gold); }
+#battle .combat-stat { background:linear-gradient(130deg,#0b2533ef,#142e40df); border:1px solid #a3c9c25c; border-radius:12px; box-shadow:0 5px 25px #00132055; }
+#battle .combat-stat:before { background:linear-gradient(90deg,#8de4d1,#e6ca85); height:2px; }
+#battle .combat-stat strong { font-family:Sora,sans-serif; font-size:clamp(12px,1.25cqw,19px); font-weight:600; }
+#battle .hp-track { border:1px solid #5a808866; background:#06151e; border-radius:8px; height:7px; }
+#battle .hp-track i { background:linear-gradient(90deg,#56bba7,#bcdf9e); box-shadow:0 0 9px #92ddbf44; transition:width .38s ease; }
+#battle .battle-bottom { background:linear-gradient(180deg,#04101a00,#061a2c99); }
+#battle .combat-log { background:linear-gradient(120deg,#0a2332f2,#0b1e2adb); border-radius:12px; border:1px solid #789ba650; }
+#battle .battle-actions { background:linear-gradient(130deg,#123442f2,#0b1e2af5); border-radius:12px; border:1px solid #789ba670; }
+#battle .command-menu button { border-radius:10px; border:1px solid #8fb7bb45; background:linear-gradient(120deg,#28485888,#142d3b99); }
+#battle .command-menu button:hover { background:#365c66bb; border-color:#e6c98399; }
+#battle .command-menu strong { font-family:Sora,sans-serif; font-size:clamp(11px,1.1cqw,17px); }
+#battle .menu-icon { border-color:#d1bd7c66; color:var(--gold); border-radius:8px; }
+#battle .move-card { border-radius:10px; background:linear-gradient(135deg,#1c4055,#17303f); border:1px solid #8aa8b666; }
+#battle .move-card.elemental { border-color:#8bd2bd80; background:linear-gradient(135deg,#285449,#153e42); }
+#battle-message { font-weight:400; line-height:1.6; }
+#customization { max-height: min(36vh,310px); overflow-y:auto; padding-right:9px; scrollbar-width:thin; scrollbar-color:#659d9c #0b2331; }
+#customization .custom-row { min-height:36px; padding:5px 0; }
+.cycle-option { min-width:150px; }
+#objective { border-left:2px solid #d9c18b; border-radius:9px; background:linear-gradient(100deg,#102b3ae8,#0b2231d9); }
+#dialogue-text { line-height:1.75; letter-spacing:.005em; }
+.creation-panel { max-height:100%; min-height:0; overflow-y:auto; scrollbar-width:thin; scrollbar-color:#659d9c #0b2331; }
+.creator-footer { pointer-events:none; }
+@media (max-height:650px) {
+  #modal[data-kind="menu"] .modal-panel { padding:14px 18px; }
+  #modal[data-kind="menu"] h2 { font-size:19px; margin:3px 0 9px; }
+  .journey-profile { min-height:72px; margin-bottom:8px; }
+  .journey-profile canvas { width:64px; height:71px; }
+  #modal[data-kind="menu"] .menu-buttons button { min-height:36px; padding:5px 8px; }
+  .menu-buttons small { display:none; }
+  .journey-footer { margin-top:8px; padding-top:8px; }
+  #customization { max-height:28vh; }
+}
+@media(prefers-reduced-motion:reduce) { #battle .hp-track i { transition:none; } }

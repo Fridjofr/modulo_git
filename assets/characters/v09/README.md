@@ -1,0 +1,5 @@
+# Folhas de aparência v0.9
+
+`female-looks.png` e `male-looks.png` são assets de produção derivados dos protagonistas aprovados. Cada folha contém cinco looks em quatro direções. As linhas da imagem não são uma grade exata: `character-atlas.js` declara os limites de recorte e a correspondência das laterais por coluna, preserva transparência e normaliza cada sprite para 192×192.
+
+Cabeças e roupas são combinadas em tempo de execução. Máscaras de cabelo usam componentes conectados a partir da região da cabeça, evitando tratar o sombreado das mãos como cabelo. O tecido sob regiões antes cobertas por cabelo longo é recomposto a partir dos tons pintados da própria roupa, evitando buracos quando o corte muda. Paletas preservam luminosidade, e bolsa/Z-Link são camadas independentes. O dispositivo só é desenhado após a entrega. As poses direcionais são pintadas; a caminhada dos novos looks é interpolada nas pernas, não uma nova folha de dezenas de quadros por roupa. Os sprites originais seguem intactos nos caminhos anteriores.

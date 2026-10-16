@@ -1,0 +1,1070 @@
+@font-face {
+  font-family: Sora;
+  src: url("assets/fonts/Sora.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: Rajdhani;
+  src: url("assets/fonts/Rajdhani-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+:root {
+  font-family: Sora, system-ui, sans-serif;
+}
+button,
+input {
+  font-family: inherit;
+}
+.eyebrow,
+.brand,
+.title-copy h1,
+.arena-header,
+.combat-stat strong,
+.stat-level,
+.folder-heading,
+.command-menu strong {
+  font-family: Rajdhani, Sora, sans-serif;
+}
+.title-copy h1 {
+  font-weight: 600;
+  letter-spacing: 0.11em;
+}
+.music-button {
+  position: absolute;
+  z-index: 16;
+  right: 3%;
+  top: 3%;
+  border: 1px solid #8ab4bc66;
+  color: #cce9e7;
+  background: #0a2638d9;
+  border-radius: 25px;
+  padding: 8px 13px;
+  font-size: 11px;
+  backdrop-filter: blur(10px);
+}
+[data-scene="loading"] > .music-button {
+  display: none;
+}
+[data-scene="world"] > .music-button {
+  right: 265px;
+  top: 2.7%;
+}
+[data-scene="creator"] > .music-button {
+  right: 120px;
+  top: 4%;
+}
+[data-scene="battle"] > .music-button {
+  right: 36%;
+  top: 3.2%;
+}
+.setting-row input[type="range"] {
+  width: 45%;
+  accent-color: #8de8dc;
+}
+.npc-name {
+  font-family: Sora, sans-serif;
+  font-size: clamp(9px, 0.82cqw, 12px);
+}
+#battle .arena-header .eyebrow {
+  font-size: clamp(10px, 1.25cqw, 18px);
+  letter-spacing: 1.8px;
+  border-color: #a1d5d36b;
+  border-left: 3px solid #69c9c4;
+  background: linear-gradient(90deg, #081e2eec, #12394adf);
+}
+#battle #turn-label {
+  font-size: clamp(10px, 1.2cqw, 17px);
+  letter-spacing: 1.2px;
+}
+#battle .combat-stat {
+  width: 27%;
+  padding: 13px 18px;
+  border-radius: 5px 17px 5px 17px;
+  border: 1px solid #acd5d4b0;
+  background: linear-gradient(125deg, #102d41f2, #123444ef);
+  box-shadow:
+    inset 0 1px #dbefea24,
+    0 5px 18px #061e2a3d;
+  border-bottom: 3px solid #7db8b6;
+}
+#battle .combat-stat:before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 18px;
+  width: 37px;
+  height: 3px;
+  background: #edce91;
+  box-shadow: 47px 0 #edce9166;
+}
+#battle .combat-stat strong {
+  font-size: clamp(18px, 2cqw, 28px);
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  line-height: 1.1;
+}
+#battle .combat-stat > div:first-child {
+  gap: 6px;
+}
+#battle .combat-stat > div:first-child > span {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+#battle .stat-level {
+  color: #ffe3a9;
+  font-size: clamp(11px, 1.1cqw, 16px);
+  background: #0a2236;
+  padding: 4px 7px;
+  border: 1px solid #9dbeb92e;
+  border-radius: 4px;
+  top: 12px;
+  right: 14px;
+}
+#battle .hp-track {
+  height: 8px;
+  border: 1px solid #010d19;
+  margin-top: 10px;
+  border-radius: 2px;
+  background: #071928;
+  box-shadow: 0 1px #ffffff12;
+}
+.hp-track i {
+  background: linear-gradient(90deg, #4ec9aa, #a4e2a7);
+  transition: width 0.5s ease;
+}
+.energy-track {
+  background: #041c2c;
+  border-radius: 1px;
+}
+.energy-track i {
+  background: linear-gradient(90deg, #4d9ac9, #84ede2);
+}
+#battle .stat-numbers {
+  font-size: clamp(9px, 0.84cqw, 12px);
+  margin-top: 6px;
+}
+.form-state {
+  font-size: clamp(7px, 0.64cqw, 10px);
+  letter-spacing: 1.6px;
+  color: #a5c7d4;
+}
+.type-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid #8bb2c36b;
+  color: #d6e6ef;
+  background: #4d657a33;
+  border-radius: 4px;
+  padding: 3px 6px;
+  font-family: Sora, sans-serif;
+  font-size: clamp(8px, 0.7cqw, 11px);
+  font-weight: 550;
+  white-space: nowrap;
+  line-height: 1.1;
+}
+.type-pill svg {
+  width: 13px;
+  height: 13px;
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 1.3;
+  stroke-linejoin: round;
+}
+.type-pill[data-type="Fogo"] {
+  color: #ffc094;
+  background: #9b462b44;
+  border-color: #ed955580;
+}
+.type-pill[data-type="Água"] {
+  color: #9be0ff;
+  background: #2869a144;
+  border-color: #6dc9ff88;
+}
+.type-pill[data-type="Planta"] {
+  color: #cef3a6;
+  background: #4d7a3c44;
+  border-color: #a0d16d80;
+}
+.experience-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+.experience-line > span {
+  font-size: clamp(7px, 0.61cqw, 9px);
+  color: #b5c8d5;
+  white-space: nowrap;
+}
+.xp-track {
+  height: 3px;
+  background: #071b2d;
+  width: 100%;
+  overflow: hidden;
+}
+.xp-track i {
+  height: 100%;
+  display: block;
+  background: #dec790;
+}
+#battle .battle-bottom {
+  min-height: 25.2%;
+  padding: 12px 23px 13px;
+  background: linear-gradient(110deg, #061b2df5, #112d3df5);
+  border-top: 1px solid #badbdba8;
+  box-shadow: 0 -4px 30px #061d2850;
+}
+#battle .battle-bottom:before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: 3%;
+  width: 80px;
+  height: 3px;
+  background: #f1d396;
+  box-shadow: 88px 0 #f1d39644;
+}
+#battle .combat-log {
+  padding: 12px 25px 6px 7px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+#battle .combat-log .tiny {
+  font-family: Rajdhani, Sora, sans-serif;
+  font-size: clamp(11px, 1.15cqw, 17px);
+  letter-spacing: 1.2px;
+}
+#battle .combat-log p {
+  font-size: clamp(12px, 1.12cqw, 17px);
+  line-height: 1.7;
+  margin: 8px 0;
+}
+#battle .combat-log .quiet {
+  font-size: clamp(9px, 0.8cqw, 12px);
+  text-align: left;
+}
+#battle .battle-actions {
+  width: 57%;
+  border-left: 1px solid #74aeb264;
+  padding-left: 20px;
+}
+.command-menu {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  height: 100%;
+}
+.command-menu > button {
+  display: flex;
+  position: relative;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 16px;
+  text-align: left;
+  border: 1px solid #7cabb37d;
+  background: linear-gradient(110deg, #24495c, #133347);
+  border-radius: 5px;
+  box-shadow: inset 0 1px #ffffff0b;
+}
+.command-menu > button:first-child {
+  border-color: #e5c68b9d;
+  background: linear-gradient(110deg, #65563888, #29414c);
+}
+.command-menu strong {
+  display: block;
+  color: #eef4ed;
+  letter-spacing: 0.5px;
+  font-size: clamp(17px, 1.75cqw, 25px);
+  font-weight: 600;
+}
+.command-menu small {
+  display: block;
+  font-size: clamp(8px, 0.77cqw, 12px);
+  color: #b4cdd4;
+  margin-top: 3px;
+}
+.command-menu kbd {
+  position: absolute;
+  right: 10px;
+  top: 11px;
+  font-size: 9px;
+  border-color: #97bdc53b;
+  color: #a6c2c8;
+}
+.menu-icon {
+  font-size: clamp(22px, 2.5cqw, 35px);
+  color: #c0e4e6;
+  width: 35px;
+  text-align: center;
+}
+.command-menu > button:first-child .menu-icon {
+  color: #efce90;
+}
+.command-menu > button:hover {
+  transform: none;
+  border-color: #e2d0a1;
+  background: #31596b;
+}
+.folder-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  color: #f2d997;
+  font-size: clamp(13px, 1.35cqw, 19px);
+  letter-spacing: 1.3px;
+}
+.folder-heading > button {
+  background: transparent;
+  color: #b9d6db;
+  border: 1px solid #93bac04d;
+  border-radius: 3px;
+  font-family: Sora, sans-serif;
+  font-size: clamp(9px, 0.8cqw, 12px);
+  padding: 4px 9px;
+}
+.folder-path {
+  font-size: clamp(8px, 0.68cqw, 10px);
+  letter-spacing: 1.4px;
+  color: #7fa6b6;
+}
+.command-grid {
+  gap: 7px;
+}
+#battle .move-card {
+  padding: 9px 29px 9px 12px;
+  min-height: 58px;
+  gap: 7px;
+  font-size: clamp(12px, 1.06cqw, 16px);
+  border-left-width: 2px;
+  border-radius: 3px 10px 3px 3px;
+  background: linear-gradient(115deg, #1d4358, #183446);
+  box-shadow: inset 0 1px #ffffff0b;
+}
+#battle .move-card small {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: clamp(8px, 0.66cqw, 10px);
+  line-height: 1.2;
+}
+#battle .move-card .type-pill {
+  font-size: clamp(7px, 0.6cqw, 9px);
+  padding: 2px 4px;
+}
+#battle .move-card .type-pill svg {
+  width: 11px;
+  height: 11px;
+}
+.affinity {
+  white-space: nowrap;
+  color: #bbd1d6;
+}
+.affinity.advantage {
+  color: #b9f195;
+}
+.affinity.resisted {
+  color: #f1bc93;
+}
+.move-cost {
+  color: #bdd7df;
+}
+.next-move {
+  font-size: clamp(9px, 0.76cqw, 12px);
+  color: #a5bdc8;
+  grid-column: 1/-1;
+  margin: 2px 0;
+  line-height: 1.5;
+}
+.bag-command,
+.exit-command {
+  min-height: 100px;
+}
+#battle .bag-command button,
+#battle .exit-command button {
+  font-size: clamp(10px, 1cqw, 15px);
+  border-radius: 3px 10px 3px 3px;
+}
+.form-options {
+  display: flex;
+  gap: 8px;
+}
+.form-options button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 8px;
+  border: 1px solid #95bcc46b;
+  border-top: 2px solid var(--form-color);
+  background: #173c50;
+  text-align: left;
+  min-width: 0;
+}
+.form-options canvas {
+  width: 48px;
+  height: 39px;
+  image-rendering: pixelated;
+  float: left;
+}
+.form-options strong {
+  font-family: Rajdhani, sans-serif;
+  font-size: clamp(15px, 1.4cqw, 21px);
+  color: #edf5ef;
+}
+.form-options small {
+  display: block;
+  flex-basis: 100%;
+  font-size: clamp(8px, 0.66cqw, 10px);
+  color: #b8d7dd;
+}
+.form-options .type-pill {
+  font-size: 8px;
+}
+.swap-command > small {
+  display: block;
+  margin-top: 4px;
+  font-size: clamp(8px, 0.7cqw, 10px);
+  color: #9dbfc8;
+}
+#battle .swap-command .combat-sync {
+  display: inline-block;
+  max-width: none;
+  padding: 4px 8px;
+  font-size: 10px;
+  margin-top: 6px;
+  background: transparent;
+  border: 1px solid #89b8c14d;
+}
+.battle-intro {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  min-height: 25.2%;
+  background: linear-gradient(110deg, #061a2bf5, #17364aee);
+  border-top: 1px solid #b7d7d4;
+  padding: 24px 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px;
+}
+.battle-intro .eyebrow {
+  font-size: clamp(12px, 1.35cqw, 19px);
+  color: #f0d29a;
+  letter-spacing: 2px;
+}
+.battle-intro p {
+  font-family: Rajdhani, sans-serif;
+  font-size: clamp(18px, 2.4cqw, 34px);
+  color: #f0f8f1;
+  line-height: 1.2;
+  margin: 9px 0;
+}
+.battle-intro #intro-stage {
+  font-size: clamp(8px, 0.8cqw, 12px);
+  color: #8ecece;
+  letter-spacing: 2px;
+}
+.battle-intro button {
+  white-space: nowrap;
+  font-size: clamp(9px, 0.9cqw, 13px);
+  padding: 8px 13px;
+  background: #183b4d;
+  border-color: #94bab969;
+}
+#battle[data-stage="intro"] .battle-bottom {
+  visibility: hidden;
+}
+#battle[data-stage="intro"] .combat-stat {
+  opacity: 0.85;
+}
+#battle .result-panel h1 {
+  font-family: Rajdhani, sans-serif;
+  font-weight: 600;
+  font-size: clamp(25px, 3cqw, 43px);
+}
+.rewards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.rewards span {
+  font-size: clamp(9px, 0.8cqw, 12px);
+}
+@media (max-width: 1100px) {
+  #battle .combat-stat {
+    padding: 10px 13px;
+  }
+  #battle .battle-bottom {
+    padding: 10px 14px;
+  }
+  .command-menu > button {
+    padding: 9px 11px;
+    gap: 9px;
+  }
+  .command-menu {
+    gap: 7px;
+  }
+  .folder-path {
+    display: none;
+  }
+  #battle .move-card {
+    padding: 8px 22px 8px 10px;
+    min-height: 49px;
+  }
+  .folder-heading {
+    margin-bottom: 7px;
+  }
+  .form-options canvas {
+    width: 40px;
+    height: 33px;
+  }
+  .form-options {
+    gap: 5px;
+  }
+  .form-options button {
+    padding: 5px;
+  }
+}
+@media (max-width: 850px) {
+  .music-button {
+    font-size: 8px;
+    padding: 5px 7px;
+  }
+  [data-scene="world"] > .music-button {
+    right: 174px;
+    top: 3%;
+  }
+  [data-scene="creator"] > .music-button {
+    right: 100px;
+    top: 3.7%;
+  }
+  .command-menu > button {
+    padding: 6px 9px;
+    gap: 7px;
+  }
+  .menu-icon {
+    width: 22px;
+    font-size: 22px;
+  }
+  .command-menu strong {
+    font-size: 17px;
+  }
+  .command-menu small {
+    font-size: 7px;
+  }
+  .command-menu kbd {
+    font-size: 6px;
+    right: 6px;
+    top: 6px;
+  }
+  #battle .battle-actions {
+    padding-left: 10px;
+    width: 58%;
+  }
+  #battle .battle-bottom {
+    padding: 8px 11px;
+    min-height: 27.5%;
+  }
+  #battle .combat-log {
+    padding: 7px 11px 4px 1px;
+  }
+  #battle .combat-log p {
+    font-size: 10px;
+  }
+  #battle .combat-log .tiny {
+    font-size: 11px;
+  }
+  #battle .combat-log .quiet {
+    font-size: 8px;
+  }
+  #battle .move-card {
+    font-size: 10px;
+    min-height: 43px;
+    padding: 6px 19px 6px 7px;
+    gap: 5px;
+  }
+  #battle .move-card small {
+    font-size: 7px;
+    gap: 4px;
+  }
+  #battle .move-card .type-pill {
+    font-size: 6px;
+    padding: 2px 3px;
+  }
+  .affinity {
+    font-size: 6px;
+  }
+  .next-move {
+    font-size: 7px;
+  }
+  .folder-heading {
+    margin-bottom: 5px;
+    font-size: 13px;
+  }
+  .folder-heading > button {
+    font-size: 7px;
+    padding: 3px 7px;
+  }
+  #battle .combat-stat {
+    padding: 8px 10px;
+  }
+  .type-pill {
+    font-size: 7px;
+    padding: 2px 4px;
+  }
+  .type-pill svg {
+    height: 10px;
+    width: 10px;
+  }
+  .form-state {
+    font-size: 5px;
+    letter-spacing: 1px;
+  }
+  #battle .combat-stat strong {
+    font-size: 19px;
+  }
+  #battle .stat-level {
+    font-size: 10px;
+    padding: 3px 5px;
+    right: 9px;
+    top: 9px;
+  }
+  #battle .stat-numbers {
+    font-size: 7px;
+  }
+  #battle .combat-stat small {
+    font-size: 6px;
+  }
+  #battle .combat-stat .hp-track {
+    margin-top: 7px;
+    height: 6px;
+  }
+  .experience-line {
+    margin-top: 4px;
+    gap: 6px;
+  }
+  .experience-line > span {
+    font-size: 5px;
+  }
+  .form-options canvas {
+    width: 32px;
+    height: 25px;
+  }
+  .form-options strong {
+    font-size: 14px;
+  }
+  .form-options .type-pill {
+    font-size: 6px;
+  }
+  .form-options small {
+    font-size: 6px;
+  }
+  .swap-command > small {
+    font-size: 6px;
+  }
+  .form-options button {
+    padding: 4px;
+  }
+  .bag-command,
+  .exit-command {
+    min-height: 80px;
+  }
+  #battle .swap-command .combat-sync {
+    font-size: 7px;
+    margin-top: 4px;
+  }
+  .battle-intro {
+    min-height: 27.5%;
+    padding: 14px 4%;
+  }
+  .battle-intro p {
+    font-size: 21px;
+  }
+  .battle-intro .eyebrow {
+    font-size: 13px;
+  }
+  .battle-intro #intro-stage {
+    font-size: 7px;
+  }
+  .battle-intro button {
+    font-size: 8px;
+    padding: 6px 8px;
+  }
+}
+@media (orientation: portrait) and (max-width: 600px) {
+  .music-button {
+    font-size: 5px;
+    padding: 3px 5px;
+  }
+  [data-scene="creator"] > .music-button {
+    top: 1%;
+    right: 22%;
+  }
+  #battle .combat-stat strong {
+    font-size: 11px;
+  }
+  #battle .combat-stat {
+    padding: 5px;
+    width: 29%;
+  }
+  #battle .stat-level {
+    font-size: 6px;
+    padding: 2px;
+    top: 5px;
+    right: 5px;
+  }
+  .type-pill {
+    font-size: 5px;
+    padding: 1px 2px;
+  }
+  .type-pill svg {
+    width: 6px;
+    height: 6px;
+  }
+  .form-state {
+    display: none;
+  }
+  #battle .stat-numbers {
+    font-size: 4px;
+  }
+  #battle .combat-stat small {
+    font-size: 4px;
+  }
+  .experience-line > span {
+    font-size: 3px;
+  }
+  #battle .battle-bottom {
+    padding: 5px;
+  }
+  .command-menu {
+    gap: 4px;
+  }
+  .command-menu > button {
+    padding: 4px;
+    gap: 4px;
+  }
+  .menu-icon {
+    font-size: 12px;
+    width: 12px;
+  }
+  .command-menu strong {
+    font-size: 10px;
+  }
+  .command-menu small {
+    font-size: 4px;
+  }
+  .command-menu kbd {
+    display: none;
+  }
+  #battle .combat-log p {
+    font-size: 6px;
+  }
+  #battle .combat-log .tiny {
+    font-size: 6px;
+  }
+  #battle .combat-log .quiet {
+    font-size: 5px;
+  }
+  #battle .move-card {
+    font-size: 6px;
+    padding: 4px;
+    min-height: 26px;
+    gap: 3px;
+  }
+  #battle .move-card small {
+    font-size: 4px;
+    gap: 2px;
+  }
+  #battle .move-card .type-pill {
+    font-size: 4px;
+    padding: 1px;
+  }
+  .affinity {
+    font-size: 4px;
+  }
+  .next-move {
+    font-size: 4px;
+  }
+  .folder-heading {
+    font-size: 8px;
+  }
+  .folder-heading > button {
+    font-size: 5px;
+    padding: 2px 3px;
+  }
+  .battle-intro p {
+    font-size: 11px;
+  }
+  .battle-intro .eyebrow {
+    font-size: 7px;
+  }
+  .battle-intro #intro-stage {
+    font-size: 4px;
+  }
+  .battle-intro button {
+    font-size: 5px;
+  }
+  .battle-intro {
+    gap: 7px;
+    padding: 7px 4%;
+  }
+  .form-options canvas {
+    width: 20px;
+    height: 16px;
+  }
+  .form-options strong {
+    font-size: 8px;
+  }
+  .form-options small {
+    font-size: 4px;
+  }
+  .form-options .type-pill {
+    font-size: 4px;
+  }
+  .form-options button {
+    padding: 2px;
+  }
+  .form-options {
+    gap: 3px;
+  }
+  .swap-command > small {
+    font-size: 4px;
+  }
+  #battle .swap-command .combat-sync {
+    font-size: 4px;
+  }
+}
+
+/* Folder navigation has a fixed footprint so menu changes never cover the models. */
+#battle .battle-bottom {
+  height: 25.2%;
+  min-height: 0;
+  max-height: 25.2%;
+}
+#battle .battle-actions {
+  height: 100%;
+  min-height: 0;
+}
+#battle .command-menu {
+  height: 100%;
+  grid-template-rows: 1fr 1fr;
+}
+#battle .command-menu > button {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 0;
+  height: auto;
+  padding: 8px 15px;
+}
+#battle .command-menu > button > span:not(.menu-icon) {
+  flex: 1;
+}
+#battle .command-menu small {
+  font-size: clamp(8px, 0.77cqw, 12px);
+}
+#battle .form-options button {
+  flex-direction: row;
+  justify-content: flex-start;
+  min-height: 0;
+  align-content: center;
+}
+#battle .form-options button small {
+  position: static;
+  float: none;
+}
+#battle .folder-heading > button {
+  flex-direction: row;
+}
+#battle .type-pill {
+  font-size: clamp(8px, 0.7cqw, 11px);
+}
+#battle .form-state {
+  font-size: clamp(7px, 0.64cqw, 10px);
+}
+.menu-icon svg {
+  height: 27px;
+  width: 27px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.command-menu strong {
+  font-family: Rajdhani, Sora, sans-serif !important;
+}
+.command-menu small {
+  font-family: Sora, sans-serif !important;
+}
+#battle .command-menu button small {
+  color: #b4cdd4;
+}
+#battle .combat-stat .stat-level {
+  font-family: Rajdhani, Sora, sans-serif;
+}
+#battle .bag-command button,
+#battle .exit-command button {
+  display: flex;
+  flex-direction: column;
+}
+.swap-command {
+  height: calc(100% - 28px);
+}
+.form-options {
+  height: 65%;
+}
+.form-options .type-pill {
+  font-size: 9px !important;
+}
+.swap-command small {
+  line-height: 1.3;
+}
+@media (max-width: 850px) {
+  #battle .battle-bottom {
+    height: 27.5%;
+    max-height: 27.5%;
+  }
+  #battle .command-menu > button {
+    padding: 6px 9px;
+    gap: 7px;
+  }
+  #battle .command-menu small {
+    font-size: 7px;
+  }
+  #battle .type-pill {
+    font-size: 7px;
+  }
+  #battle .form-state {
+    font-size: 5px;
+  }
+  .menu-icon svg {
+    height: 20px;
+    width: 20px;
+  }
+  .form-options .type-pill {
+    font-size: 6px !important;
+  }
+}
+@media (orientation: portrait) and (max-width: 600px) {
+  #battle .command-menu > button {
+    padding: 3px;
+    gap: 3px;
+  }
+  #battle .command-menu small {
+    font-size: 4px;
+  }
+  .menu-icon svg {
+    height: 11px;
+    width: 11px;
+  }
+  #battle .form-state {
+    display: none;
+  }
+  #battle .type-pill {
+    font-size: 4px;
+  }
+  .form-options .type-pill {
+    font-size: 4px !important;
+  }
+}
+
+#battle .combat-stat > div:first-child .type-pill {
+  font-size: clamp(8px, 0.7cqw, 11px);
+}
+#battle .combat-stat > div:first-child .form-state {
+  font-size: clamp(7px, 0.64cqw, 10px);
+}
+@media (max-width: 850px) {
+  #battle .combat-stat > div:first-child .type-pill {
+    font-size: 7px;
+  }
+  #battle .combat-stat > div:first-child .form-state {
+    font-size: 5px;
+  }
+}
+
+@media (max-width: 850px) {
+  #battle .move-card {
+    min-height: 37px;
+    padding: 5px 18px 5px 7px;
+    gap: 3px;
+  }
+  #fight-panel {
+    gap: 4px;
+  }
+  .folder-heading {
+    margin-bottom: 4px;
+  }
+  #battle .move-card small {
+    gap: 3px;
+    font-size: 6px;
+  }
+  #battle .move-card .type-pill {
+    font-size: 6px;
+  }
+  .affinity {
+    font-size: 6px;
+  }
+}
+
+#battle .command-grid {
+  height: calc(100% - 34px);
+  grid-auto-rows: minmax(0, 1fr);
+}
+#battle .command-grid .move-card {
+  min-height: 0;
+  height: auto;
+}
+.folder-heading {
+  height: 26px;
+  min-height: 26px;
+}
+.folder-heading > button {
+  height: 24px;
+  justify-content: center;
+  padding: 2px 8px;
+}
+#battle .combat-log .next-move {
+  font-size: clamp(8px, 0.7cqw, 11px);
+  color: #93b7c5;
+  line-height: 1.5;
+  margin: 3px 0;
+}
+@media (max-width: 850px) {
+  .folder-heading {
+    height: 20px;
+    min-height: 20px;
+  }
+  .folder-heading > button {
+    height: 18px;
+    padding: 1px 6px;
+  }
+  #battle .command-grid {
+    height: calc(100% - 24px);
+  }
+  #battle .command-grid .move-card {
+    min-height: 0;
+    padding: 4px 19px 4px 6px;
+    font-size: 9px;
+    gap: 2px;
+  }
+  #battle .combat-log .next-move {
+    font-size: 6px;
+    line-height: 1.3;
+    margin: 1px 0;
+  }
+}
