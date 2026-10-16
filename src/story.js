@@ -244,14 +244,12 @@ export class OpeningStory {
     });
   }
   scene(number, from = 0, to = Infinity) {
-    const lines = SCENES[String(number)]
-      .slice(from, to)
-      .map((l) => ({
-        ...l,
-        text: l.text
-          .replaceAll("[NOME]", this.state.name)
-          .replaceAll("[ZIMON]", STARTERS[this.state.starter]?.name || "Zimon"),
-      }));
+    const lines = SCENES[String(number)].slice(from, to).map((l) => ({
+      ...l,
+      text: l.text
+        .replaceAll("[NOME]", this.state.name)
+        .replaceAll("[ZIMON]", STARTERS[this.state.starter]?.name || "Zimon"),
+    }));
     return this.api.talk(lines);
   }
   begin() {
@@ -397,6 +395,7 @@ export class OpeningStory {
     const s = this.state,
       l = s.story.lira;
     s.story.openDoor = exit.id;
+    await this.api.stage("door-open");
     if (Math.hypot(s.x - exit.x, s.y - exit.y) < 55) {
       const point = [
         [exit.x - 78, exit.y + 70],
@@ -405,6 +404,32 @@ export class OpeningStory {
       ].find(([x, y]) => actorCanStand(s.world, x, y, s, this.api.actors()));
       if (point) await this.walk(s, [point], 150);
     }
+    // Establish a lead before the follower joins. Starting with a reverse trail
+    // through the leader's old position creates a head-on collision at a bend
+    // (notably from the chair on the left of the bed).
+    const route = sceneRoute(
+      s.world,
+      l,
+      [[exit.x, exit.y]],
+      this.api.actors().filter((a) => a !== l),
+    );
+    const lead = [];
+    let from = [l.x, l.y],
+      remaining = 160;
+    for (const point of route) {
+      const length = Math.hypot(point[0] - from[0], point[1] - from[1]);
+      if (length >= remaining) {
+        lead.push([
+          from[0] + ((point[0] - from[0]) * remaining) / length,
+          from[1] + ((point[1] - from[1]) * remaining) / length,
+        ]);
+        break;
+      }
+      lead.push(point);
+      remaining -= length;
+      from = point;
+    }
+    await this.walk(l, lead, 154);
     const trail = sceneRoute(
       s.world,
       s,
@@ -478,8 +503,17 @@ export class OpeningStory {
         ]);
         await this.guidedTransition(
           MAPS.corridor.exits.find((e) => e.to === "clinic"),
-          440,
-          285,
+          550,
+          420,
+        );
+        await this.walk(
+          l,
+          [
+            [550, 360],
+            [260, 360],
+            [260, 330],
+          ],
+          150,
         );
         this.setQuest("medical");
         await this.walk(
@@ -487,13 +521,16 @@ export class OpeningStory {
           [
             [640, 520],
             [435, 520],
-            [435, 330],
+            [435, 345],
+            [360, 345],
           ],
           150,
         );
+        await this.scene(4, 0, 1);
         await this.api.stage("bed-lie");
-        l.dir = "left";
-        await this.scene(4);
+        await this.api.stage("lira-sit");
+        l.dir = "right";
+        await this.scene(4, 1);
         await this.api.talk([
           L(
             "Pode fechar os olhos um pouco. Eu fico aqui. Depois vamos juntos ao laboratório.",
@@ -504,6 +541,7 @@ export class OpeningStory {
         await this.api.transition("", () => {});
         await this.api.stage("wake");
         await this.api.stage("bed-rise");
+        await this.api.stage("lira-stand");
         await this.api.talk([
           L("Melhor? Então vamos. Sem pressa, eu acompanho você."),
         ]);
@@ -591,9 +629,10 @@ export class OpeningStory {
       s.story.lira.partial = false;
       s.story.dream = "mist";
       await this.scene(8);
-      await this.location("clinic", 360, 252, 440, 285, "", true);
+      await this.location("clinic", 360, 252, 260, 287, "", true);
       s.story.dream = false;
-      s.story.lira.dir = "left";
+      s.story.lira.dir = "right";
+      s.story.lira.seated = true;
       this.setQuest("recovery");
       await this.scene(9);
       await this.api.talk([
@@ -608,6 +647,7 @@ export class OpeningStory {
       ]);
       s.zlink = false;
       s.story.freeLink = false;
+      await this.api.stage("lira-stand");
       await this.walk(
         s.story.lira,
         [

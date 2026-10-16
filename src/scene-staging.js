@@ -7,12 +7,25 @@ export function stageUpdate(state, fx, now) {
   if (!fx) return;
   const p = Math.max(0, Math.min(1, (now - fx.start) / fx.duration)),
     l = state.story.lira;
+  if (fx.kind === "lira-sit" || fx.kind === "lira-stand") {
+    l.seated = true;
+    const sitting = fx.kind === "lira-sit" ? ease(p) : 1 - ease(p);
+    l.x = 260;
+    l.y = lerp(330, 287, sitting);
+    l.dir = "right";
+    l.seatProgress = fx.kind === "lira-stand" ? ease(p) : 1 - ease(p);
+    return;
+  }
   if (fx.kind === "bed-rise" || fx.kind === "bed-lie") {
-    const q = fx.kind === "bed-rise" ? ease(p) : 1 - ease(p);
-    state.x = lerp(360, 435, q);
-    state.y = lerp(252, 330, q);
-    state.story.resting = q < 0.58;
-    state.dir = "down";
+    const lying = fx.kind === "bed-lie";
+    const q = lying ? ease(p) : 1 - ease(p);
+    // Side access to the mattress. Body articulation belongs to the bed renderer,
+    // not a diagonal interpolation through the monitor/chair and bed frame.
+    state.x = 360;
+    state.y = lerp(345, 252, q);
+    state.story.bedPose = q;
+    state.story.resting = q > 0.18;
+    state.dir = "left";
     state.moving = false;
     return;
   }

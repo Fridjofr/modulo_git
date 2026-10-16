@@ -1,3 +1,4 @@
+import { doorway, doorStep, drawSlidingDoor } from "./doors.js";
 import { MAPS } from "./maps.js";
 const create = (w, h) =>
   Object.assign(document.createElement("canvas"), { width: w, height: h });
@@ -117,6 +118,22 @@ export class TileWorld {
     g.imageSmoothingEnabled = false;
     if (m.art) {
       g.drawImage(this.images[m.art], 0, 0, ...m.size);
+      if (world === "clinic") {
+        // Authored art is missing the left finial of the rear medical rail.
+        // Complete that single fixture in world space, before actors/occlusion.
+        const x = 317,
+          y = 133;
+        g.fillStyle = "#1a2c3b";
+        g.beginPath();
+        g.arc(x, y, 4.6, 0, Math.PI * 2);
+        g.fill();
+        g.fillStyle = "#c0aa78";
+        g.beginPath();
+        g.arc(x, y, 3.3, 0, Math.PI * 2);
+        g.fill();
+        g.fillStyle = "#e9e1c4";
+        g.fillRect(x - 2, y - 2, 3, 2);
+      }
       this.cache.set(world, c);
       return c;
     }
@@ -235,19 +252,25 @@ export class TileWorld {
       this.texture(g, 12 + (Math.floor(now / 500) % 3), ...water, 64);
     }
     if (m.art) {
-      // Door frames belong to the wall art. Only their interior slides open.
-      const opening = state.story.openDoor;
-      for (const e of m.exits)
-        if (opening === e.id && m.indoor) {
-          const north = e.y < 300;
-          g.save();
-          g.fillStyle = "#0b2639";
-          g.fillRect(e.x - 30, e.y - (north ? 78 : 64), 60, north ? 76 : 68);
-          g.strokeStyle = "#6df3f5";
-          g.lineWidth = 2;
-          g.strokeRect(e.x - 30, e.y - (north ? 78 : 64), 60, north ? 76 : 68);
-          g.restore();
-        }
+      this.doorStates ||= new Map();
+      const dt = Math.max(0, Math.min(100, now - (this.lastDoorTime ?? now)));
+      this.lastDoorTime = now;
+      for (const e of m.exits) {
+        const rect = doorway(m, e);
+        if (!rect) continue;
+        const key = state.world + ":" + e.id;
+        const actors = [state, state.story.lira].filter(
+          (a) => a && a.visible !== false && a.world === state.world,
+        );
+        const target =
+          state.story.openDoor === e.id ||
+          actors.some((a) => Math.hypot(a.x - e.x, a.y - e.y) < 110)
+            ? 1
+            : 0;
+        const p = doorStep(this.doorStates.get(key) || 0, target, dt);
+        this.doorStates.set(key, p);
+        drawSlidingDoor(g, this.terrain(state.world), rect, p);
+      }
     }
     if (state.world === "forest") {
       // A few glints follow the actual river, never paint water over walkable ground.

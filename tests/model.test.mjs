@@ -332,7 +332,7 @@ for (const starter of Object.keys(STARTERS))
     assert.equal(b.storyBattle, true);
     assert.equal(b.mandatory, true);
     assert.equal(b.playerName, s.name);
-    assert.equal(b.opponentName, "Mentora Lira");
+    assert.equal(b.opponentName, "Lira");
     assert.equal(b.opponent.partial, true);
     assert.equal(b.opponent.transformed, false);
     assert.equal(b.enemy, "plant", "Lira mantém o vínculo com Verdrax nos três iniciais");

@@ -54,6 +54,7 @@ export class Renderer {
       if (
         l.visible &&
         !l.moving &&
+        !l.seated &&
         l.world === state.world &&
         Math.hypot(l.x - state.x, l.y - state.y) < 110
       )
@@ -71,6 +72,15 @@ export class Renderer {
   }
   drawWorld(state, now, walkFrame, fx, reducedMotion = false) {
     const ctx = this.world;
+    // World geometry and DOM labels share this responsive logical viewport.
+    const rect = ctx.canvas.getBoundingClientRect();
+    const viewW = 1280,
+      viewH = Math.round((1280 * rect.height) / Math.max(1, rect.width));
+    if (ctx.canvas.width !== viewW || ctx.canvas.height !== viewH) {
+      ctx.canvas.width = viewW;
+      ctx.canvas.height = viewH;
+    }
+    this.view = { width: viewW, height: viewH };
     ctx.imageSmoothingEnabled = false;
     const [width, height] = WORLD_SIZE[state.world];
     let zoom =
@@ -79,9 +89,16 @@ export class Renderer {
           Math.sin(Math.min(1, (now - fx.start) / fx.duration) * Math.PI) * 0.12
         : 1;
     if (reducedMotion) zoom = 1;
+    zoom *= Math.max(1, viewW / width, viewH / height);
     const camera = {
-      x: Math.max(0, Math.min(width - 1280 / zoom, state.x - 640 / zoom)),
-      y: Math.max(0, Math.min(height - 720 / zoom, state.y - 360 / zoom)),
+      x: Math.max(
+        0,
+        Math.min(width - viewW / zoom, state.x - viewW / (2 * zoom)),
+      ),
+      y: Math.max(
+        0,
+        Math.min(height - viewH / zoom, state.y - viewH / (2 * zoom)),
+      ),
       zoom,
     };
     this.camera = camera;
@@ -156,6 +173,10 @@ export class Renderer {
             : e.partial
               ? 1
               : 0;
+        if (e.seated || e.seatProgress !== undefined) {
+          this.assets.drawSeatedLira(ctx, e.x, e.y, e.seatProgress ?? 0);
+          continue;
+        }
         if (partialProgress < 1)
           this.assets.draw(
             ctx,
@@ -219,7 +240,7 @@ export class Renderer {
           ctx.fillStyle = "#eafaff";
           ctx.fillText("Por aqui! Vem!", e.x, e.y - 102);
         }
-        this.label("lira", "Mentora Lira", e.x, e.y, true);
+        this.label("lira", "Lira", e.x, e.y, true);
       } else if (e.type === "npc") {
         const human = e.human || ["male", "female"].includes(e.sprite);
         const idle = e.moving
@@ -284,23 +305,8 @@ export class Renderer {
             e.y,
             84,
             state.zlink,
+            !!state.story.eyesClosed,
           );
-          if (state.world === "clinic") {
-            const image = this.assets.images.clinicApproved,
-              scaleX = image.width / 1280,
-              scaleY = image.height / 720;
-            ctx.drawImage(
-              image,
-              310 * scaleX,
-              230 * scaleY,
-              100 * scaleX,
-              83 * scaleY,
-              310,
-              230,
-              100,
-              83,
-            );
-          }
           continue;
         }
         const fading =
@@ -388,26 +394,28 @@ export class Renderer {
           ? 1 - p * p * (3 - 2 * p)
           : p * p * (3 - 2 * p);
     for (const node of this.labelNodes.values()) node.hidden = true;
+    const w = g.canvas.width,
+      h = g.canvas.height;
     g.save();
     g.fillStyle = "#000";
     if (reduced) {
       g.globalAlpha = 1 - open;
-      g.fillRect(0, 0, 1280, 720);
+      g.fillRect(0, 0, w, h);
     } else {
-      const edge = 360 - open ** 3 * 720,
-        center = 360 - open * 1200;
+      const edge = h / 2 - open ** 3 * h,
+        center = h / 2 - open * h * 1.67;
       g.beginPath();
       g.moveTo(0, 0);
-      g.lineTo(1280, 0);
-      g.lineTo(1280, edge);
-      g.quadraticCurveTo(640, center, 0, edge);
+      g.lineTo(w, 0);
+      g.lineTo(w, edge);
+      g.quadraticCurveTo(w / 2, center, 0, edge);
       g.closePath();
       g.fill();
       g.beginPath();
-      g.moveTo(0, 720);
-      g.lineTo(1280, 720);
-      g.lineTo(1280, 720 - edge);
-      g.quadraticCurveTo(640, 720 - center, 0, 720 - edge);
+      g.moveTo(0, h);
+      g.lineTo(w, h);
+      g.lineTo(w, h - edge);
+      g.quadraticCurveTo(w / 2, h - center, 0, h - edge);
       g.closePath();
       g.fill();
     }
@@ -421,6 +429,17 @@ export class Renderer {
       ((state.story.dreamProgress || 0) - (this.dreamApproach || 0)) * 0.055;
     for (const node of this.labelNodes.values()) node.hidden = true;
     ctx.fillStyle = "#050d19";
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.save();
+    const dreamScale = Math.min(
+      ctx.canvas.width / 1280,
+      ctx.canvas.height / 720,
+    );
+    ctx.translate(
+      (ctx.canvas.width - 1280 * dreamScale) / 2,
+      (ctx.canvas.height - 720 * dreamScale) / 2,
+    );
+    ctx.scale(dreamScale, dreamScale);
     ctx.fillRect(0, 0, 1280, 720);
     const glow = ctx.createRadialGradient(640, 300, 8, 640, 340, 470);
     glow.addColorStop(0, "#305360");
@@ -522,6 +541,7 @@ export class Renderer {
       }
       ctx.restore();
     }
+    ctx.restore();
   }
 
   drawFX(ctx, fx, now, reducedMotion) {
@@ -959,8 +979,8 @@ export class Renderer {
       ctx.strokeRect(
         this.camera.x * sx,
         this.camera.y * sy,
-        (1280 * sx) / this.camera.zoom,
-        (720 * sy) / this.camera.zoom,
+        ((this.view?.width || 1280) * sx) / this.camera.zoom,
+        ((this.view?.height || 720) * sy) / this.camera.zoom,
       );
     }
     const target = questTarget(state);
@@ -1167,8 +1187,10 @@ export class Renderer {
     const c = this.camera || { x: 0, y: 0, zoom: 1 };
     x = (x - c.x) * c.zoom;
     y = (y - c.y) * c.zoom;
-    node.hidden = x < 15 || x > 1265 || y < 50 || y > 690;
-    node.style.left = `${(x / 1280) * 100}%`;
-    node.style.top = `${((y + 7) / 720) * 100}%`;
+    const vw = this.view?.width || 1280,
+      vh = this.view?.height || 720;
+    node.hidden = x < 15 || x > vw - 15 || y < 50 || y > vh - 30;
+    node.style.left = `${(x / vw) * 100}%`;
+    node.style.top = `${((y + 7) / vh) * 100}%`;
   }
 }

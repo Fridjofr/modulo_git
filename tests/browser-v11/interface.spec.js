@@ -91,6 +91,26 @@ test("HUD, minimapa com zoom e menu preservam legibilidade e bloqueiam movimento
 }) => {
   await start(page);
   const s = (await snap(page)).state;
+  for (const viewport of [
+    { width: 1366, height: 768 },
+    { width: 1920, height: 1080 },
+    { width: 1440, height: 900 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.waitForTimeout(100);
+    const geometry = await page.locator("#world-canvas").evaluate((c) => {
+      const r = c.getBoundingClientRect();
+      return {
+        w: r.width,
+        h: r.height,
+        sx: r.width / c.width,
+        sy: r.height / c.height,
+      };
+    });
+    expect(geometry.w).toBe(viewport.width);
+    expect(geometry.h).toBe(viewport.height);
+    expect(Math.abs(geometry.sx - geometry.sy)).toBeLessThan(0.002);
+  }
   await page.keyboard.press("Escape");
   await expect(page.locator(".menu-buttons button").first()).toHaveAttribute(
     "aria-label",
@@ -110,13 +130,11 @@ test("HUD, minimapa com zoom e menu preservam legibilidade e bloqueiam movimento
   expect((await snap(page)).settings.radarRange).toBeLessThan(previous);
   await page.locator("#minimap-zoom-out").click();
   expect((await snap(page)).settings.radarRange).toBe(previous);
-  const colors = await page
-    .locator("#objective")
-    .evaluate((n) => ({
-      bg: getComputedStyle(n).backgroundImage,
-      text: getComputedStyle(n.querySelector("strong")).color,
-    }));
-  expect(colors.bg).toBe("none");
+  const colors = await page.locator("#objective").evaluate((n) => ({
+    bg: getComputedStyle(n).backgroundImage,
+    text: getComputedStyle(n.querySelector("strong")).color,
+  }));
+  expect(colors.bg).toContain("linear-gradient");
 });
 test("falha real de um tileset apresenta recuperação e não fica em tela preta", async ({
   page,
@@ -156,27 +174,39 @@ test.describe("toque", () => {
     });
   });
 });
-test("elenco da entrada não corta caudas ou personagens nas bordas dos canvases", async ({
+test("abertura usa composição única, sem slogan, e preenche a viewport após resize", async ({
   page,
 }) => {
   await page.goto("/?debug=1");
   await expect(page.locator("#title")).toHaveClass(/active/);
-  await page.waitForTimeout(150);
-  const clipped = await page.locator("[data-cast]").evaluateAll((nodes) =>
-    nodes
-      .filter((c) => {
-        const g = c.getContext("2d"),
-          d = g.getImageData(0, 0, c.width, c.height).data;
-        for (let y = 0; y < c.height; y++)
-          if (
-            d[y * c.width * 4 + 3] > 220 ||
-            d[(y * c.width + c.width - 1) * 4 + 3] > 220
-          )
-            return true;
-        return false;
-      })
-      .map((c) => c.dataset.cast),
-  );
-  expect(clipped).toEqual([]);
-  await page.screenshot({ path: "docs/screenshots/v11/00-entrada.png" });
+  await expect(page.locator("#title h1")).toHaveText("ZIMONS");
+  await expect(
+    page.locator("[data-cast],.title-tagline,.title-description"),
+  ).toHaveCount(0);
+  for (const viewport of [
+    { width: 1366, height: 768 },
+    { width: 1920, height: 1080 },
+    { width: 1440, height: 900 },
+  ]) {
+    await page.setViewportSize(viewport);
+    const app = await page.locator("#app").boundingBox();
+    expect(app.x).toBe(0);
+    expect(app.y).toBe(0);
+    expect(app.width).toBe(viewport.width);
+    expect(app.height).toBe(viewport.height);
+    const controls = await page
+      .locator("#title button:not([hidden])")
+      .evaluateAll((nodes) =>
+        nodes.every((n) => {
+          const r = n.getBoundingClientRect();
+          return (
+            r.left >= 0 &&
+            r.top >= 0 &&
+            r.right <= innerWidth &&
+            r.bottom <= innerHeight
+          );
+        }),
+      );
+    expect(controls).toBe(true);
+  }
 });

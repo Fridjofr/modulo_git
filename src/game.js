@@ -176,22 +176,32 @@ function buildCustomization() {
       button.setAttribute("aria-label", `${label}: ${choice}`);
       button.setAttribute("aria-pressed", String(appearance[key] === index));
       c.width = 144;
-      c.height = key === "style" ? 103 : 153;
-      assets.draw(
-        c.getContext("2d"),
-        appearance.gender,
-        "down",
-        0,
-        72,
-        key === "style" ? 213 : 146,
-        key === "style" ? 208 : 137,
-        {
-          ...appearance,
-          [key]: index,
-          bag: key === "outfit" ? 0 : appearance.bag,
-        },
-        false,
-      );
+      c.height = key === "style" ? 126 : 153;
+      const cardLook = { ...appearance, [key]: index, bag: 0 };
+      if (key === "style") {
+        const head = assets.frame(
+          appearance.gender,
+          "down",
+          0,
+          cardLook,
+          false,
+        );
+        const cg = c.getContext("2d");
+        cg.imageSmoothingEnabled = false;
+        cg.drawImage(head.canvas, 30, 0, 132, 116, 0, 0, 144, 126);
+      } else {
+        assets.draw(
+          c.getContext("2d"),
+          appearance.gender,
+          "down",
+          0,
+          72,
+          146,
+          137,
+          cardLook,
+          false,
+        );
+      }
       caption.textContent = choice;
       button.append(c, caption);
       button.onclick = () => {
@@ -298,7 +308,7 @@ function buildCustomization() {
 }
 function startJourney() {
   if (story.active) return;
-  state = newGame(appearance, $("player-name").value);
+  state = newGame(appearance, "Alex");
   closeModal();
   resetNpcs();
   renderer.liraState = null;
@@ -390,7 +400,10 @@ async function stageAction(kind) {
     "close-eyes": 1600,
     "spirit-approach": 2600,
     "bed-rise": 1500,
-    "bed-lie": 1400,
+    "bed-lie": 1800,
+    "lira-sit": 900,
+    "lira-stand": 900,
+    "door-open": 620,
     wake: 2600,
     rampage: 8200,
     "partial-world": 3100,
@@ -402,6 +415,8 @@ async function stageAction(kind) {
   };
   const l = state.story.lira,
     home = { x: l.x, y: l.y };
+  if (kind === "close-eyes") state.story.eyesClosed = true;
+  if (kind === "wake") state.story.eyesClosed = false;
   if (kind === "delivery")
     await story.walk(
       l,
@@ -443,10 +458,15 @@ async function stageAction(kind) {
     state.story.rampageLean = 0;
   }
   if (kind === "bed-rise" || kind === "bed-lie") {
-    state.x = kind === "bed-rise" ? 435 : 360;
-    state.y = kind === "bed-rise" ? 330 : 252;
-    state.story.resting = kind === "bed-lie";
+    stageUpdate(state, { kind, start: 0, duration: 1 }, 1);
     state.moving = false;
+    delete state.story.bedPose;
+  }
+  if (kind === "lira-sit" || kind === "lira-stand") {
+    stageUpdate(state, { kind, start: 0, duration: 1 }, 1);
+    l.seated = kind === "lira-sit";
+    delete l.seatProgress;
+    l.dir = "right";
   }
   if (kind === "exhibition") {
     delete state.story.demo;
@@ -515,7 +535,7 @@ function renderDialogue() {
       .replace(/você estava desacordado/gi, "você estava desacordada")
       .replace(/Você está machucado/g, "Você está machucada");
   const names = {
-    lira: "Mentora Lira",
+    lira: "Lira",
     player: state?.name || "Você",
     narrator: "Zimoria",
     voice: "…",
@@ -754,7 +774,10 @@ async function useDoor(e) {
     }
   }
   await story.play("PASSAGEM", async () => {
-    const escorted = await story.beforeDoor(e);
+    s.story.openDoor = e.id;
+    if (!(await story.beforeDoor(e))) await stageAction("door-open");
+    const escorted =
+      s.story.lira.visible === false && s.story.lira.world === from;
     if (escorted) s.story.lira.visible = false;
     await story.walk(s, [[e.x, e.y]], 135);
     await story.api.transition(MAPS[e.to].name, () => {
@@ -1797,7 +1820,7 @@ async function startBattle(npc = null) {
     enemyLevel: 6,
     ...(npc?.duel || {}),
     id: npc?.id || "lira",
-    name: npc?.name || "Mentora Lira",
+    name: npc?.name || "Lira",
     sprite: npc?.sprite || "lira",
     appearance: npc?.appearance,
     level: formProgress(state).level,
@@ -1890,7 +1913,7 @@ async function startContainment() {
   await wait(pace(850, 80));
   layer.hidden = true;
   introSkip = false;
-  $("intro-speaker").textContent = "Mentora Lira";
+  $("intro-speaker").textContent = "Lira";
   $("intro-text").textContent =
     `“${state.name}, eu não vou atacar primeiro. Tente escutar minha voz.”`;
   $("intro-stage").textContent = "O MESMO LABORATÓRIO · CONTENÇÃO";
@@ -2181,11 +2204,11 @@ function drawPreview(time) {
     const c = $("creator-terrain"),
       g = c.getContext("2d");
     const light = g.createLinearGradient(0, 0, 0, c.height);
-    light.addColorStop(0, "#dfe8ec");
-    light.addColorStop(1, "#9caeb8");
+    light.addColorStop(0, "#213a4a");
+    light.addColorStop(1, "#0b1929");
     g.fillStyle = light;
     g.fillRect(0, 0, c.width, c.height);
-    g.strokeStyle = "#f6fbfc88";
+    g.strokeStyle = "#83bec11c";
     g.lineWidth = 1;
     for (let i = 0; i < 7; i++) {
       g.beginPath();

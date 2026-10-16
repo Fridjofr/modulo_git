@@ -50,7 +50,6 @@ export async function start(page, { gender = "female", brief = true } = {}) {
   await page
     .getByRole("button", { name: "Modelo da roupa: Uniforme", exact: true })
     .click();
-  await page.locator("#player-name").fill("Nara");
   await page.locator("#start").click();
   return drive(page, (s) => s.state.quest === "forest");
 }

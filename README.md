@@ -1,4 +1,6 @@
-# ZIMONS — O Despertar · v0.11.0
+# ZIMONS
+
+**Revisão Lote 01 · Marco A — aguardando avaliação visual.** Base v0.11.0. Esta revisão não encerra a etapa nem valida os marcos B, C e D. Consulte [diagnóstico, evidências e pendências](docs/review/lote01/marco-a/RELATORIO.md).
 
 RPG 2D de transformação, com exploração superior, batalhas por turnos e adaptação do **roteiro narrativo 4.1, Capítulo 1 — O Despertar**. O humano é o próprio corpo transformado. O jogo usa sprites animados, não modelos 3D.
 

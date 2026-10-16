@@ -27,7 +27,8 @@ export class Assets {
       corridorV11: "assets/world/v11/corridor.png",
       academyApproved: "assets/world/academy.png",
       labApproved: "assets/world/laboratory.png",
-      clinicApproved: "assets/world/infirmary.png",
+      clinicApproved: "assets/world/review-a/infirmary.png",
+      liraSeated: "assets/characters/review-a/lira-seated.png",
       tileTerrain: "assets/tiles/v10/terrain.png",
       tileObjects: "assets/tiles/v10/objects.png",
       heads: "assets/characters/v10/heads.png",
@@ -35,7 +36,7 @@ export class Assets {
       bags: "assets/characters/v10/bags.png",
       npcs: "assets/characters/v10/npcs.png",
       attackEffects: "assets/battle/effects-v10.png",
-      wallpaper: "assets/world/title-v09.png",
+      wallpaper: "assets/world/review-a/title.png",
     }))
       files.set(key, file);
     for (const [key, file] of Object.entries({
@@ -275,8 +276,40 @@ export class Assets {
         if (d[(j * w + i) * 4 + 3] > 220) top = Math.min(top, j);
     return (this.liraHeights[dir] = (data.baseline ?? h) - top);
   }
-  sleeping(ctx, appearance, x, y, height, zlink = false) {
-    const key = "sleep:" + JSON.stringify(appearance);
+  drawSeatedLira(ctx, x, y, progress = 0) {
+    this.seatedFrames ||= [0, 1].map((col) =>
+      extractSprite(this.images.liraSeated, [
+        (col * this.images.liraSeated.width) / 2,
+        0,
+        this.images.liraSeated.width / 2,
+        this.images.liraSeated.height,
+      ]),
+    );
+    const f = this.seatedFrames[progress > 0.5 ? 1 : 0];
+    // Both poses use the same scale. Measure standing pose once, never normalize
+    // a seated figure to full standing height.
+    const scale =
+      (84 / (this.seatedFrames[1].b - this.seatedFrames[1].t + 1)) * 0.91;
+    ctx.save();
+    ctx.imageSmoothingEnabled = false;
+    // Mirror the approved left-facing seated pose toward the bed on her right.
+    ctx.translate(x, y);
+    ctx.scale(-1, 1);
+    ctx.drawImage(
+      f.canvas,
+      f.l,
+      f.t,
+      f.r - f.l + 1,
+      f.b - f.t + 1,
+      Math.round(-(f.r - f.l + 1) * scale * 0.5),
+      Math.round(-(f.b - f.t + 1) * scale),
+      Math.round((f.r - f.l + 1) * scale),
+      Math.round((f.b - f.t + 1) * scale),
+    );
+    ctx.restore();
+  }
+  sleeping(ctx, appearance, x, y, height, zlink = false, eyesClosed = false) {
+    const key = "sleep:" + JSON.stringify([appearance, zlink, eyesClosed]);
     let f = this.frames.get(key);
     if (!f) {
       const base = this.frame(appearance.gender, "down", 0, appearance, zlink),
@@ -284,15 +317,19 @@ export class Assets {
       c.width = c.height = 192;
       const g = c.getContext("2d");
       g.drawImage(base.canvas, 0, 0);
-      const skin = PALETTES.skin[appearance.skin || 0];
-      g.fillStyle = skin;
-      for (const ex of [85, 105]) {
-        g.fillRect(ex - 5, 70, 11, 12);
-        g.strokeStyle = "#55413c";
-        g.lineWidth = 2;
+      // Close the eyes inside the face. Sample adjacent cheek material so all
+      // skin palettes retain the same shading instead of applying a pale patch.
+      const pixels = g.getImageData(0, 0, 192, 192);
+      for (const ex of eyesClosed ? [84, 108] : []) {
+        const n = (80 * 192 + ex) * 4;
+        const color = `rgb(${pixels.data[n]},${pixels.data[n + 1]},${pixels.data[n + 2]})`;
+        g.fillStyle = color;
+        g.fillRect(ex - 5, 67, 11, 13);
+        g.strokeStyle = "#4b322d";
+        g.lineWidth = 1.5;
         g.beginPath();
-        g.moveTo(ex - 4, 77);
-        g.quadraticCurveTo(ex, 80, ex + 4, 77);
+        g.moveTo(ex - 4, 74);
+        g.quadraticCurveTo(ex, 77, ex + 4, 74);
         g.stroke();
       }
       f = { ...base, canvas: c };
@@ -301,6 +338,11 @@ export class Assets {
     const scale = height / f.referenceHeight;
     ctx.save();
     ctx.imageSmoothingEnabled = false;
+    // The authored mattress already has its single blanket. Only the uncovered
+    // head and upper shoulders are above it; no copied rectangle of bedding.
+    ctx.beginPath();
+    ctx.rect(x - 48, y - 92, 96, 56);
+    ctx.clip();
     ctx.drawImage(
       f.canvas,
       Math.round(x - f.anchor * scale),

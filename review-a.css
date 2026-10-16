@@ -1,0 +1,271 @@
+/* Marco A: viewport and Academy studio. This stylesheet owns only revised surfaces. */
+:root {
+  --academy-ink: #e3edf2;
+  --academy-muted: #8ea9bc;
+  --academy-navy: #0b1829;
+  --academy-panel: #142739;
+  --academy-line: #365166;
+  --academy-cyan: #78cfda;
+  --academy-gold: #d9bc7b;
+}
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+body {
+  display: block;
+  min-height: 0;
+}
+#app {
+  width: 100%;
+  height: 100dvh;
+  aspect-ratio: auto;
+  max-width: none;
+  max-height: none;
+}
+#world-canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+#battle-canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+#title.title-screen {
+  background-image: url("assets/world/review-a/title.png");
+  background-size: cover;
+  background-position: center;
+}
+#title .title-shade {
+  background:
+    linear-gradient(90deg, #071524ed 0%, #0715248c 31%, transparent 65%),
+    linear-gradient(0deg, #06122099, transparent 25%);
+}
+#title .title-copy {
+  top: 24%;
+  left: 6%;
+  width: 34%;
+}
+#title .title-copy h1 {
+  font-size: clamp(48px, 7.3vw, 144px);
+  line-height: 1.1;
+  letter-spacing: 0.05em;
+  border: 0;
+  padding: 0;
+  margin: 0 0 48px;
+}
+#title .title-menu {
+  width: min(100%, 340px);
+}
+#title .title-menu #title-new {
+  padding: 17px 22px;
+  border-radius: 3px;
+  background: linear-gradient(100deg, #e4cc93, #c0a05d);
+  font-size: 16px;
+  color: #0b1929;
+}
+#title .title-menu .quiet {
+  font-size: 14px;
+  padding: 10px 0;
+}
+#title .title-footer {
+  color: #b4cad7;
+  letter-spacing: 0.12em;
+}
+#creator {
+  color: var(--academy-ink);
+  background: radial-gradient(ellipse at 20% 30%, #21394a, #0c1b2b 65%);
+}
+#creator .creator-header {
+  color: var(--academy-ink);
+}
+#creator #creator-back {
+  color: var(--academy-muted) !important;
+}
+#creator .creator-art {
+  border: 1px solid var(--academy-line);
+  background: #112638;
+  border-radius: 8px;
+  box-shadow: none;
+}
+#creator #creator-terrain {
+  opacity: 1;
+  filter: none;
+}
+#creator .creator-art:after {
+  box-shadow: inset 0 0 45px #06132155;
+  background: linear-gradient(0deg, #08192788, transparent 40%);
+}
+#creator .creation-panel {
+  color: var(--academy-ink);
+  background: linear-gradient(130deg, #192f41, #102335);
+  border: 1px solid #365166;
+  border-radius: 8px;
+  box-shadow: 0 8px 30px #030b1844;
+}
+#creator h2,
+#creator h3,
+#creator .look-collection h3 span,
+#creator .palette-group > span {
+  color: var(--academy-ink) !important;
+}
+#creator h2 {
+  border-bottom: 1px solid #365166;
+}
+#creator h2 em {
+  color: var(--academy-gold);
+}
+#creator .appearance-choice {
+  color: var(--academy-ink);
+  background: radial-gradient(ellipse at 50% 35%, #304659, #172a3c);
+  border: 1px solid #3a5367;
+  border-radius: 5px;
+}
+#creator .appearance-choice[aria-pressed="true"] {
+  background: radial-gradient(ellipse at 50% 30%, #355965, #1a3647);
+  border-color: var(--academy-cyan);
+  box-shadow: inset 0 -2px var(--academy-cyan);
+}
+#creator .appearance-choice small {
+  color: #c1d4df;
+  font-size: clamp(9px, 0.85vw, 13px);
+}
+#creator .gender-options button {
+  color: var(--academy-ink);
+  background: #152a3c;
+  border: 1px solid #49677a;
+  border-radius: 5px;
+}
+#creator .gender-options button[aria-pressed="true"] {
+  border-color: var(--academy-cyan);
+  box-shadow: inset 0 -2px var(--academy-cyan);
+}
+#creator .gender-options button span {
+  background: #112537e8;
+  color: #dce8ed;
+}
+#creator .appearance-views {
+  bottom: 26px;
+}
+#creator .appearance-views figure {
+  background: #132a3bdd;
+  border-color: #37556a;
+  border-radius: 5px;
+}
+#creator .appearance-views figcaption {
+  color: #b8d0de !important;
+}
+#creator .rotate-buttons {
+  bottom: 4px;
+}
+#creator .utility-group button {
+  background: #20384a;
+  border-color: #456277;
+  color: #c6d9e4;
+}
+#creator .utility-group button[aria-pressed="true"],
+#creator .utility-group button[aria-pressed="true"] span {
+  background: #315767;
+  color: #eafaff !important;
+  border-color: #78cfda;
+}
+#creator #start {
+  background: linear-gradient(100deg, #d9c18a, #b89b62);
+  color: #0b1b2b;
+  border: 1px solid #e5d2a4;
+  border-radius: 4px;
+  font-size: clamp(13px, 1.3vw, 18px);
+}
+#creator .creator-footer {
+  color: #8fa9bb;
+}
+#creator .swatch[aria-pressed="true"] {
+  box-shadow:
+    0 0 0 2px #102335,
+    0 0 0 3px #cbe9ec;
+}
+#world #objective {
+  background: linear-gradient(105deg, #0b1b2be8, #142b3dd9) !important;
+  border: 1px solid #789da044 !important;
+  border-left: 2px solid #d9bc7b !important;
+  border-radius: 3px;
+  padding: 11px 13px !important;
+  box-shadow: 0 4px 16px #03101a44 !important;
+}
+#world #objective strong {
+  font-size: 13px;
+  line-height: 1.4;
+}
+#world #objective p {
+  font-size: 11px;
+  line-height: 1.65;
+}
+#world #dialogue {
+  backdrop-filter: none;
+  filter: none;
+  transform: none;
+  border-color: #5c8194;
+  background: linear-gradient(110deg, #142b3cf7, #0b1929fa);
+  border-radius: 5px 14px 5px 14px;
+}
+#world #speaker {
+  color: #e1c68b;
+}
+#world #dialogue-text {
+  font-size: clamp(13px, 1.3vw, 20px);
+  color: #e2edf3;
+}
+@media (max-height: 650px) {
+  #title .title-copy h1 {
+    margin-bottom: 24px;
+  }
+  #title .title-copy {
+    top: 18%;
+  }
+  #title .title-menu #title-new {
+    padding: 10px 16px;
+  }
+  #creator .appearance-views {
+    bottom: 22px;
+  }
+}
+@media (max-width: 700px) {
+  #title .title-copy {
+    left: 5%;
+    width: 46%;
+  }
+  #title .title-copy h1 {
+    font-size: 11vw;
+  }
+  #title .title-menu .quiet {
+    font-size: 12px;
+  }
+  #world #objective {
+    max-width: 160px;
+  }
+  #world #objective strong {
+    font-size: 10px;
+  }
+  #world #objective p {
+    font-size: 9px;
+  }
+}
+/* Keep the dialogue inside the viewport; older layers center it by transform. */
+#world #dialogue {
+  left: 3%;
+  right: 3%;
+  width: auto;
+  transform: none;
+  bottom: 3%;
+}
+#world #dialogue .dialogue-copy {
+  min-width: 0;
+}
+#world #dialogue #dialogue-text {
+  max-width: 100%;
+}

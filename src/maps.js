@@ -96,10 +96,9 @@ export const MAPS = {
     ],
     objects: [
       solid(302, 158, 117, 163, "clinic-bed"),
-      solid(235, 194, 55, 85),
-      solid(451, 191, 69, 113),
-      solid(764, 148, 360, 135),
-      solid(101, 168, 80, 100),
+      solid(435, 155, 90, 58, "clinic-monitor"),
+      solid(228, 242, 63, 52, "clinic-chair"),
+      solid(783, 152, 217, 118, "clinic-workstation"),
     ],
     exits: [door("clinic-corridor", 640, 674, "corridor", 210, 230, "Átrio")],
   },
