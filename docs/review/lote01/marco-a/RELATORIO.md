@@ -90,6 +90,8 @@ Imagens e vídeos em arquivos separados:
 - [Enfermaria integrada, 1366×768](images/10-enfermaria-sentada.png).
 - [Tela inicial revisada, 1920×1080](images/02-entrada-1920.png) e [1366×768](images/01-entrada-1366.png).
 - [Criador feminino](images/03-personalizacao-feminina.png) e [masculino](images/04-personalizacao-masculina.png).
+- Capturas diretas do painel real de quatro vistas em 1920×1080: [feminino](images/13-quatro-direcoes-female.png), [masculino](images/13-quatro-direcoes-male.png).
+- [Trecho animado da porta, GIF derivado da gravação real](videos/02-porta.gif); resolução reduzida apenas para visualização na conversa. O MP4 conserva a gravação em 1366×768.
 - [Floresta e HUD](images/05-floresta.png), [praça](images/07-academia.png).
 - Caminhada: [frente](images/06-caminhada-frente.png), [costas](images/06-caminhada-costas.png), [esquerda](images/06-caminhada-esquerda.png), [direita](images/06-caminhada-direita.png).
 - Vídeos: [marcha](videos/01-caminhada.mp4), [porta e início da escolta](videos/02-porta.mp4), [deitar e Lira sentar](videos/03-cama-cadeira.mp4), [levantar e sair](videos/04-levantar-sair.mp4).

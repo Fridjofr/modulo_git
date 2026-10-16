@@ -104,7 +104,7 @@ e992ebbf5425b570701ecc5f823b04d5ad583a17963eb14dde4545fae053dd49  docs/historico
 33fa6141300f0afc0744502a86eb2cd22068394082dc886c4659017f81fc9239  docs/lore/ADAPTACAO-CAPITULO-1.md
 73f1ae780026424b208f3b28122015afadaf8def694a3afe90b775bddf6a667b  docs/lore/ADAPTACAO-LORE-ATUALIZADA.md
 377329aab4c8bb2078cd912d25e64e48582cca1fdb571da971225579cbc3a4b9  docs/lore/README.md
-182ed7737cee4235ae6308aecfaf0591c799168e8bf63c7ebe4d507f1c42208a  docs/review/lote01/marco-a/RELATORIO.md
+2c85553e888ab10f6a21c2bb3bc114292f5e66b5dd264d129c467939121fa0d2  docs/review/lote01/marco-a/RELATORIO.md
 43e02071acab101101f8d1d62c2b147f7d8a469f5bf890f6a814ac43c9b5db21  docs/review/lote01/marco-a/before/creator.png
 c4371ceaef78458a19e06dfd6e547054fd6a01b27be7a69c3cbfebc089f0a36a  docs/review/lote01/marco-a/before/title.png
 747f160da71c287df16fcd48584efa45d27e4ecd406ecc3d2fd33dc0c98c01aa  docs/review/lote01/marco-a/images/01-entrada-1366.png
@@ -123,13 +123,16 @@ e8bac60dc1f3e2c0ab553b065821ddaffec4969a89a426eb6e1ffc8d4b7e93f9  docs/review/lo
 0b01eef795a8a8f75b50ad9fd80eefc823f66a9db08a776897cd966400950e07  docs/review/lote01/marco-a/images/10-enfermaria-sentada.png
 60a194500233491a2e276a50ad6abec785f4dfcaf52097a485cf11203cd596a1  docs/review/lote01/marco-a/images/11-acordar.png
 d7b3417677d7f51c900b531d702d4606ef34fb6e962f9ebe087e4754446def74  docs/review/lote01/marco-a/images/12-fim-marco-a-laboratorio.png
+44d882d841876499fa4e1507fecce663b7463df3c46941121478e8f92a3cfe73  docs/review/lote01/marco-a/images/13-quatro-direcoes-female.png
+b2e1e36ce1752b7fdeecebb9f2bbf465c90de39361896d96f6635ef97a0c322f  docs/review/lote01/marco-a/images/13-quatro-direcoes-male.png
 f3f173f9f46daab4dbcb5b401e47df3d0ce295ad8cb57f8e7741cc341bbcfa86  docs/review/lote01/marco-a/logs/capture-timeline.json
 a7e6d29c5cd64252856cd8f87f705ea3986e7627998afb4dbf176024956e5331  docs/review/lote01/marco-a/logs/chapter-regression.txt
 cf52ee1ff9d0fe03846c3302ef52521f1764a2698fea40e9ddb72e2af8a1fc43  docs/review/lote01/marco-a/logs/interface.txt
 8aeeba33d453f66789f7a3df0ff34c25f048f4a7fd974effcdbec3ae59f5170e  docs/review/lote01/marco-a/logs/normal-route.txt
-6ef9c815fc94a87cf96282be2b0e40051aa60cb8a17a2d00207de54f9b49cec7  docs/review/lote01/marco-a/logs/syntax.txt
+f931c9db14375e334716a7d3912350bb1f933fe6e675b669385da746435919a8  docs/review/lote01/marco-a/logs/syntax.txt
 0066607b21de415d7e157d6dfd5b9283b333092ee02145e490eda61dffd7a887  docs/review/lote01/marco-a/logs/unit.txt
 0f247fb6d066501ce6af78e710b120f124d0bca1320d084ea8fb44f203ff945c  docs/review/lote01/marco-a/videos/01-caminhada.mp4
+61a9d1a99bbdc120928afa13ce3b890ff22996ce1bd2d0e9dd78c27250f8b8cf  docs/review/lote01/marco-a/videos/02-porta.gif
 d94036514bb72fa436086289c581062025534602b336c4bf53fe3c136d58aec3  docs/review/lote01/marco-a/videos/02-porta.mp4
 b8ac8d9943471a1ea8410526ea8374e44ff50555ed46314e560c78f4cb6e678b  docs/review/lote01/marco-a/videos/03-cama-cadeira.mp4
 d8b50b5fad8363771632f3d207915a7646a61d0e2e7ad365d95e220e8f328887  docs/review/lote01/marco-a/videos/04-levantar-sair.mp4
