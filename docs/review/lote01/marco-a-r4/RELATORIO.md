@@ -18,6 +18,14 @@ A porta superior esquerda estava aberta dentro do PNG e não tinha folhas fechad
 
 O progresso das folhas passou do renderizador para a simulação. Animação e colisão consultam o mesmo valor. A porta fechada ou parcialmente aberta bloqueia os pés; a travessia só é liberada a partir de 96% de abertura. O jogador/NPC autorizado precisa aproximar-se; a escolta não abre a porta remotamente ao começar a caminhar. Uma passagem em grupo mantém a porta aberta até o último ocupante atravessar, depois fecha antes da transição.
 
+A revisão do vídeo mostrou que a conexão da grade de pathfinding com o destino fora da grade ainda criava um último passo lateral. Cada porta agora tem um ponto de aproximação no mesmo eixo da entrada, ainda fora da zona de abertura. O caminho faz as curvas até esse ponto; o segmento final alinhado é preservado diretamente, sem reconectá-lo à grade. A abertura automática também exige alinhamento horizontal. A gravação verifica x242 para Lira e protagonista ao longo de toda a zona final da primeira porta, sem deslocamento lateral. No piso livre, a rota faz o alinhamento horizontal antes da subida, sem o último desvio da grade.
+
+O primeiro ajuste de alinhamento falhou: o protagonista chegou em y790, com a área dos pés ainda intersectando a porta inferior. Ao sair do eixo, essa porta fechava e prendia a colisão. A chegada foi recuada para y760; uma porta já aberta permanece aberta enquanto houver um ocupante atravessando, mesmo que ele deixe o eixo central. Um teste reproduz especificamente esse bloqueio. A abertura continua exigindo aproximação alinhada; a exceção de ocupação apenas impede fechar sobre alguém.
+
+A regressão seguinte detectou uma segunda causa de impasse: a física permitia 32 pixels entre atores, mas o replanejamento exigia 35. Um ator parado na faixa válida de 32–35 pixels não conseguia gerar a rota de desvio. O planejador passou a usar a mesma separação da física. Dois testes cobrem a faixa e a simulação completa da saída da enfermaria com ambos os atores, sem desativar colisões.
+
+A contagem das folhas usa o mesmo relógio dos efeitos, e a sequência aguarda o estado completamente fechado antes de iniciar o fade. Isso evita que uma queda de quadros corte visualmente o fechamento.
+
 Os personagens caminham fisicamente pelo corredor da porta. A parede/moldura oculta o sprite conforme ele entra; somente depois da travessia ocorre a transição de ambiente. Na exploração livre, cruzar a soleira aciona a mesma passagem, evitando ficar preso atrás da parede sem conseguir interagir.
 
 A validação encontrou uma rota antiga da saída de Lira após a prática que ainda terminava em y674, dentro da nova porta fechada do laboratório. A rota passou a usar a posição de aproximação do mapa e a sequência abrir → atravessar → fechar, compartilhada com as demais passagens.
@@ -26,12 +34,12 @@ A validação encontrou uma rota antiga da saída de Lira após a prática que a
 
 O arquivo de Lira, a cadeira, sua posição e a transformação gráfica da pose final sentada foram preservados. A pose final é comparada pixel a pixel com a versão aprovada. A transição usa o apoio dos pés extraído das duas poses existentes, aproximação curta, alinhamento e mudança de pose com o mesmo apoio.
 
-A animação do protagonista chegando pela lateral e deitando não foi reconstruída nem alterada. O lençol foi limitado ao retângulo/polígono real do colchão e encurtado antes da estrutura metálica frontal. O teste verifica a área alfa durante cinco momentos da animação, impedindo pixels fora do colchão.
+A animação do protagonista chegando pela lateral e deitando não foi reconstruída nem alterada. O lençol foi limitado ao retângulo/polígono real do colchão e encurtado antes da estrutura metálica frontal. O teste verifica a área alfa durante cinco momentos da animação, impedindo pixels fora do colchão. [Captura nativa do detalhe](images/lencol-detalhe.png) e vídeo mostram o resultado integrado.
 
 ## Arquivos alterados
 
 - Cenários/geometria: `src/assets.js`, `src/maps.js`, `src/world.js`, `assets/world/approved-final/*`.
-- Portas e caminhos: `src/doors.js`, `src/tilemap.js`, `src/render.js`, `src/story.js`, `src/game.js`, `src/scene-staging.js`.
+- Portas e caminhos: `src/doors.js`, `src/actor-path.js`, `src/tilemap.js`, `src/render.js`, `src/story.js`, `src/game.js`, `src/scene-staging.js`.
 - Encaixes: `src/clinic-layout.js`, `src/clinic-renderer.js`.
 - Continuidade da revisão de combate: `src/battle-contacts.js`, `src/battle-atlas.js`, `review-a4.css`, `assets/ui/review-a4/panel-border.svg`, `index.html`, trechos de `src/game.js`. A navegação persistente possui Batalha/Bolsa/Zimons/Sair; quatro espaços de técnica, dois inicialmente ocupados; mensagens transitórias e histórico acessível. A revisão visual completa da arena continua pendente, conforme abaixo.
 - Testes: `tests/approved-maps.test.mjs`, `tests/model.test.mjs`, `tests/actor-path.test.mjs`, `tests/browser-v11/{clinic-a4,chapter}.spec.js`, `tests/browser-v11/helpers.js`, `package.json`.
@@ -40,19 +48,21 @@ A animação do protagonista chegando pela lateral e deitando não foi reconstru
 
 ## Validação
 
-Os resultados finais e os logs são listados abaixo. Os testes automatizados não substituem a aprovação visual do usuário.
+Os resultados finais e os logs estão em [logs](logs/). Os testes automatizados não substituem a aprovação visual do usuário.
 
 - `npm run check`: sintaxe dos módulos.
-- `npm test`: 46 testes unitários, incluindo hashes dos PNGs, proporção, porta fechada/parcial/aberta, autorização, travessia e fechamento, acesso aos objetos e varredura das trajetórias de cena/possessão.
-- Navegador: 10 verificações de interface, personalização, criaturas, pose final de Lira e lençol. Nove passaram na primeira bateria; a verificação de recolher missão foi repetida com diretório de resultados próprio após uma colisão entre os arquivos de trace de duas execuções simultâneas.
-- Percurso completo: consultar o log final antes de considerar concluído.
+- `npm test`: 52 testes unitários, incluindo hashes dos PNGs, proporção, porta fechada/parcial/aberta, autorização, travessia e fechamento, acesso aos objetos e varredura das trajetórias de cena/possessão.
+- Navegador: 10 verificações de interface, personalização, criaturas, pose final de Lira e lençol. Todos os 10 passaram juntos na última bateria (44 s). A tentativa histórica com colisão nos arquivos de trace permanece registrada, sem ser contada como sucesso.
+- Percurso completo: 1 teste de navegador aprovado, incluindo escolta, enfermaria, possessão, derrota, recuperação, prática, ginásio, HUD em duas resoluções e encerramento. O log final corresponde ao código com alinhamento antecipado e correção do bloqueio de ocupação. A gravação específica também repete a entrada na enfermaria sem erros e verifica as coordenadas dos dois atores.
 - Os 11 arquivos originais e outros 10 recursos/fontes aprovados permanecem inalterados: [logs/preservacao.json](logs/preservacao.json).
 
 As primeiras tentativas de gravação identificaram problemas no próprio roteiro de captura: falta de URL base, prazo curto para carregar os assets e uma caminhada de teste direcionada para a posição ocupada por Lira. A colisão impediu corretamente essa última passagem. As evidências entregues correspondem a execuções posteriores; não foram alterados estados ou colididores para fazer a gravação passar.
 
 ## Pendências e limites
 
-A aprovação visual do salão, laboratório, transição da cadeira e lençol continua com o usuário. Não declaro ausência universal de bugs. Os vídeos mostram os casos exercitados, em velocidade normal, sem interpolação; a gravação de página é de 25 quadros/s e não representa uma medição de FPS do jogo.
+A aprovação visual do salão, laboratório, transição da cadeira e lençol continua com o usuário. A abertura da porta foi aprovada; o alinhamento final da trajetória é a correção nova a revisar. Não declaro ausência universal de bugs. Os vídeos mostram os casos exercitados, em velocidade normal, sem interpolação; a gravação de página é de 25 quadros/s e não representa uma medição de FPS do jogo.
+
+Consulte também [PENDENCIAS.md](PENDENCIAS.md), que preserva os itens encontrados na auditoria e ainda não encerrados.
 
 A composição completa da batalha aprovada anteriormente — piso liso e dois círculos diagonais específicos — **ainda não está reproduzida integralmente**. O fundo de batalha existente e a nova HUD não são apresentados nesta entrega como essa arena final concluída. Os PNGs agora fornecidos são apenas do salão e do laboratório normal; esta integração não redesenhou esses cenários para criar outra arena.
 

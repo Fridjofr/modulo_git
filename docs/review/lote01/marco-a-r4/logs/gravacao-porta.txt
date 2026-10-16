@@ -1,0 +1,75 @@
+{
+  "events": [
+    {
+      "name": "closed",
+      "time": 35.112,
+      "player": [
+        652,
+        790
+      ],
+      "lira": [
+        652,
+        750
+      ],
+      "progress": 0
+    },
+    {
+      "name": "moving",
+      "time": 42.5,
+      "player": [
+        256,
+        674.8153999999995
+      ],
+      "lira": [
+        256,
+        304.830799999999
+      ],
+      "progress": 0.08333333333333333
+    },
+    {
+      "name": "open",
+      "time": 43.096,
+      "player": [
+        256,
+        620.813000000001
+      ],
+      "lira": [
+        256,
+        224
+      ],
+      "progress": 1
+    },
+    {
+      "name": "moving",
+      "time": 50.105,
+      "player": [
+        242,
+        94
+      ],
+      "lira": [
+        242,
+        94
+      ],
+      "progress": 0.8333333333333333
+    },
+    {
+      "name": "closed",
+      "time": 50.775,
+      "player": [
+        242,
+        94
+      ],
+      "lira": [
+        242,
+        94
+      ],
+      "progress": 0
+    },
+    {
+      "name": "clinic",
+      "time": 50.992
+    }
+  ],
+  "errors": [],
+  "source": "/tmp/zimons-review-a4/door-visible/page@9f613d85c8e144625c23403e9c2b62ca.webm"
+}

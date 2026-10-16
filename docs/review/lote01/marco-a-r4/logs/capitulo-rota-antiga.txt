@@ -1,0 +1,101 @@
+
+Running 1 test using 1 worker
+
+(node:254904) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+FOREST
+FLOW corridor entrance 256 497.5153999999979 242 215 { active: true, motion: null } {
+  kind: 'door-open',
+  to: undefined,
+  duration: 620,
+  progress: 0.7258064516129032
+}
+FLOW clinic medical 550.0149999999998 512 248 303 { active: true, motion: { x: 550.0149999999998, y: 512 } } null
+FLOW clinic medical 360 240 230 303 { active: true, motion: null } {
+  kind: 'wake',
+  to: undefined,
+  duration: 2600,
+  progress: 0.17307692307692307
+}
+FLOW clinic medical 598.1513999999983 336 640 497.68459999999885 { active: true, motion: { x: 640, y: 497.68459999999885 } } null
+FLOW corridor medical 551 94 551 94 { active: true, motion: null } {
+  kind: 'door-open',
+  to: undefined,
+  duration: 620,
+  progress: 0.4838709677419355
+}
+FLOW lab prepare 640 500 864 455.00000000000006 { active: true, motion: { x: 864, y: 455.00000000000006 } } null
+LAB
+FLOW lab crisis 640 499.249727075149 868 369 { active: true, motion: null } {
+  kind: 'rampage',
+  to: undefined,
+  duration: 8200,
+  progress: 0.105682926829269
+}
+FLOW lab crisis 902 430 802 425 { active: true, motion: null } null
+BATTLE
+LOSS
+FLOW clinic recovery 360 240 868 369 { active: true, motion: null } {
+  kind: 'wake',
+  to: undefined,
+  duration: 2600,
+  progress: 0.17307692307692307
+}
+RECOVERED
+FLOW lab recalibrate 640 500 864 390.00500000000176 { active: true, motion: { x: 864, y: 390.00500000000176 } } null
+CONSOLE Error: Destino de cena ocupado: lab 640,674
+    at sceneRoute (http://127.0.0.1:4173/src/actor-path.js:52:13)
+    at http://127.0.0.1:4173/src/story.js:129:17
+    at new Promise (<anonymous>)
+    at OpeningStory.walk (http://127.0.0.1:4173/src/story.js:126:11)
+    at http://127.0.0.1:4173/src/story.js:759:20
+    at async OpeningStory.play (http://127.0.0.1:4173/src/story.js:110:7)
+FLOW lab return 737.4999999999999 500 868 369 { active: false, motion: null } null
+FLOW lab return 737.4999999999999 500 868 369 { active: false, motion: null } null
+FLOW lab return 737.4999999999999 500 868 369 { active: false, motion: null } null
+FLOW lab return 737.4999999999999 500 868 369 { active: false, motion: null } null
+FLOW lab return 737.4999999999999 500 868 369 { active: false, motion: null } null
+FLOW lab return 737.4999999999999 500 868 369 { active: false, motion: null } null
+FLOW lab return 737.4999999999999 500 868 369 { active: false, motion: null } null
+FLOW lab return 737.4999999999999 500 868 369 { active: false, motion: null } null
+FLOW lab return 737.4999999999999 500 868 369 { active: false, motion: null } null
+FLOW lab return 737.4999999999999 500 868 369 { active: false, motion: null } null
+  ✘  1 tests/browser-v11/chapter.spec.js:15:1 › percurso v11, escolta física, descanso, possessão e encerramento no ginásio (5.1m)
+
+
+  1) tests/browser-v11/chapter.spec.js:15:1 › percurso v11, escolta física, descanso, possessão e encerramento no ginásio 
+
+    Error: Story stalled {"state":{"version":4,"name":"Nara","appearance":{"gender":"female","hair":0,"style":1,"outfit":2,"legwear":0,"top":0,"bottom":0,"skin":0,"accent":0,"bag":1},"world":"lab","x":737.4999999999999,"y":500,"dir":"right","quest":"return","story":{"lira":{"world":"lab","x":868,"y":369,"dir":"left","frame":0,"moving":false,"visible":true,"calling":false,"distance":1299.9999999999877,"seated":false,"partial":false,"transformed":false},"flags":{"calibrated":true,"labSecondDamage":true,"labDamaged":true,"contained":true,"steps":97.49999999999989,"trainingComplete":true},"visits":[],"dex":{"fire":"linked"},"freeLink":true,"pose":null,"dream":false,"dreamProgress":0,"eyesClosed":false,"openDoor":null,"resting":false,"possessed":false,"rampagePose":0,"rampageLean":0,"lastX":737.4999999999999,"lastY":500},"zimondex":true,"health":106,"energy":60,"zlink":true,"starter":"fire","transformed":false,"inventory":{"tonic":3},"level":5,"forms":{"fire":{"level":5,"xp":0}},"duelWins":[],"challenges":{"lira":{"result":"loss"}},"xp":0,"victories":0,"seenTransformation":false,"moving":false,"frame":0},"scene":"world","battle":{"starter":"fire","enemy":"plant","phase":"ended","turn":4,"result":"loss","world":"lab","origin":{"world":"lab","x":862,"y":451,"dir":"up"},"storyBattle":true,"mandatory":true,"playerName":"Nara","playerSprite":null,"opponentId":"lira","opponentName":"Lira","opponentSprite":"lira","opponentAppearance":null,"taunt":"Prometo pegar leve… até você me surpreender!","rewardForm":null,"repeatable":false,"player":{"hp":0,"maxHP":106,"energy":38,"maxEnergy":60,"transformed":false,"level":5,"guard":false,"status":{"type":"root","turns":1}},"opponent":{"hp":250,"maxHP":320,"energy":62,"maxEnergy":86,"transformed":false,"level":18,"guard":false,"status":null,"partial":false},"log":["Seu corpo reage por instinto. A voz de Lira parece distante.","Nara prepara Impacto…","Nara: Impacto. 13 de dano.","Lira recua e mantém os braços abertos. Ela tenta alcançar sua consciência, sem revidar.","Lira recua e mantém os braços abertos. Ela tenta alcançar sua consciência, sem revidar.","Nara prepara Lança-chamas…","Nara: Lança-chamas. 28 de dano. Vantagem elemental!","Lira prepara Impacto…","Lira: Impacto. 41 de dano.","Nara prepara Impacto…","Nara: Impacto. 13 de dano.","Lira prepara Raízes ancestrais…","Lira: Raízes ancestrais. 60 de dano. Energia resistida. Enraizamento por 2 turnos.","Nara prepara Lança-chamas…","Nara: Lança-chamas. 28 de dano. Vantagem elemental!","Você: Raízes: 3 de dano residual.","Lira prepara Impacto…","Lira: Impacto. 41 de dano.","As patas perdem força. Lira ampara a queda e impede que o corpo bata nos equipamentos.","Você permanece no chão enquanto a Sincro se desfaz. O brilho vermelho desaparece.","Lira: “Nara? Está respirando… Vou levar você à enfermaria. Não vou sair daqui.”"],"contactGap":{"player":125,"opponent":125},"partialReady":true,"displayHP":null,"fallen":true,"returning":true},"modal":null,"dialogue":null,"frameCache":25,"story":{"active":false,"motion":null},"lira":{"world":"lab","x":868,"y":369,"dir":"left","frame":0,"moving":false,"visible":true,"calling":false,"distance":1299.9999999999877,"seated":false,"partial":false,"transformed":false},"effect":null,"actors":[],"rendering":{"mode":"sprite-atlases","webgl":false,"poses":6,"actors":["fire","water","plant","lira"],"lastDraws":{"fire":{"pose":5,"possessed":false,"height":165},"water":{"pose":0,"possessed":false,"height":85},"plant":{"pose":0,"possessed":false,"height":85},"lira":{"pose":0,"possessed":false,"height":180}}},"settings":{"briefAnimations":false,"reduceMotion":false,"battleSpeed":1,"radarRange":610},"clock":301567.29999998206,"audio":{"started":true,"state":"running","muted":false,"volume":0.28},"moving":false,"keys":[]}
+
+       at helpers.js:35
+
+      33 |     else await page.waitForTimeout(70);
+      34 |   }
+    > 35 |   throw Error("Story stalled " + JSON.stringify(await snap(page)));
+         |         ^
+      36 | }
+      37 | export async function start(page, { gender = "female", brief = true } = {}) {
+      38 |   await page.goto("/?debug=1");
+        at drive (/workspace/zimons/tests/browser-v11/helpers.js:35:9)
+        at /workspace/zimons/tests/browser-v11/chapter.spec.js:99:3
+
+    Error: browserContext._wrapApiCall: ENOENT: no such file or directory, open '/tmp/zimons-a4-chapter/.playwright-artifacts-0/traces/aa892263c892083d7932-c0e66ef4b9c78ef68f2e.trace'
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../tmp/zimons-a4-chapter/chapter-percurso-v11-escol-ea479-o-e-encerramento-no-ginásio/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../tmp/zimons-a4-chapter/chapter-percurso-v11-escol-ea479-o-e-encerramento-no-ginásio/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../../tmp/zimons-a4-chapter/chapter-percurso-v11-escol-ea479-o-e-encerramento-no-ginásio/trace.zip
+    Usage:
+
+        npx playwright show-trace ../../tmp/zimons-a4-chapter/chapter-percurso-v11-escol-ea479-o-e-encerramento-no-ginásio/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Slow test file: tests/browser-v11/chapter.spec.js (5.1m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  1 failed
+    tests/browser-v11/chapter.spec.js:15:1 › percurso v11, escolta física, descanso, possessão e encerramento no ginásio 

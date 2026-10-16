@@ -1,0 +1,61 @@
+CAP 01-entrada-1366
+CAP 02-entrada-1920
+CAP 03-personalizacao-feminina
+CAP 04-personalizacao-masculina
+CAP 04b-aparencia-escolhida
+FLOW forest:awakening:undefined 460 550 530 550
+FLOW forest:awakening:wake 460 550 530 550
+FLOW forest:awakening:undefined 460 550 530 550
+FLOW forest:forest:undefined 460 550 560 500
+CAP 05-floresta
+CAP 05b-missao-recolhida
+CAP 05c-protagonista-e-lira
+CAP 06-caminhada-frente
+CAP 06-caminhada-direita
+CAP 06-caminhada-costas
+CAP 06-caminhada-esquerda
+FLOW forest:forest:door-open 1287.3849999999989 499.9749999999996 1400 480
+FLOW forest:forest:undefined 1287.3849999999989 499.9749999999996 1412.8435999999992 480
+FLOW plaza:forest:undefined 768 780 768 700
+CAP 07-academia
+FLOW plaza:entrance:door-open 718.0350000000018 325.0800000000045 768 260
+FLOW plaza:entrance:undefined 718.0350000000018 325.0800000000045 768 260
+FLOW corridor:entrance:undefined 652 790 652 750
+CAP 08a-corredor
+CAP 08b-porta-passagem
+FLOW corridor:entrance:door-open 242 94 242 94
+CAP 08-porta-abrindo
+FLOW clinic:entrance:undefined 640 640 550 420
+FLOW clinic:medical:undefined 640 629.9950000000006 248 303
+FLOW clinic:medical:bed-lie 438 263 248 303
+CAP 09a-lateral
+CAP 09b-sentar-na-cama
+FLOW clinic:medical:lira-sit 360 240 247.958454272 303
+CAP 09d-lira-sentando
+CAP 10-enfermaria-sentada
+FLOW clinic:medical:undefined 360 240 230 303
+FLOW clinic:medical:close-eyes 360 240 230 303
+FLOW clinic:medical:undefined 360 240 230 303
+FLOW clinic:medical:wake 360 240 230 303
+CAP 11-acordar
+FLOW clinic:medical:bed-rise 360 240 230 303
+CAP 11b-levantar
+FLOW clinic:medical:lira-stand 438 263 230.01514375251026 303
+CAP 11c-lira-levantando
+FLOW clinic:medical:undefined 438 263 248 303
+FLOW clinic:medical:door-open 438 263 248 303
+FLOW clinic:medical:undefined 438 263 255.6845999999991 303
+CAP 11d-saida-caminhando
+FLOW corridor:medical:undefined 242 242 290 285
+FLOW corridor:medical:door-open 408.47500000000207 256 551 215
+FLOW corridor:medical:undefined 408.47500000000207 256 544 215
+FLOW corridor:medical:door-open 551 94 551 94
+FLOW corridor:medical:undefined 551 94 551 94
+FLOW lab:medical:undefined 640 600 720 570
+FLOW lab:prepare:undefined 640 582.4950000000026 868 369
+FLOW lab:prepare:delivery 640 500 678 500
+FLOW lab:prepare:undefined 640 500 685.4849999999992 500
+CAP 12-fim-marco-a-laboratorio
+CAP 13-circulacao-bancada
+VIDEO /tmp/zimons-review-a4/approved-final/video/page@2b7817174a6c387701b8327d95ef6f14.webm
+DONE []

@@ -1,5 +1,7 @@
 # Validação — ZIMONS v0.11.0
 
+> Registro histórico da validação inicial v0.11. Para os testes, capturas e pendências da revisão atual, consulte [Marco A · revisão 4](review/lote01/marco-a-r4/RELATORIO.md).
+
 Ambiente: Node.js 24.19.0, Chromium do sistema, Playwright 1.64.0; telas 1440×900 e toque 800×450. Node.js 20 ou superior executa o servidor incluído, sem dependências de runtime a instalar.
 
 ## Verificações

@@ -49,11 +49,11 @@ O menu reúne Zimondex, Missões, Bolsa, Mapa, afinidades e Configurações. A b
 
 ## Mapas, combate e arquivos
 
-A rota principal tem seis locais: floresta, praça, átrio, enfermaria, laboratório e ginásio. Os cenários usam as artes aprovadas e os novos fundos em `assets/world/v11/`, com colisões próprias. Dois mapas históricos adicionais permanecem preservados fora desse percurso. Para inspecionar as peças e colisões reais, abra `/tools/tileset.html` com o servidor ligado. A floresta tem uma clareira e trilha orgânica; a Academia usa interiores com funções distintas. As marcas de destruição do laboratório persistem.
+A rota principal tem seis locais: floresta, praça, átrio, enfermaria, laboratório e ginásio. O salão e o laboratório usam os PNGs originais finais em `assets/world/approved-final/`, com escala proporcional e colisões próprias. Os outros ambientes preservam seus recursos anteriores. Dois mapas históricos adicionais permanecem preservados fora desse percurso. Para inspecionar as peças e colisões reais, abra `/tools/tileset.html` com o servidor ligado. A floresta tem uma clareira e trilha orgânica; a Academia usa interiores com funções distintas. As marcas de destruição do laboratório persistem.
 
-O fundo do combate usa o mapa onde ele começou. Impacto avança em salto, toca o alvo e retorna. Bolhas sai da boca e estoura no alvo; Lança-chamas é um jato contínuo; Lâminas de folhas lança folhas cortantes. Os sprites originais dos Zimons e os braços específicos da Lira estão em uso. As duas técnicas iniciais são física e elemental; habilidades posteriores são aprendidas por nível, com aviso. Não há comando Defender.
+O combate seleciona um fundo próprio para o ambiente onde começou. A arena definitiva aprovada e seu acabamento de HUD continuam pendentes; veja a lista de pendências da revisão. Impacto avança em salto, toca o alvo e retorna. Bolhas sai da boca e estoura no alvo; Lança-chamas é um jato contínuo; Lâminas de folhas lança folhas cortantes. Os sprites originais dos Zimons e os braços específicos da Lira estão em uso. As duas técnicas iniciais são física e elemental; habilidades posteriores são aprendidas por nível, com aviso. Não há comando Defender.
 
-Código em `src/`, assets em `assets/`, ferramentas em `tools/`, testes em `tests/`. Os onze arquivos recebidos originalmente continuam preservados com hashes em `docs/ASSETS_ORIGINAIS.json`. Capturas desta versão em `docs/screenshots/v11/`. O pacote inclui `INTEGRIDADE.sha256`.
+Código em `src/`, assets em `assets/`, ferramentas em `tools/`, testes em `tests/`. Os onze arquivos recebidos originalmente continuam preservados com hashes em `docs/ASSETS_ORIGINAIS.json`. Capturas e vídeos desta revisão em `docs/review/lote01/marco-a-r4/`; `docs/screenshots/v11/` registra verificações históricas. O pacote inclui `INTEGRIDADE.sha256`.
 
 Esta entrega continua sendo um cliente local para testar o capítulo; servidor MMORPG, contas e persistência online ainda não estão implementados. Não há interface de save local. Recarregar a página reinicia a sessão.
 
@@ -71,4 +71,4 @@ npm run test:e2e
 
 Se Chromium já estiver instalado, defina `CHROMIUM_PATH` quando necessário. O runner usa uma instância local na porta 4173 e executa um navegador por vez. Os testes antigos em `tests/browser/` documentam versões anteriores; a suíte atual está em `tests/browser-v11/`.
 
-`npm run package` gera o ZIP na pasta acima do projeto. Consulte `docs/VALIDACAO.md` para os resultados da entrega e `docs/ARQUITETURA.md` para a organização.
+`npm run package` gera o ZIP na pasta acima do projeto. Consulte `docs/review/lote01/marco-a-r4/RELATORIO.md` para os resultados e pendências da entrega e `docs/ARQUITETURA.md` para a organização.

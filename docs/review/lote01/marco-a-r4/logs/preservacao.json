@@ -1,0 +1,107 @@
+[
+  {
+    "file": "original/index.html",
+    "sha256": "40a04a325278bb6245d6ce92727a689142a331aa2649f0192cbf2926b127868f",
+    "preserved": true
+  },
+  {
+    "file": "original/README_IMPORTAR_CODEX.txt",
+    "sha256": "08ae425c9fb21e9c0985d34e4f58582dc336edc02c288130da573c279839b5f2",
+    "preserved": true
+  },
+  {
+    "file": "assets/male_sheet.png",
+    "sha256": "f524d5864366b1406a68319d8416f7c2bf4e73f78e0ca22530a6dd1eec86af26",
+    "preserved": true
+  },
+  {
+    "file": "assets/starters.png",
+    "sha256": "62bd3b60c29ae98c8e5ee01b4ce5dfcab7e046eb7a7aabe39458bdbc5cd26caa",
+    "preserved": true
+  },
+  {
+    "file": "assets/map.png",
+    "sha256": "796849d34d5ecf219654159ca7b437a49ab309fad6901dc62095e8bde5dc6368",
+    "preserved": true
+  },
+  {
+    "file": "assets/female_sheet.png",
+    "sha256": "a68859551f225e571418252aa0df54f91edec58aaeff12524ecbc25b44f8efe3",
+    "preserved": true
+  },
+  {
+    "file": "assets/fire_sheet.png",
+    "sha256": "086bc170c5388181569c1da3a3c00cd7f509a4ab97a3a2fb6b49c4f94abd944a",
+    "preserved": true
+  },
+  {
+    "file": "assets/plant_sheet.png",
+    "sha256": "1d4646f95fbd7698e99ff0e85624babc24127fc60eb2d4ba18b86aa0299b4820",
+    "preserved": true
+  },
+  {
+    "file": "assets/lira_sheet.png",
+    "sha256": "6ef142e855d58424d5e58b02b4e15625ff19c13071c2eb0474d08bd61a82ed71",
+    "preserved": true
+  },
+  {
+    "file": "assets/water_sheet.png",
+    "sha256": "fdcd365f185024fe394e6d24f682a5d7c7cdc5667295689de48835875b286374",
+    "preserved": true
+  },
+  {
+    "file": "original/sprites_meta.json",
+    "sha256": "3248b32b01cfaa6552a429d541b2b3965f2a2a81b586fba380c357c222f8b1dd",
+    "preserved": true
+  },
+  {
+    "file": "assets/world/review-a/title.png",
+    "sha256": "f1cb28b3b4107514b5e6a5d98001b0d948a9b5cd291dc94c401feb5ddd112f85",
+    "preserved": true
+  },
+  {
+    "file": "assets/characters/review-a/lira-seated.png",
+    "sha256": "9ebb562fcf8cf6744b26d6c68c0eff65553f38e2f3954ecf1aad50dfcfe99df2",
+    "preserved": true
+  },
+  {
+    "file": "src/effects.js",
+    "sha256": "2fb6e4f16fa3cc763d40dc7b80e8056789e8083af75ebab4a59b8da742b75422",
+    "preserved": true
+  },
+  {
+    "file": "src/battle-sprites.js",
+    "sha256": "5da30e910e69146e9659dc2148832debbc7628e15e1888dec33d51b9bc2bf9c2",
+    "preserved": true
+  },
+  {
+    "file": "src/creature-atlas.js",
+    "sha256": "e9b60a097988ba814296cf5cd6d26e6dec632280c01bdbb136f8000afafd42da",
+    "preserved": true
+  },
+  {
+    "file": "assets/battle/pyron.png",
+    "sha256": "35147fc159f8bb916ee7e935e24351596b9f900e338fd72ea9b61005364014c0",
+    "preserved": true
+  },
+  {
+    "file": "assets/battle/marivon.png",
+    "sha256": "d4967ae5207c5732c1a25f9caf3143dec7b399e4da93154d5a35d56586dcb60e",
+    "preserved": true
+  },
+  {
+    "file": "assets/battle/verdrax.png",
+    "sha256": "03f52b0bcb7e93bb597f4ec097de2adcb30a71839008151e2ee0b7d3cb9cef82",
+    "preserved": true
+  },
+  {
+    "file": "assets/battle/lira-verdrax.png",
+    "sha256": "ca53e3efae6a2e0d49b2758ae651c58ac6227f415a8cc002738e1cc6349bbe74",
+    "preserved": true
+  },
+  {
+    "file": "src/character-atlas.js",
+    "sha256": "a48d83f70d348a0e3d0c89be2518af07798f705babb71894db748cfbfbc80472",
+    "preserved": true
+  }
+]

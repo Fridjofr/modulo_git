@@ -1,0 +1,48 @@
+
+Running 1 test using 1 worker
+
+(node:262997) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+FOREST
+FLOW corridor entrance 242 463.32819999999714 242 197.4949999999999 { active: true, motion: { x: 242, y: 197.4949999999999 } } null
+FLOW clinic medical 470 417.50499999999977 248 303 { active: true, motion: { x: 470, y: 417.50499999999977 } } null
+FLOW clinic medical 360 240 230 303 { active: true, motion: null } { kind: 'wake', to: undefined, duration: 2600, progress: 0.8525 }
+FLOW clinic medical 438 308 421.19999999999993 336 { active: true, motion: { x: 421.19999999999993, y: 336 } } null
+FLOW clinic medical 438 308 421.19999999999993 336 { active: true, motion: { x: 421.19999999999993, y: 336 } } null
+FLOW clinic medical 438 308 421.19999999999993 336 { active: true, motion: { x: 421.19999999999993, y: 336 } } null
+FLOW clinic medical 438 308 421.19999999999993 336 { active: true, motion: { x: 421.19999999999993, y: 336 } } null
+FLOW clinic medical 438 308 421.19999999999993 336 { active: true, motion: { x: 421.19999999999993, y: 336 } } null
+FLOW clinic medical 438 308 421.19999999999993 336 { active: true, motion: { x: 421.19999999999993, y: 336 } } null
+FLOW clinic medical 438 308 421.19999999999993 336 { active: true, motion: { x: 421.19999999999993, y: 336 } } null
+FLOW clinic medical 438 308 421.19999999999993 336 { active: true, motion: { x: 421.19999999999993, y: 336 } } null
+FLOW clinic medical 438 308 421.19999999999993 336 { active: true, motion: { x: 421.19999999999993, y: 336 } } null
+FLOW clinic medical 438 308 421.19999999999993 336 { active: true, motion: { x: 421.19999999999993, y: 336 } } null
+FLOW clinic medical 438 308 421.19999999999993 336 { active: true, motion: { x: 421.19999999999993, y: 336 } } null
+FLOW clinic medical 438 308 421.19999999999993 336 { active: true, motion: { x: 421.19999999999993, y: 336 } } null
+  ✘  1 tests/browser-v11/chapter.spec.js:15:1 › percurso v11, escolta física, descanso, possessão e encerramento no ginásio (3.0m)
+
+
+  1) tests/browser-v11/chapter.spec.js:15:1 › percurso v11, escolta física, descanso, possessão e encerramento no ginásio 
+
+    Error: Story stalled {"state":{"version":4,"name":"Nara","appearance":{"gender":"female","hair":0,"style":1,"outfit":2,"legwear":0,"top":0,"bottom":0,"skin":0,"accent":0,"bag":1},"world":"clinic","x":438,"y":308,"dir":"down","quest":"medical","story":{"lira":{"world":"clinic","x":421.19999999999993,"y":336,"dir":"up","frame":2,"moving":false,"visible":true,"calling":false,"distance":1299.999999999991,"seated":false},"flags":{},"visits":[],"dex":{},"freeLink":false,"pose":null,"dream":false,"dreamProgress":0,"eyesClosed":false,"openDoor":"clinic-corridor","resting":false},"zimondex":false,"health":null,"energy":60,"zlink":false,"starter":null,"transformed":false,"inventory":{"tonic":3},"level":5,"forms":{},"duelWins":[],"challenges":{},"xp":0,"victories":0,"seenTransformation":false,"moving":true,"frame":2},"scene":"world","battle":null,"modal":null,"dialogue":null,"frameCache":12,"story":{"active":true,"motion":{"x":421.19999999999993,"y":336}},"lira":{"world":"clinic","x":421.19999999999993,"y":336,"dir":"up","frame":2,"moving":false,"visible":true,"calling":false,"distance":1299.999999999991,"seated":false},"effect":null,"actors":[],"rendering":{"mode":"sprite-atlases","webgl":false,"poses":6,"actors":["fire","water","plant","lira"],"lastDraws":{}},"settings":{"briefAnimations":false,"reduceMotion":false,"battleSpeed":1,"radarRange":610},"clock":55907.59999998212,"audio":{"started":true,"state":"running","muted":false,"volume":0.28},"moving":false,"keys":[]}
+
+       at helpers.js:35
+
+      33 |     else await page.waitForTimeout(70);
+      34 |   }
+    > 35 |   throw Error("Story stalled " + JSON.stringify(await snap(page)));
+         |         ^
+      36 | }
+      37 | export async function start(page, { gender = "female", brief = true } = {}) {
+      38 |   await page.goto("/?debug=1");
+        at drive (/workspace/zimons/tests/browser-v11/helpers.js:35:9)
+        at /workspace/zimons/tests/browser-v11/chapter.spec.js:70:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../../tmp/zimons-a5-complete-final/chapter-percurso-v11-escol-ea479-o-e-encerramento-no-ginásio/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../../tmp/zimons-a5-complete-final/chapter-percurso-v11-escol-ea479-o-e-encerramento-no-ginásio/error-context.md
+
+  1 failed
+    tests/browser-v11/chapter.spec.js:15:1 › percurso v11, escolta física, descanso, possessão e encerramento no ginásio 

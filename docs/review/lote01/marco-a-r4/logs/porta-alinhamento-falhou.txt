@@ -1,0 +1,73 @@
+{
+  "events": [
+    {
+      "name": "closed",
+      "time": 23.599,
+      "player": [
+        652,
+        790
+      ],
+      "lira": [
+        652,
+        750
+      ],
+      "progress": 0
+    },
+    {
+      "name": "moving",
+      "time": 29.632,
+      "player": [
+        644.5150000000003,
+        790
+      ],
+      "lira": [
+        242,
+        317.0281999999999
+      ],
+      "progress": 0.027833333333334546
+    },
+    {
+      "name": "open",
+      "time": 30.241,
+      "player": [
+        644.5150000000003,
+        790
+      ],
+      "lira": [
+        242,
+        219.50000000000017
+      ],
+      "progress": 1
+    },
+    {
+      "name": "moving",
+      "time": 31.775,
+      "player": [
+        644.5150000000003,
+        790
+      ],
+      "lira": [
+        242,
+        94
+      ],
+      "progress": 0.9721666666666654
+    },
+    {
+      "name": "closed",
+      "time": 32.367,
+      "player": [
+        644.5150000000003,
+        790
+      ],
+      "lira": [
+        242,
+        94
+      ],
+      "progress": 0
+    }
+  ],
+  "errors": [
+    "Error: A passagem não terminou.\n    at file:///workspace/zimons/tools/capture-academy-door.mjs:30:46"
+  ],
+  "source": "/tmp/zimons-review-a4/door-visible/page@7a4efc2db8e3c8016f8106654ac0532b.webm"
+}

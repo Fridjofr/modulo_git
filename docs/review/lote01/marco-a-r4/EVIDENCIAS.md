@@ -2,13 +2,29 @@
 
 **Para avaliação; não constitui aprovação do Marco A.** Estas imagens foram extraídas do jogo em Chromium. Os PNGs enviados pelo autor são os assets de cenário; não foram apresentados isoladamente como capturas.
 
-## Salão integrado
+## Tela inicial e personalização
+
+As capturas abaixo usam a mesma composição humana e os mesmos assets preservados nesta revisão. As alterações recentes de portas não modificaram esses recursos.
+
+![Tela inicial real](images/entrada-1366.png)
+
+[Entrada 1366×768](images/entrada-1366.png) · [Entrada 1920×1080](images/entrada-1920.png)
+
+![Criação masculina em execução](images/criacao-masculina.png)
+
+![Criação feminina em execução](images/criacao-feminina.png)
+
+[Masculino caminhando nas quatro direções, 1×](../marco-a-r3/videos/protagonista-masculino-1x.mp4) · [Feminino personalizado caminhando nas quatro direções, 1×](../marco-a-r3/videos/protagonista-feminina-personalizada-1x.mp4)
+
+## Salão integrado · entrada alinhada
 
 ![Salão com as quatro portas superiores fechadas e personagens em movimento](images/salao-portas-fechadas.png)
 
 [PNG completo](images/salao-portas-fechadas.png) · [Passagem pela porta, 1× — MP4](videos/porta-salao-1x.mp4) · [Sequência de quadros reais](images/sequencia-porta.png)
 
 ![Trecho real da passagem pela porta](videos/porta-salao.gif)
+
+A abertura foi preservada. A nova trajetória resolve as curvas antes do ponto de aproximação e mantém o trecho final no eixo da entrada, sem ajuste lateral junto à porta. A porta permanece aberta enquanto houver um ocupante na passagem.
 
 ## Laboratório integrado
 
@@ -22,7 +38,7 @@
 
 ![Protagonista coberto e Lira sentada](images/enfermaria.png)
 
-[PNG completo](images/enfermaria.png) · [Aproximação, deitar, sentar e levantar, 1× — MP4](videos/enfermaria-1x.mp4)
+[PNG completo](images/enfermaria.png) · [Aproximação, deitar, sentar e levantar, 1× — MP4](videos/enfermaria-1x.mp4) · [Sequência de quadros reais](images/sequencia-enfermaria.png)
 
 ![Aproximação real da enfermaria](videos/enfermaria.gif)
 
