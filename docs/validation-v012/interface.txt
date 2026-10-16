@@ -1,0 +1,18 @@
+
+Running 11 tests using 1 worker
+
+(node:284305) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/browser-v11/clinic-a4.spec.js:2:1 › a parede sobre a porta oculta o personagem sem cobrir a passagem aberta (3.5s)
+  ✓   2 tests/browser-v11/clinic-a4.spec.js:20:1 › nova enfermaria mantém a pose original de Lira e o fundo intacto, sem lençol extra (3.6s)
+  ✓   3 tests/browser-v11/clinic-a4.spec.js:35:1 › os três Zimons usam o centro de apoio das patas, com retorno ao mesmo ponto (3.6s)
+  ✓   4 tests/browser-v11/creatures.spec.js:2:1 › Zimons usam pixels originais, poses distintas e índices inteiros nas quatro direções (3.6s)
+  ✓   5 tests/browser-v11/customization-register.spec.js:2:1 › roupas não alteram a cabeça; cortes não alteram as pernas; cabeças seguem os marcos de cada passo (5.9s)
+  ✓   6 tests/browser-v11/interface.spec.js:3:1 › personalização: cinco cabelos e roupas, quatro direções, pernas ligadas e cores independentes (7.5s)
+  ✓   7 tests/browser-v11/interface.spec.js:96:1 › HUD, minimapa com zoom e menu preservam legibilidade e bloqueiam movimento ao abrir (5.4s)
+  ✓   8 tests/browser-v11/interface.spec.js:146:1 › falha real de um tileset apresenta recuperação e não fica em tela preta (545ms)
+  ✓   9 tests/browser-v11/interface.spec.js:156:3 › toque › personalização e menus cabem em 800×450, sem cortar o botão de iniciar (2.4s)
+  ✓  10 tests/browser-v11/interface.spec.js:184:1 › abertura usa composição única, sem slogan, e preenche a viewport após resize (2.8s)
+  ✓  11 tests/browser-v11/interface.spec.js:221:1 › painel de missão recolhe mantendo a aba acessível, preserva o objetivo e expande por teclado (5.2s)
+
+  11 passed (45.1s)

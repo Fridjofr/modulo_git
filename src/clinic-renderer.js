@@ -1,13 +1,10 @@
+import { relaxedHumanFrame } from "./human-rig.js";
 import { extractSprite } from "./character-atlas.js";
 import { CLINIC, bedPhase, mix, smooth } from "./clinic-layout.js";
 
 export class ClinicRenderer {
   constructor(assets) {
     this.assets = assets;
-    const image = assets.images.clinicProps;
-    this.bed = extractSprite(image, [0, 0, 835, 550]);
-    this.blanket = extractSprite(image, [835, 0, image.width - 835, 550]);
-    this.chair = extractSprite(image, [0, 550, 835, image.height - 550]);
     const pose = assets.images.liraSeated;
     this.lira = [0, 1].map((i) =>
       extractSprite(pose, [
@@ -25,100 +22,50 @@ export class ClinicRenderer {
       return {x:xs.reduce((a,b)=>a+b,0)/xs.length,y:f.b+1};
     });
   }
-  prop(g, p, r) {
-    g.imageSmoothingEnabled = false;
-    g.drawImage(
-      p.canvas,
-      p.l,
-      p.t,
-      p.r - p.l + 1,
-      p.b - p.t + 1,
-      Math.round(r.x),
-      Math.round(r.y),
-      r.w,
-      r.h,
-    );
-  }
-  furniture(g, state) {
-    const q = state.story.bedPose;
-    const opening =
-      q === undefined ? 0 : smooth(q / 0.12) * (1 - smooth((q - 0.78) / 0.22));
-    const gate = { x: CLINIC.bed.x + 100, y: CLINIC.bed.y + 50, w: 8, h: 77 };
-    // The lateral safety rail telescopes down before the transfer. It is an
-    // independent piece of the SAME bed, exposing the actual floor underneath.
-    g.save();
-    g.beginPath();
-    g.rect(CLINIC.bed.x, CLINIC.bed.y, CLINIC.bed.w, CLINIC.bed.h);
-    g.rect(gate.x, gate.y, gate.w, gate.h);
-    g.clip("evenodd");
-    this.prop(g, this.bed, CLINIC.bed);
-    g.restore();
-    const remaining = gate.h * (1 - opening);
-    if (remaining > 0) {
-      g.save();
-      g.beginPath();
-      g.rect(gate.x, gate.y + gate.h - remaining, gate.w, remaining);
-      g.clip();
-      this.prop(g, this.bed, CLINIC.bed);
-      g.restore();
-    }
-    this.prop(g, this.chair, CLINIC.chair);
-  }
-  blanketLayer(g, state) {
-    const p=state.story.bedPose;
-    const lift=p===undefined?0:Math.sin(p*Math.PI)*2;
-    const m=CLINIC.mattress;
-    g.save();
-    g.beginPath();
-    g.moveTo(m.x,m.y);g.lineTo(m.x+m.w,m.y);
-    g.lineTo(m.x+m.w-2,m.y+m.h);g.lineTo(m.x+1,m.y+m.h);
-    g.closePath();g.clip();
-    this.prop(g,this.blanket,{...CLINIC.blanket,y:CLINIC.blanket.y-lift});
-    g.restore();
-  }
-  chairForeground(g) {
-    // Reuse the exact near armrest from the same chair, with the same transform.
-    // No separate approximate sprite and no painted patch of the floor.
-    const r = CLINIC.chair;
-    g.save();
-    g.beginPath();
-    // Clip the diagonal near arm only, not the seat through the thighs.
-    for (const [i, point] of [[5,35],[16,33],[51,41],[51,50],[41,49],[5,42]].entries())
-      g[i ? "lineTo" : "moveTo"](r.x + point[0], r.y + point[1]);
-    g.closePath();
-    g.clip();
-    this.prop(g, this.chair, r);
-    g.restore();
-  }
   seatedLira(g, q) {
-    const unit=0.11, finalHip=[580,670], sole=this.soles[0];
-    // This is exactly the already approved final seated transform.
-    const planted={
-      x:CLINIC.seat.x+(finalHip[0]-sole.x)*unit,
-      y:CLINIC.seat.y+(sole.y-finalHip[1])*unit,
-    };
-    if(q<0.38){
-      const step=smooth((q-0.1)/0.28);
-      const phase=q<0.1?0:Math.floor(step*4)%4;
-      this.assets.draw(g,"lira","right",this.assets.walkIndex("lira","right",phase),
-        mix(CLINIC.liraApproach[0],planted.x,step),
-        mix(CLINIC.liraApproach[1],planted.y,step),84,null,false);
-      return;
-    }
-    const index=q<0.72?1:0, f=this.lira[index], contact=this.soles[index];
-    // The feet stay planted through both approved poses. No interpolation of
-    // the hip's x coordinate, and no lateral slide when a pose is selected.
+    const unit=.11, finalHip=[580,670], sole=this.soles[0];
+    const planted={x:CLINIC.seat.x+(finalHip[0]-sole.x)*unit,
+      y:CLINIC.seat.y+(sole.y-finalHip[1])*unit};
     g.save();g.imageSmoothingEnabled=false;
-    if(index===0){
-      // Preserve the approved final matrix bit for bit, including raster rounding.
+    if(q>=1){
+      // Same authored pixels, same scale and final pose; only the chair anchor changed.
       g.translate(CLINIC.seat.x,CLINIC.seat.y);g.scale(-unit,unit);
-      g.drawImage(f.canvas,-finalHip[0],-finalHip[1]);
+      g.drawImage(this.lira[0].canvas,-finalHip[0],-finalHip[1]);
     }else{
-      g.translate(planted.x,planted.y);g.scale(-unit,unit);
-      g.drawImage(f.canvas,-contact.x,-contact.y);
+      const step=Math.round(smooth((q-.1)/.9)*48);
+      this.sitFrames ||= new Map();
+      if(!this.sitFrames.has(step))this.sitFrames.set(step,this.sitFrame(step/48));
+      g.drawImage(this.sitFrames.get(step),planted.x-80,planted.y-130);
     }
     g.restore();
-    this.chairForeground(g);
+  }
+  sitFrame(t) {
+    // Register the two APPROVED poses at the soles. Articulated bands follow
+    // common head/torso/knee landmarks before blending, avoiding a whole-sprite
+    // swap, a sliding body or a scale jump. Assets and the final pose stay intact.
+    const c=Object.assign(document.createElement("canvas"),{width:160,height:160});
+    const g=c.getContext("2d");g.imageSmoothingEnabled=false;
+    const rows=[
+      [[0,550],[140,550],[380,550],[580,530],[680,450],[740,430],[846,this.soles[0].x],[887,this.soles[0].x]],
+      [[0,340],[62,340],[300,340],[530,350],[620,330],[710,350],[848,this.soles[1].x],[887,this.soles[1].x]],
+    ];
+    const target=rows[0].map((p,i)=>[
+      mix(rows[1][i][0]-this.soles[1].y,p[0]-this.soles[0].y,t),
+      mix(rows[1][i][1]-this.soles[1].x,p[1]-this.soles[0].x,t),
+    ]);
+    g.translate(80,130);g.scale(-.11,.11);g.globalCompositeOperation="lighter";
+    for(const index of [1,0]){
+      g.globalAlpha=index?1-t:t;
+      for(let i=0;i<rows[index].length-1;i++){
+        const [y,x]=rows[index][i],[ny,nx]=rows[index][i+1];
+        const [ty,tx]=target[i],[by,bx]=target[i+1];
+        const sy=(by-ty)/(ny-y),shear=((bx-nx)-(tx-x))/(ny-y);
+        g.save();g.transform(1,0,shear,sy,tx-x-shear*y,ty-sy*y);
+        g.drawImage(this.lira[index].canvas,0,y,887,ny-y,0,y,887,ny-y);
+        g.restore();
+      }
+    }
+    return c;
   }
   sittingPlayer(g, state, hip, bend = 1, lean = 0, dir = "right") {
     const f = this.assets.frame(
@@ -162,7 +109,7 @@ export class ClinicRenderer {
       this.sittingPlayer(
         g,
         state,
-        { x: mix(438, 405, p.sit), y: mix(241.76, 246, p.sit) },
+        { x: mix(CLINIC.playerApproach[0], CLINIC.sideHip[0], p.sit), y: mix(CLINIC.playerApproach[1]-21.24, CLINIC.sideHip[1], p.sit) },
         p.sit,
       );
     } else if (q < 0.72) {
@@ -171,8 +118,8 @@ export class ClinicRenderer {
         g,
         state,
         {
-          x: mix(405, 360, t),
-          y: mix(246, CLINIC.playerRest[1] - (44 * 84) / 174, t),
+          x: mix(CLINIC.sideHip[0], CLINIC.playerRest[0], t),
+          y: mix(CLINIC.sideHip[1], CLINIC.playerRest[1] - (44 * 84) / 174, t),
         },
         1,
         -Math.sin(t * Math.PI) * 0.12,
@@ -202,20 +149,19 @@ export class ClinicRenderer {
       { ...state.appearance, bag: 0 },
       state.zlink,
     );
-    if (!state.story.eyesClosed) return base;
-    const key = "bed-closed:" + JSON.stringify(state.appearance);
+    const key = "bed-rest:" + JSON.stringify([state.appearance,!!state.story.eyesClosed]);
     if (this.assets.frames.has(key)) return this.assets.frames.get(key);
     const c = Object.assign(document.createElement("canvas"), {
         width: 192,
         height: 192,
       }),
       g = c.getContext("2d");
-    g.drawImage(base.canvas, 0, 0);
+    g.drawImage(relaxedHumanFrame(base.canvas), 0, 0);
     // Close only the authored eye pixels using cheek colour. Landmarks differ
     // for original and alternate heads, so the mask follows their actual face.
-    const eyeY = state.appearance.style ? 82 : 80;
+    const eyeY = 74;
     const pixels = g.getImageData(0, 0, 192, 192).data;
-    for (const x of [83, 107]) {
+    for (const x of state.story.eyesClosed ? [84, 108] : []) {
       const k = ((eyeY + 10) * 192 + x) * 4;
       g.fillStyle = `rgb(${pixels[k]},${pixels[k + 1]},${pixels[k + 2]})`;
       g.fillRect(x - 5, eyeY - 5, 11, 12);

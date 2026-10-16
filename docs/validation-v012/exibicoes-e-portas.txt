@@ -1,0 +1,11 @@
+
+Running 1 test using 1 worker
+
+(node:286396) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+FLOW clinic medical 299.0100000000002 365 112.38188524590164 259.36 { active: true, motion: { x: 299.0100000000002, y: 365 } } null
+FLOW corridor medical 336 257 450.99000000000086 335 { active: true, motion: { x: 450.99000000000086, y: 335 } } null
+FLOW gym tour 697.4950000000024 590 802.4950000000023 590 { active: true, motion: { x: 802.4950000000023, y: 590 } } null
+  ✓  1 tests/browser-v11/exhibitions-final.spec.js:3:1 › exibição livre pode ser encerrada; participantes saem humanos e alojamento incompleto fica trancado (2.2m)
+
+  1 passed (2.2m)

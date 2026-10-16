@@ -1,22 +1,36 @@
 import {test,expect} from '@playwright/test';
-test('pose final aprovada de Lira é idêntica e o lençol fica somente no colchão',async({page})=>{
+test('a parede sobre a porta oculta o personagem sem cobrir a passagem aberta',async({page})=>{
  await page.goto('/?debug=1');await expect(page.locator('#title')).toHaveClass(/active/);
- const errors=await page.evaluate(async()=>{
+ const result=await page.evaluate(async()=>{
+  const {Assets}=await import('/src/assets.js'),{MAPS}=await import('/src/maps.js');
+  const {resetDoorStates,setDoorProgress}=await import('/src/doors.js');
+  const a=new Assets();await a.load();const map=MAPS.corridor,d=map.doorSpecs[0];
+  const c=Object.assign(document.createElement('canvas'),{width:map.size[0],height:map.size[1]}),g=c.getContext('2d');
+  resetDoorStates();for(const spec of map.doorSpecs)setDoorProgress('corridor',spec.id,1);
+  // A visible silhouette would leak above the lintel without the foreground.
+  g.fillStyle='#ff0000';g.fillRect(d.x,0,d.w,d.y+d.h);
+  a.tiles.doorForeground(g,{world:'corridor'});
+  const actual=g.getImageData(d.x,0,d.w,d.y).data;
+  const expected=a.tiles.terrain('corridor').getContext('2d').getImageData(d.x,0,d.w,d.y).data;
+  const aperture=[...g.getImageData(d.x+d.w/2,d.y+d.h/2,1,1).data];
+  resetDoorStates();return {wallPreserved:actual.every((v,i)=>v===expected[i]),aperture};
+ });
+ expect(result.wallPreserved).toBe(true);expect(result.aperture).toEqual([255,0,0,255]);
+});
+test('nova enfermaria mantém a pose original de Lira e o fundo intacto, sem lençol extra',async({page})=>{
+ await page.goto('/?debug=1');await expect(page.locator('#title')).toHaveClass(/active/);
+ const result=await page.evaluate(async()=>{
   const {Assets}=await import('/src/assets.js'),{CLINIC}=await import('/src/clinic-layout.js');
-  const a=new Assets();await a.load();const make=()=>Object.assign(document.createElement('canvas'),{width:1280,height:720});
-  const actual=make(),expected=make(),g=expected.getContext('2d'),errors=[];
+  const a=new Assets();await a.load();const make=()=>Object.assign(document.createElement('canvas'),{width:768,height:579});
+  const actual=make(),expected=make(),g=expected.getContext('2d');
   a.clinic.seatedLira(actual.getContext('2d'),1);
-  g.save();g.imageSmoothingEnabled=false;g.translate(212,283);g.scale(-.11,.11);g.drawImage(a.clinic.lira[0].canvas,-580,-670);g.restore();a.clinic.chairForeground(g);
-  const p=actual.getContext('2d').getImageData(0,0,1280,720).data,q=g.getImageData(0,0,1280,720).data;
-  if(p.some((v,n)=>v!==q[n]))errors.push('Pose final aprovada foi alterada');
-  for(const progress of [0,.15,.5,.8,1]){
-   const c=make();a.clinic.blanketLayer(c.getContext('2d'),{story:{bedPose:progress}});
-   const d=c.getContext('2d').getImageData(0,0,1280,720).data,m=CLINIC.mattress;let count=0;
-   for(let y=0;y<720;y++)for(let x=0;x<1280;x++)if(d[(y*1280+x)*4+3]){count++;if(x<m.x||x>=m.x+m.w||y<m.y||y>=m.y+m.h)errors.push('Lençol fora do colchão');}
-   if(count<1000)errors.push('Lençol desapareceu');
-  }
-  return [...new Set(errors)];
- });expect(errors).toEqual([]);
+  g.save();g.imageSmoothingEnabled=false;g.translate(CLINIC.seat.x,CLINIC.seat.y);g.scale(-.11,.11);g.drawImage(a.clinic.lira[0].canvas,-580,-670);g.restore();
+  const p=actual.getContext('2d').getImageData(0,0,768,579).data,q=g.getImageData(0,0,768,579).data;
+  const terrain=a.tiles.terrain('clinic'),before=terrain.toDataURL();
+  for(const progress of [0,.15,.5,.8,1])a.clinic.seatedLira(make().getContext('2d'),progress);
+  return {samePose:p.every((v,i)=>v===q[i]),sameBackground:before===terrain.toDataURL(),extraPropsLoaded:!!a.images.clinicProps};
+ });
+ expect(result).toEqual({samePose:true,sameBackground:true,extraPropsLoaded:false});
 });
 test('os três Zimons usam o centro de apoio das patas, com retorno ao mesmo ponto',async({page})=>{
  await page.goto('/?debug=1');await expect(page.locator('#title')).toHaveClass(/active/);

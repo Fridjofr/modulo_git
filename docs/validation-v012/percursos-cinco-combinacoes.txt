@@ -1,0 +1,79 @@
+
+Running 5 tests using 2 workers
+
+(node:284888) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:284889) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+FLOW corridor entrance 242 463.3281999999977 242 94 { active: true, motion: { x: 242, y: 463.3281999999977 } } null
+FLOW corridor entrance 242 463.3589999999961 242 97.50500000000011 { active: true, motion: { x: 242, y: 97.50500000000011 } } null
+FLOW clinic medical 186 220 112.38188524590164 259.36 { active: true, motion: null } {
+  kind: 'close-eyes',
+  to: undefined,
+  duration: 500,
+  progress: 0.03340000000000873
+}
+FLOW clinic medical 186 220 112.38188524590164 259.36 { active: true, motion: null } null
+FLOW clinic medical 384 547 384 547 { active: true, motion: { x: 384, y: 547 } } null
+FLOW clinic medical 384 534 384 547 { active: true, motion: { x: 384, y: 534 } } null
+FLOW lab medical 640 600 868 500.0100000000002 { active: true, motion: { x: 868, y: 500.0100000000002 } } null
+FLOW lab medical 640 600 868 512.5050000000007 { active: true, motion: { x: 868, y: 512.5050000000007 } } null
+male fire LAB
+female water LAB
+female water RECOVERED
+male fire RECOVERED
+FLOW corridor tour 635.1518000000037 335 786.9128000000027 335 { active: true, motion: { x: 786.9128000000027, y: 335 } } null
+FLOW corridor tour 642.999599999998 335 797.1845999999998 335 { active: true, motion: { x: 797.1845999999998, y: 335 } } null
+FLOW gym tour 1015 600 1105 600 { active: true, motion: { x: 285.01000000000136, y: 465 } } null
+FLOW gym tour 1015 600 1105 600 { active: true, motion: { x: 297.5050000000018, y: 465 } } null
+female water GYM
+male fire GYM
+male fire COMPLETE
+  ✓  1 tests/browser-v11/final-playthrough.spec.js:13:56 › male-fire: capítulo completo e derrota no ginásio (3.1m)
+female water COMPLETE
+  ✓  2 tests/browser-v11/final-playthrough.spec.js:13:56 › female-water: capítulo completo e vitória no ginásio (3.1m)
+FLOW corridor entrance 242 463.32819999999714 242 94 { active: true, motion: { x: 242, y: 94 } } null
+FLOW corridor entrance 242 463.34359999999657 242 95.01500000000033 { active: true, motion: { x: 242, y: 95.01500000000033 } } null
+FLOW clinic medical 186 220 112.38188524590164 259.36 { active: true, motion: null } {
+  kind: 'close-eyes',
+  to: undefined,
+  duration: 500,
+  progress: 0.1663999999999942
+}
+FLOW clinic medical 186 220 112.38188524590164 259.36 { active: true, motion: null } null
+FLOW clinic medical 384 546.509999999999 384 547 { active: true, motion: { x: 384, y: 546.509999999999 } } null
+FLOW clinic medical 384 534 384 547 { active: true, motion: { x: 384, y: 534 } } null
+FLOW lab medical 640 600 868 502.50000000000006 { active: true, motion: { x: 868, y: 502.50000000000006 } } null
+FLOW lab medical 640 600 868 512.4900000000009 { active: true, motion: { x: 868, y: 512.4900000000009 } } null
+male water LAB
+female plant LAB
+male water RECOVERED
+female plant RECOVERED
+FLOW corridor tour 635.1667999999999 335 786.9128000000003 335 { active: true, motion: { x: 786.9128000000003, y: 335 } } null
+FLOW corridor tour 643.0000000000002 335 797.1846 335 { active: true, motion: { x: 797.1846, y: 335 } } null
+FLOW gym tour 1015 600 1105 600 { active: true, motion: { x: 292.50999999999925, y: 465 } } null
+FLOW gym tour 1015 600 1105 600 { active: true, motion: { x: 295.00000000000006, y: 465 } } null
+male water GYM
+female plant GYM
+male water COMPLETE
+  ✓  3 tests/browser-v11/final-playthrough.spec.js:13:56 › male-water: capítulo completo e derrota no ginásio (3.0m)
+female plant COMPLETE
+  ✓  4 tests/browser-v11/final-playthrough.spec.js:13:56 › female-plant: capítulo completo e vitória no ginásio (3.0m)
+FLOW corridor entrance 242 458.348599999997 242 94 { active: true, motion: { x: 242, y: 458.348599999997 } } null
+FLOW clinic medical 186 220 112.38188524590164 259.36 { active: true, motion: null } {
+  kind: 'close-eyes',
+  to: undefined,
+  duration: 500,
+  progress: 0.1331999999999971
+}
+FLOW clinic medical 384 546.4799999999994 384 547 { active: true, motion: { x: 384, y: 546.4799999999994 } } null
+FLOW lab medical 640 600 868 499.99500000000046 { active: true, motion: { x: 868, y: 499.99500000000046 } } null
+male plant LAB
+male plant RECOVERED
+FLOW corridor tour 640.5099999999992 335 794.6282000000007 335 { active: true, motion: { x: 794.6282000000007, y: 335 } } null
+FLOW gym tour 1015 600 1105 600 { active: true, motion: { x: 295, y: 465 } } null
+male plant GYM
+male plant COMPLETE
+  ✓  5 tests/browser-v11/final-playthrough.spec.js:13:56 › male-plant: capítulo completo e derrota no ginásio (3.1m)
+
+  5 passed (9.2m)

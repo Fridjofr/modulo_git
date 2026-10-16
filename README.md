@@ -1,74 +1,50 @@
-# ZIMONS
+# ZIMONS — versão jogável 0.12.0
 
-**Revisão Lote 01 · Marco A, revisão 4 — aguardando avaliação visual.** Base v0.11.0. Marco A continua aberto. [Capturas e vídeos reais](docs/review/lote01/marco-a-r4/EVIDENCIAS.md) · [arquivos, testes e pendências](docs/review/lote01/marco-a-r4/RELATORIO.md).
+Trecho do Capítulo 1: criação do personagem, despertar na floresta, Academia, enfermaria, primeira essência, possessão, recuperação, treino de Sincro e duelo com Nico. Depois do duelo, ficam disponíveis as exibições no ginásio. Escolha **um** inicial: Pyron, Marivon ou Verdrax.
 
-RPG 2D de transformação, com exploração superior, batalhas por turnos e adaptação do **roteiro narrativo 4.1, Capítulo 1 — O Despertar**. O humano é o próprio corpo transformado. O jogo usa sprites animados, não modelos 3D.
+## Jogar no Windows
 
-## Executar
+1. Extraia **todo** o ZIP para uma pasta.
+2. Instale o **Node.js LTS, versão 20 ou superior**, em https://nodejs.org se ainda não tiver.
+3. Abra `INICIAR.bat`. O navegador padrão abrirá o jogo. Mantenha a janela do iniciador aberta.
+4. Se o navegador não abrir automaticamente, entre em **http://localhost:4173** no Chrome ou Edge.
 
-Requer **Node.js 20 ou superior**. Extraia o ZIP inteiro, abra o terminal na pasta extraída que contém `package.json` e execute:
+Não precisa executar `npm install`, compilar ou baixar assets para jogar. Fontes, música sintetizada, sprites e cenários estão incluídos. Não abra `index.html` diretamente.
 
-```sh
-npm start
-```
-
-Abra **http://localhost:4173**. Encerre com `Ctrl+C`. No Windows também pode abrir `INICIAR.bat`. **Não precisa instalar dependências para jogar.** Os assets, as fontes e os módulos estão incluídos. Não abra `index.html` diretamente: os módulos precisam do servidor.
-
-Outra porta: `PORT=4180 npm start` no Linux/macOS; no PowerShell, `$env:PORT=4180` e depois `npm start`. Alternativa sem Node: `python3 -m http.server 4173` nesta pasta. Celular: orientação horizontal e controles de toque.
-
-## Percurso desta versão
-
-1. Aparência antes do início: cinco cortes de cabelo e cinco modelos de roupa por protagonista, cores independentes, bolsas e quatro direções. O nome é confirmado na conversa com Lira.
-2. Sonho com silhuetas de duas pessoas lado a lado, despertar com abertura gradual dos olhos e floresta já danificada. Lira encontra o protagonista e conduz até a Academia, pela única floresta e pelo pátio.
-3. O corredor tem portas próprias para enfermaria, laboratório e ginásio. Não existe seletor de destinos num único portal.
-4. Avaliação médica, explicação da Sincro artificial, entrega do Z-Link de treinamento, calibração e escolha de **uma** essência: Pyron, Marivon ou Verdrax.
-5. Respiração guiada, aura de transformação, olhos vermelhos e possessão. O protagonista avança e danifica duas bancadas no laboratório. Lira desvia e manifesta apenas os antebraços de Verdrax Ascendido.
-6. Na contenção, você controla o protagonista. Lira tenta contato sem atacar no primeiro turno. A derrota leva à queda, retorno humano ainda deitado, sonho na névoa e socorro.
-7. Recuperação na enfermaria. Lira retém o Z-Link durante a noite: o protagonista permanece deitado, conversa e dorme na própria cena. No dia seguinte, receba o dispositivo recalibrado no laboratório e pratique transformar, caminhar e retornar com T.
-8. Apresentação da Zimondex, visita ao ginásio, encontro com Nina, Caio e Nico, demonstração e primeira batalha contra Nico. Vitória e derrota permitem continuar.
-9. O trecho termina após o duelo com Nico, no ginásio. As exibições ficam disponíveis; o bônus da primeira vitória não se repete. Depois de cada duelo, os dois participantes voltam à forma humana e HP/MP são recuperados.
-10. Encerrada a história, há **uma única Lira, fixa no ginásio**. A transformação exige supervisão no mesmo local. Ao sair transformado, o retorno humano termina antes da mudança de mapa.
-
-As falas são avançadas pelo jogador. **Pular etapa** encerra somente a conversa, caminhada ou efeito atual; não pula o capítulo. O ritmo normal usa transformação de 5,2 s, retorno de 3 s e golpes de 1,65–2,3 s. O botão de batalha alterna **1× → 2× → 3× → 1×**, incluindo movimentos, impactos e barras de vida. Animações breves é uma opção separada, desativada por padrão.
+No Linux/macOS, ou pelo terminal do Windows, use `npm start` na pasta do projeto. Encerre com Ctrl+C. Se a porta 4173 estiver ocupada, feche a outra janela do jogo; também é possível definir `PORT` antes de iniciar.
 
 ## Controles
 
 | Entrada | Ação |
 |---|---|
-| Setas | Andar / navegar nos menus |
-| E, Enter ou Espaço | Interagir / revelar e avançar conversa |
-| T | Iniciar ou encerrar Sincro sob supervisão |
-| Esc | Menu / voltar |
-| R / Pular etapa | Encerrar somente a etapa narrativa atual |
-| + e − no minimapa | Aproximar / afastar |
-| Aba ao lado da missão | Recolher / expandir o objetivo |
-| V / 1× no combate | Alternar a velocidade, de 1× até 3× |
-| Controle | Direcional/analógico, A confirmar, B voltar; botões conforme indicação de tela |
+| Setas | Caminhar e navegar |
+| E / Enter / Espaço | Interagir e avançar conversa |
+| T | Iniciar/encerrar Sincro nos locais supervisionados |
+| Esc | Menu e voltar |
+| R / Pular etapa | Avançar a conversa ou efeito atual; numa caminhada, acelerar a rota sem teletransporte |
+| V / botão 1× | Batalha: 1× → 2× → 3× → 1× |
+| + / − no minimapa | Ajustar o zoom |
+| Aba ao lado do objetivo | Recolher/expandir a missão |
 
-O menu reúne Zimondex, Missões, Bolsa, Mapa, afinidades e Configurações. A bolsa tem slots. A Zimondex mostra cada estágio em sua própria entrada 1, 2 ou 3; as silhuetas vêm das artes das respectivas formas. Apenas a essência escolhida está vinculada ao protagonista.
+Há controles de toque em orientação horizontal e suporte a controle. Música, volume, movimentos reduzidos e animações breves ficam nas configurações. O ritmo normal é o padrão.
 
-## Mapas, combate e arquivos
+## Nesta entrega
 
-A rota principal tem seis locais: floresta, praça, átrio, enfermaria, laboratório e ginásio. O salão e o laboratório usam os PNGs originais finais em `assets/world/approved-final/`, com escala proporcional e colisões próprias. Os outros ambientes preservam seus recursos anteriores. Dois mapas históricos adicionais permanecem preservados fora desse percurso. Para inspecionar as peças e colisões reais, abra `/tools/tileset.html` com o servidor ligado. A floresta tem uma clareira e trilha orgânica; a Academia usa interiores com funções distintas. As marcas de destruição do laboratório persistem.
+- Enfermaria usa o PNG final aprovado, sem redesenho, cama extra ou lençol sobreposto. Cama, cadeira, monitor e porta têm coordenadas próprias; poses de repouso preservam a aparência selecionada.
+- Salão, laboratório e wallpaper aprovados foram preservados. Portas têm destinos próprios, abertura sincronizada com colisões e aproximação alinhada. Escoltas percorrem rotas físicas.
+- Cinco cabelos e cinco roupas por protagonista, cores, tons de pele e bolsas. O nome é escolhido dentro da história; o Z-Link aparece somente depois da entrega.
+- Cada holograma é apresentado uma vez. A primeira crise mantém o protagonista sob controle do jogador; a derrota ocorre ainda em forma Zimon. A reversão acontece no laboratório, antes do segundo sonho com as mesmas duas silhuetas.
+- Combate com piso azul liso, dois círculos diagonais, apoio das patas centralizado, HUD azul-marinho/dourada e pastas Batalha, Bolsa, Zimons e Sair. Mensagens são transitórias; o histórico fica acessível sem painel narrativo permanente à direita.
+- Golpes físicos e elementais preservados; sem Defender. As duas técnicas iniciais estão disponíveis no nível 5; outra técnica é aprendida no nível 8, com aviso. HP/MP e parâmetros crescem por nível e são recuperados depois dos duelos.
+- Nina/Caio entram e deixam a arena; o receio do protagonista é conversado em particular com Lira. Protagonista e adversário caminham para os duelos e saem depois. Vitória ou derrota contra Nico encerram o trecho.
+- Menu Esc, bolsa com slots, Zimondex com silhuetas próprias e estágios 1/2/3, oito elementos, missões e minimapa circular com marcadores e zoom.
 
-O combate seleciona um fundo próprio para o ambiente onde começou. A arena definitiva aprovada e seu acabamento de HUD continuam pendentes; veja a lista de pendências da revisão. Impacto avança em salto, toca o alvo e retorna. Bolhas sai da boca e estoura no alvo; Lança-chamas é um jato contínuo; Lâminas de folhas lança folhas cortantes. Os sprites originais dos Zimons e os braços específicos da Lira estão em uso. As duas técnicas iniciais são física e elemental; habilidades posteriores são aprendidas por nível, com aviso. Não há comando Defender.
+Consulte `PROBLEMAS_CONHECIDOS.md` para os limites desta versão. A sessão reinicia ao recarregar a página; persistência online está fora deste trecho.
 
-Código em `src/`, assets em `assets/`, ferramentas em `tools/`, testes em `tests/`. Os onze arquivos recebidos originalmente continuam preservados com hashes em `docs/ASSETS_ORIGINAIS.json`. Capturas e vídeos desta revisão em `docs/review/lote01/marco-a-r4/`; `docs/screenshots/v11/` registra verificações históricas. O pacote inclui `INTEGRIDADE.sha256`.
+## Código e testes
 
-Esta entrega continua sendo um cliente local para testar o capítulo; servidor MMORPG, contas e persistência online ainda não estão implementados. Não há interface de save local. Recarregar a página reinicia a sessão.
+`src/`: código; `assets/`: recursos e originais preservados; `tests/`: testes; `tools/`: servidor e empacotamento. Os três PNGs finais estão em `assets/world/approved-final/`. O ZIP inclui `INTEGRIDADE.sha256` para conferir os arquivos.
 
-## Verificar e desenvolver
+Para desenvolvimento, instale as dependências com `npm ci`. Execute `npm run check`, `npm test` e `npm run test:e2e`. O Playwright precisa de Chromium (`npx playwright install chromium`, ou `CHROMIUM_PATH` para uma instalação existente).
 
-Jogar requer só Node; os comandos de testes usam as dependências de desenvolvimento:
-
-```sh
-npm ci
-npm run check
-npm test
-npx playwright install chromium
-npm run test:e2e
-```
-
-Se Chromium já estiver instalado, defina `CHROMIUM_PATH` quando necessário. O runner usa uma instância local na porta 4173 e executa um navegador por vez. Os testes antigos em `tests/browser/` documentam versões anteriores; a suíte atual está em `tests/browser-v11/`.
-
-`npm run package` gera o ZIP na pasta acima do projeto. Consulte `docs/review/lote01/marco-a-r4/RELATORIO.md` para os resultados e pendências da entrega e `docs/ARQUITETURA.md` para a organização.
+A suíte atual está em `tests/browser-v11/`. `final-playthrough.spec.js` percorre as seis combinações de protagonista/inicial e cobre vitória e derrota no ginásio. Os testes mais antigos permanecem como histórico. `npm run package` gera o ZIP jogável na pasta acima do projeto e verifica sua integridade.

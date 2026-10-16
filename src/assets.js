@@ -1,4 +1,5 @@
 import { CreatureAtlas } from "./creature-atlas.js";
+import { relaxedHumanFrame } from "./human-rig.js";
 import { ClinicRenderer } from "./clinic-renderer.js";
 import { NpcAtlas } from "./npc-atlas.js";
 import { setAttackAtlas } from "./effects.js";
@@ -33,8 +34,7 @@ export class Assets {
       battleLabDamaged: "assets/world/review-a3/laboratory-battle-damaged.png",
       battleGym: "assets/world/review-a3/gym-battle.png",
       battleCourtyard: "assets/world/courtyard-battle.png",
-      clinicApproved: "assets/world/review-a2/infirmary-floor.png",
-      clinicProps: "assets/world/review-a2/clinic-props.png",
+      clinicApproved: "assets/world/approved-final/ZIMONS_Enfermaria_Final_Aprovada.png",
       maraWalk: "assets/characters/review-a2/mara-walk.png",
       ayaWalk: "assets/characters/review-a2/aya-walk.png",
       liraSeated: "assets/characters/review-a/lira-seated.png",
@@ -321,6 +321,17 @@ export class Assets {
     );
     ctx.restore();
   }
+  prone(ctx,appearance,x,y,height,zlink=false){
+    const key='prone:'+JSON.stringify([appearance,zlink]);
+    let pose=this.frames.get(key);
+    if(!pose){
+      const base=this.frame(appearance.gender,'up',0,{...appearance,bag:0},zlink);
+      pose={...base,canvas:relaxedHumanFrame(base.canvas)};this.frames.set(key,pose);
+    }
+    const scale=height/pose.referenceHeight;
+    ctx.save();ctx.translate(x,y-5);ctx.rotate(-Math.PI/2);ctx.imageSmoothingEnabled=false;
+    ctx.drawImage(pose.canvas,-pose.anchor*scale,-pose.baseline*scale,192*scale,192*scale);ctx.restore();
+  }
   sleeping(ctx, appearance, x, y, height, zlink = false, eyesClosed = false) {
     const key = "sleep:" + JSON.stringify([appearance, zlink, eyesClosed]);
     let f = this.frames.get(key);
@@ -489,6 +500,7 @@ export class Assets {
   }
   walkIndex(key, dir, phase) {
     if (key.startsWith("npc:")) return [0, 1, 0, 3][phase % 4];
+    if(key==='fire'||key==='plant')return phase%4;
     return (this.meta[key].walkFrames?.[dir] || [0, 1, 0, 2])[phase % 4];
   }
   draw(

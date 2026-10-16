@@ -291,7 +291,14 @@ export class TileWorld {
     const m=MAPS[state.world];
     for(const e of m.exits) {
       const d=m.doorSpecs?.find(d=>d.id===e.id);
-      if(d)drawSlidingDoor(g,this.terrain(state.world),d,doorProgress(state.world,e.id),true);
+      if(d){
+        const terrain=this.terrain(state.world);
+        drawSlidingDoor(g,terrain,d,doorProgress(state.world,e.id),true);
+        // The lintel/wall must occlude the head even BEFORE the feet enter the
+        // aperture. Reuse the unchanged terrain as foreground; never cut a
+        // character's head off only after it has already crossed the threshold.
+        if(d.upper)g.drawImage(terrain,d.x,0,d.w,d.y,d.x,0,d.w,d.y);
+      }
     }
   }
   drawObjects(g, state) {

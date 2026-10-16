@@ -57,6 +57,7 @@ export function setDoorProgress(world,id,value) { progress.set(world+":"+id,valu
 export function doorAuthorized(state,exit) {
   if(state.world!=="corridor") return true;
   const q=state.quest;
+  if(exit.to==='dorm')return !!state.story.flags.roomReady;
   return q==="complete" || ["room","analysis"].includes(q) || ["plaza","clinic"].includes(exit.to)
     || exit.to==="lab" && ["prepare","choose","recalibrate","practice","return","tour","challenge"].includes(q)
     || exit.to==="gym" && ["tour","challenge"].includes(q)

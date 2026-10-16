@@ -34,7 +34,7 @@ export async function drive(page, predicate, timeout = 110000) {
   }
   throw Error("Story stalled " + JSON.stringify(await snap(page)));
 }
-export async function start(page, { gender = "female", brief = true } = {}) {
+export async function start(page, { gender = "female", brief = true, style="Curto", outfit="Uniforme" } = {}) {
   await page.goto("/?debug=1");
   await expect(page.locator("#title")).toHaveClass(/active/, {timeout:30000});
   await page.locator("#title-settings").click();
@@ -45,10 +45,10 @@ export async function start(page, { gender = "female", brief = true } = {}) {
   await page.locator("#title-new").click();
   await page.locator(`[data-gender='${gender}']`).click();
   await page
-    .getByRole("button", { name: "Penteado: Curto", exact: true })
+    .getByRole("button", { name: `Penteado: ${style}`, exact: true })
     .click();
   await page
-    .getByRole("button", { name: "Modelo da roupa: Uniforme", exact: true })
+    .getByRole("button", { name: `Modelo da roupa: ${outfit}`, exact: true })
     .click();
   await page.locator("#start").click();
   return drive(page, (s) => s.state.quest === "forest");
@@ -77,7 +77,7 @@ export async function select(page, key) {
   await navigate(page, target.x, target.y);
   await page.keyboard.press("e");
   await drive(page, (s) => s.scene === "starters");
-  if (key === "fire")
+  if (key === "fire" && page.reviewScreenshots !== false)
     await page.screenshot({
       path: "docs/screenshots/v11/07-escolha-essencia.png",
     });
@@ -147,8 +147,8 @@ export async function fight(page, { capture = false } = {}) {
         const s = window.zimonsDebug.snapshot();
         return (
           s.battle.fallen &&
-          s.effect?.kind === "transform" &&
-          s.effect.progress > 0.7
+          s.battle.player.transformed &&
+          !s.effect
         );
       },
       { timeout: 20000 },
@@ -175,7 +175,7 @@ export async function practice(page, { exitInstead = false } = {}) {
   await drive(page, (s) => s.state.quest === "return");
   if (exitInstead) await door(page, "lab-corridor");
   else await page.keyboard.press("t");
-  return drive(page, (s) => s.state.quest === "tour");
+  return drive(page, (s) => s.state.quest === "challenge");
 }
 
 export async function navigate(page, tx, ty) {
@@ -198,7 +198,7 @@ export async function navigate(page, tx, ty) {
         prev = new Map([[start.join(), null]]);
       let found;
       const clear = (x, y) =>
-        canStand(s.state.world, x, y, 11) &&
+        canStand(s.state.world, x, y, 15) &&
         actors.every((n) => Math.hypot(x - n.x, y - n.y) > 43);
       for (let i = 0; i < queue.length; i++) {
         const q = queue[i];

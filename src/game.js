@@ -74,6 +74,7 @@ const story = new OpeningStory({
   state: () => state,
   travel: (exit) => useDoor(exit),
   actors: () => [state, state.story.lira, ...worldNpcs(state.world)],
+  npcs: () => worldNpcs("gym"),
   refresh: updateWorldUI,
   talk: storyTalk,
   ask: storyAsk,
@@ -410,6 +411,7 @@ async function stageAction(kind) {
     wake: 2600,
     rampage: 8200,
     "partial-world": 3100,
+    "partial-recede": 1500,
     delivery: 1500,
     calibration: 2700,
     "red-eyes": 1200,
@@ -553,7 +555,8 @@ function renderDialogue() {
     rui: "Rui",
     teo: "Téo",
   };
-  $("speaker").textContent = names[entry.speaker] || entry.speaker;
+  $("speaker").textContent = (names[entry.speaker] || entry.speaker) +
+    (state?.story.whisper && ['player','lira'].includes(entry.speaker) ? ' · em voz baixa' : '');
   dialogue.entry = entry;
   if (state?.story.dream)
     state.story.dreamProgress =
@@ -728,29 +731,13 @@ async function useDoor(e) {
   const s = state,
     from = s.world;
   if (from === "corridor") {
-    const allowed =
-      s.quest === "complete" ||
-      ["room", "analysis"].includes(s.quest) ||
-      e.to === "plaza" ||
-      e.to === "clinic" ||
-      (e.to === "lab" &&
-        [
-          "prepare",
-          "choose",
-          "recalibrate",
-          "practice",
-          "return",
-          "tour",
-          "challenge",
-        ].includes(s.quest)) ||
-      (e.to === "gym" && ["tour", "challenge"].includes(s.quest)) ||
-      (e.to === "dorm" && s.story.flags.roomReady);
+    const allowed = doorAuthorized(s,e);
     if (!allowed) {
       openDialogue([
         {
           speaker: "player",
           text:
-            s.quest === "medical"
+            e.to === 'dorm' ? 'A porta dos alojamentos está trancada.' : s.quest === "medical"
               ? "Primeiro, a enfermaria. Lira está me esperando."
               : "Vou terminar o que combinei com Lira antes de visitar este setor.",
         },
@@ -785,7 +772,7 @@ async function useDoor(e) {
       s.story.lira.visible === false && s.story.lira.world === from;
     if (escorted) s.story.lira.visible = false;
     await story.walk(s, doorPath(MAPS[from],s,e), 135);
-    if(authored&&!guided){s.story.openDoor=e.id;await stageAction("door-open");}
+    if(authored&&!guided)await story.openDoor(e);
     await story.settleDoor(e,1);
     await story.crossDoor(s,e);
     await story.api.transition(MAPS[e.to].name, () => {
@@ -852,7 +839,9 @@ async function interact() {
         "bedside-table": state.zlink
           ? "Há uma caneca ao lado dos registros médicos."
           : "Meu Z-Link não está aqui. Lira deve estar trabalhando nele.",
-        "medical-monitor": "Espero não precisar passar outra noite aqui.",
+        "medical-monitor": "O monitor acompanha meus batimentos e minha recuperação.",
+        "clinic-chair": "Lira ficou sentada aqui enquanto eu descansava.",
+        "clinic-workstation": "A bancada guarda os registros e os materiais da enfermaria.",
         "lab-bench": state.story.flags.labDamaged
           ? "A tela ainda está rachada. Não lembro de ter atingido essa bancada."
           : "Um terminal acompanha os parâmetros da plataforma.",
@@ -1649,6 +1638,7 @@ function updateBattleUI() {
     button.disabled =
       battle.phase !== "player" ||
       !!battle.result ||
+      (battle.storyBattle && !["attack", "skill"].includes(action)) ||
       !knowsMove(p.level, action) ||
       (["attack", "skill", "special"].includes(action) && !p.transformed) ||
       (action === "skill" && p.energy < 14) ||
@@ -1837,6 +1827,10 @@ async function startBattle(npc = null) {
   lastOpponent = npc;
   closeModal();
   endDialogue();
+  if(state.story.flags.arenaOccupied)return;
+  state.story.flags.arenaOccupied=true;
+  if(story.active)await story.arenaEntry(npc);
+  else await story.play('ENTRADA NA ARENA',()=>story.arenaEntry(npc));
   const token = ++runToken;
   const origin = { world: state.world, x: state.x, y: state.y, dir: state.dir };
   battle = createBattle(state.starter, state.transformed, {
@@ -2039,40 +2033,9 @@ async function finishBattle(win) {
     };
     await wait(fx.duration);
     battle.fallen = true;
-    fx = {
-      kind: "transform",
-      side: "player",
-      to: false,
-      fallen: true,
-      start: clock(),
-      duration: pace(3400, 500),
-      height: 185,
-      color: STARTERS[battle.starter].color,
-    };
-    message(
-      "Você permanece no chão enquanto a Sincro se desfaz. O brilho vermelho desaparece.",
-    );
-    await wait(fx.duration);
     fx = null;
-    battle.player.transformed = false;
-    state.transformed = false;
-    state.story.possessed = false;
-    updateBattleUI();
-    message(
-      `Lira: “${state.name}? Está respirando… Vou levar você à enfermaria. Não vou sair daqui.”`,
-    );
-    fx = {
-      kind: "partial",
-      side: "opponent",
-      to: false,
-      start: clock(),
-      duration: pace(1500, 350),
-      color: STARTERS.plant.color,
-    };
-    await wait(fx.duration);
-    fx = null;
-    battle.opponent.partial = false;
-    await wait(pace(1000, 250));
+    message(`Lira: “${state.name}? A Sincro ainda está ativa. Vou ficar com você.”`);
+    await wait(pace(900,250));
     $("result-title").textContent = "Sincro interrompida.";
     $("result-text").textContent =
       "O protagonista continua inconsciente. Lira chama a equipe médica e acompanha o atendimento. A recuperação não será imediata.";
@@ -2162,23 +2125,27 @@ async function returnWorld() {
     story.recovered();
     return;
   }
-  if (battle.player.transformed) {
+  if (battle.player.transformed || battle.opponent.transformed) {
     fx = {
       kind: "transform",
-      side: "player",
+      side: "both",
       to: false,
+      already: {player: !battle.player.transformed, opponent: !battle.opponent.transformed},
       start: clock(),
       duration: pace(3000, 400),
       height: 205,
       color: STARTERS[battle.starter].color,
+      enemyColor: STARTERS[battle.enemy].color,
     };
     await wait(fx.duration);
   }
   battle.player.transformed = false;
+  battle.opponent.transformed = false;
   state.transformed = false;
   fx = null;
   Object.assign(state, battle.origin);
   setScene("world");
+  await story.play('SAÍDA DA ARENA',()=>story.arenaExit());
   save();
   if (state.quest === "challenge" && !state.story.flags.nicoResolved) {
     state.story.flags.nicoResolved = true;
@@ -2198,8 +2165,8 @@ function requestLeaveBattle() {
   yes.onclick = () => {
     closeModal();
     state.transformed = battle.player.transformed;
-    state.health = battle.player.hp;
-    state.energy = battle.player.energy;
+    state.health = battle.player.maxHP;
+    state.energy = battle.player.maxEnergy;
     battle.result = "escape";
     state.challenges[battle.opponentId] = { result: "escape" };
     returnWorld();
@@ -2342,6 +2309,7 @@ function update(realTime) {
         .reverse()
         .find((k) => k.startsWith("arrow"))
         ?.slice(5),
+      story.motion?.actor,
     );
     moving = false;
     if (!dialogue && !modal && !fx && !story.active && !document.hidden) {
@@ -2504,11 +2472,8 @@ function skipStoryStep() {
     return;
   }
   if (story.motion) {
-    const m = story.motion,
-      [x, y] = m.points.at(-1);
-    Object.assign(m.actor, { x, y, moving: false, frame: 0 });
-    story.motion = null;
-    m.resolve();
+    // Keep footsteps, collision and the follower's route when skipping a walk.
+    story.skipWalk();
   }
 }
 function installEvents() {

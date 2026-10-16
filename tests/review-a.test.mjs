@@ -9,21 +9,21 @@ import { stageUpdate } from "../src/scene-staging.js";
 test("rotas da enfermaria verificam segmentos completos entre pontos fora da grade", () => {
   const routes = [
     [
-      [550.7, 420.3],
-      [[550, 360], [260, 360], CLINIC.liraApproach],
-      { world: "clinic", x: 640, y: 640 },
+      [384.7, 400.3],
+      [[300,350], [CLINIC.liraApproach[0],350], CLINIC.liraApproach],
+      { world: "clinic", x: CLINIC.entry[0], y: CLINIC.entry[1] },
     ],
     [
-      [435.3, 520.7],
-      [[470, 263], CLINIC.playerApproach],
+      [384.3, 365.7],
+      [[266,365],CLINIC.playerApproach],
       { world: "clinic", x: CLINIC.liraApproach[0], y: CLINIC.liraApproach[1] },
     ],
     [
       CLINIC.liraApproach,
       [
-        [540, 360],
-        [640, 360],
-        [640, 674],
+        [112.38188524590164, 328],
+        [384, 328],
+        [384, 459],
       ],
       { world: "clinic", x: CLINIC.playerRest[0], y: CLINIC.playerRest[1] },
     ],
@@ -92,5 +92,6 @@ test("aproximação à cama é lateral; transferência articulada não é caminh
   stageUpdate(s, { kind: "bed-rise", start: 0, duration: 1500 }, 1500);
   assert.deepEqual([s.x, s.y], CLINIC.playerApproach);
   assert.equal(s.story.resting, false);
+  assert.equal(s.dir,"down");
   assert.ok(mapStand("clinic", s.x, s.y, 11));
 });

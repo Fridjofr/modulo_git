@@ -69,7 +69,7 @@ export const MAPS = {
     ],
     objects: [],
     exits: [
-      door("corridor-clinic",242,215,"clinic",640,640,"Enfermaria"),
+      door("corridor-clinic",242,215,"clinic",...CLINIC.entry,"Enfermaria"),
       door("corridor-lab",551,215,"lab",640,600,"Laboratório"),
       door("corridor-gym",824,215,"gym",640,640,"Ginásio"),
       door("corridor-dorm",1112,215,"dorm",640,580,"Alojamentos"),
@@ -86,21 +86,19 @@ export const MAPS = {
   },
   clinic: {
     name: "Enfermaria",
-    size: [1280, 720],
+    size: CLINIC.size,
     art: "clinicApproved",
     indoor: true,
-    bounds: [90, 160, 1100, 535],
-    walkZones: [
-      [105, 160, 1070, 453],
-      [584, 600, 112, 95],
-    ],
+    bounds: [28, 128, 712, 443],
+    walkZones: [[38, 144, 692, 312], [338, 440, 91, 120]],
     objects: [
-      solid(...CLINIC.bedCollision, "clinic-bed"),
-      solid(435, 155, 90, 58, "clinic-monitor"),
-      solid(...CLINIC.chairCollision, "clinic-chair"),
-      solid(783, 152, 217, 118, "clinic-workstation"),
+      {...solid(...CLINIC.bedCollision, "clinic-bed"), interaction: CLINIC.playerApproach},
+      {...solid(...CLINIC.monitorCollision, "medical-monitor"), interaction: [64, 218]},
+      {...solid(...CLINIC.chairCollision, "clinic-chair"), interaction: [112.38, 285]},
+      {...solid(...CLINIC.workstationCollision, "clinic-workstation"), interaction: [620, 237]},
     ],
-    exits: [door("clinic-corridor", 640, 674, "corridor", 242, 242, "Átrio")],
+    exits: [door("clinic-corridor", 384, 459, "corridor", 242, 242, "Átrio")],
+    doorSpecs: [CLINIC.door],
   },
   lab: {
     name: "Laboratório de Lira", size: [1280, 722], art: "labApproved", indoor: true,
@@ -208,5 +206,5 @@ export function mapStand(world, x, y, radius = 9) {
 export function objectNear(state, range = 72) {
   return MAPS[state.world]?.objects
     .filter((o) => o.id)
-    .find((o) => Math.hypot(state.x - o.x, state.y - o.y) < range);
+    .find((o) => Math.hypot(state.x - (o.interaction?.[0] ?? o.x), state.y - (o.interaction?.[1] ?? o.y)) < range);
 }

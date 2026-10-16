@@ -138,6 +138,11 @@ export class OpeningStory {
       };
     });
   }
+  skipWalk() {
+    if(!this.motion)return;
+    this.motion.speed=Math.min(300,this.motion.speed*2);
+    this.motion.fastForward=true;
+  }
   update(dt) {
     this.escort(dt);
     const m = this.motion;
@@ -194,7 +199,7 @@ export class OpeningStory {
         const [tx, ty] = trail[0],
           dx = tx - f.actor.x,
           dy = ty - f.actor.y,
-          k = Math.min(dt * 150, Math.abs(dx) + Math.abs(dy));
+          k = Math.min(dt * (m.fastForward ? m.speed : 150), Math.abs(dx) + Math.abs(dy));
         const nx =
             f.actor.x +
             (Math.abs(dx) > 0.1
@@ -459,7 +464,7 @@ export class OpeningStory {
     this.following = { actor: s, trail, distance: 0 };
     await this.walk(l, doorPath(MAPS[s.world],l,exit), 154);
     this.following = null;
-    if(authored){s.story.openDoor=exit.id;await this.api.stage("door-open");await this.settleDoor(exit,1);}
+    if(authored)await this.openDoor(exit);
     await this.crossDoor(l,exit,false);
     l.visible = false;
     s.moving = false;
@@ -469,11 +474,16 @@ export class OpeningStory {
     while(Math.abs(doorProgress(this.state.world,exit.id)-target)>.001)
       await new Promise(requestAnimationFrame);
   }
+  async openDoor(exit) {
+    this.state.story.openDoor=exit.id;
+    // Authored leaves already animate while the actor approaches. Await their
+    // actual state, not another 620 ms stage after they have finished opening.
+    if(MAPS[this.state.world].doorSpecs)await this.settleDoor(exit,1);
+    else await this.api.stage("door-open");
+  }
   async leaveDoor(actor,exit) {
     await this.walk(actor,doorPath(MAPS[this.state.world],actor,exit),150);
-    this.state.story.openDoor=exit.id;
-    await this.api.stage("door-open");
-    await this.settleDoor(exit,1);
+    await this.openDoor(exit);
     await this.crossDoor(actor,exit);
   }
   async crossDoor(actor,exit,close=true) {
@@ -482,7 +492,6 @@ export class OpeningStory {
     await this.walk(actor,[crossingPoint(map,exit)],150);
     if(close) {
       this.state.story.closingDoor=exit.id;
-      await this.api.stage("door-open");
       await this.settleDoor(exit,0);
       // Let the fully closed pose render before the map fade begins.
       await new Promise(resolve=>setTimeout(resolve,120));
@@ -553,14 +562,13 @@ export class OpeningStory {
         ]);
         await this.guidedTransition(
           MAPS.corridor.exits.find((e) => e.to === "clinic"),
-          550,
-          420,
+          ...CLINIC.liraEntry,
         );
-        await this.walk(l, [[550, 360], [260, 360], CLINIC.liraApproach], 150);
+        await this.walk(l, [[300, 350], [CLINIC.liraApproach[0], 350], CLINIC.liraApproach], 150);
         this.setQuest("medical");
         await this.walk(
           s,
-          [[640, 520], [470, 520], [470, 263], CLINIC.playerApproach],
+          [[384, 365], [266, 365], CLINIC.playerApproach],
           150,
         );
         await this.scene(4, 0, 1);
@@ -629,7 +637,6 @@ export class OpeningStory {
       await this.scene(6, 4, 5);
       await this.api.stage("calibration");
       await this.scene(6, 5, 17);
-      await this.api.stage("calibration");
       await this.scene(6, 17, 26);
       this.state.story.flags.calibrated = true;
       this.api.choose();
@@ -661,10 +668,16 @@ export class OpeningStory {
   recovered() {
     return this.play("O SEGUNDO DESPERTAR", async () => {
       const s = this.state;
-      s.transformed = false;
-      s.story.possessed = false;
-      s.story.lira.partial = false;
-      s.story.dream = "mist";
+      // Return to the same damaged lab while still transformed and downed.
+      s.story.down=true;
+      await this.api.talk([L("Fique comigo. A crise passou... vou ajudar você.")]);
+      await this.api.transform(false);
+      s.story.possessed=false;
+      await this.api.stage("partial-recede");
+      s.story.lira.partial=false;
+      await this.api.talk([L("Está respirando. Preciso da equipe médica aqui, agora!")]);
+      s.story.down=false;
+      s.story.dream = "parents";
       await this.scene(8);
       await this.location(
         "clinic",
@@ -691,15 +704,7 @@ export class OpeningStory {
       s.zlink = false;
       s.story.freeLink = false;
       await this.api.stage("lira-stand");
-      await this.walk(
-        s.story.lira,
-        [
-          [540, 360],
-          [640, 360],
-          [640, 674],
-        ],
-        150,
-      );
+      await this.leaveDoor(s.story.lira, MAPS.clinic.exits[0]);
       Object.assign(s.story.lira, {
         world: "lab",
         x: 868,
@@ -771,35 +776,52 @@ export class OpeningStory {
           L("Isso! Agora vamos conhecer o ginásio."),
         ]);
         await this.scene(12);
-        await this.walk(
-          this.state.story.lira,
-          [
-            [868, 520],
-            [640, 520],
-            [640, 520],
-          ],
-          150,
-        );
-        await this.leaveDoor(this.state.story.lira,MAPS.lab.exits[0]);
-        Object.assign(this.state.story.lira, {
-          world: "gym",
-          x: 1105,
-          y: 600,
-          visible: true,
-          moving: false,
-        });
         this.setQuest("tour");
+        await this.guidedTransition(MAPS.lab.exits[0],551,285);
+        await this.guidedTransition(MAPS.corridor.exits.find(e=>e.to==='gym'),640,590);
+        this.following={actor:this.state,trail:[[640,590]],distance:0};
+        await this.walk(this.state.story.lira,[[980,590],[1105,590],[1105,600]],150);
+        this.following=null;
+        await this.studentsScene();
       });
   }
   meetStudents() {
-    return this.play("OS PRIMEIROS COLEGAS", async () => {
-      await this.walk(this.state, [[1015, 600]], 150);
-      await this.scene(13, 0, 16);
-      await this.api.stage("exhibition");
-      await this.scene(13, 16);
-      await this.scene(14, 0, 18);
-      this.setQuest("challenge");
-    });
+    return this.play("OS PRIMEIROS COLEGAS",()=>this.studentsScene());
+  }
+  async studentsScene() {
+    const npcs=this.api.npcs(),nina=npcs.find(n=>n.id==='nina'),caio=npcs.find(n=>n.id==='caio');
+    await this.walk(this.state,[[1015,600]],150);
+    await this.scene(13,0,16);
+    await this.walk(nina,[[175,465],[400,465]],150);nina.dir='right';
+    await this.walk(caio,[[875,350]],150);caio.dir='left';
+    await this.api.stage('exhibition');
+    await this.walk(nina,[[175,465],[175,400]],150);nina.dir='right';
+    await this.walk(caio,[[1105,350]],150);caio.dir='left';
+    await this.scene(13,16);
+    await this.scene(14,0,10);
+    await this.walk(this.state,[[1071,600]],150);
+    this.state.story.whisper=true;
+    await this.scene(14,10,16);
+    this.state.story.whisper=false;
+    await this.walk(this.state,[[1015,600]],150);
+    await this.scene(14,16,18);
+    this.setQuest('challenge');
+  }
+  async arenaEntry(npc) {
+    const s=this.state;
+    s.story.duelHome={player:[s.x,s.y],opponent:{id:npc.id,x:npc.x,y:npc.y,dir:npc.dir}};
+    await this.walk(s,[[640,600],[400,600],[400,465]],150);
+    await this.walk(npc,[[875,350]],150);
+    s.dir='right';npc.dir='left';
+  }
+  async arenaExit() {
+    const s=this.state,home=s.story.duelHome;
+    if(home){
+      const npc=this.api.npcs().find(n=>n.id===home.opponent.id);
+      if(npc){await this.walk(npc,[[home.opponent.x,home.opponent.y]],150);npc.dir=home.opponent.dir;}
+      await this.walk(s,[[400,600],[1015,600]],150);
+    }
+    delete s.story.duelHome;delete s.story.flags.arenaOccupied;
   }
   challenge() {
     return this.play("O PRIMEIRO DESAFIO", async () => {

@@ -1,4 +1,5 @@
 import http from "node:http";
+import { spawn } from "node:child_process";
 import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -49,8 +50,16 @@ http
       res.end("Arquivo não encontrado");
     }
   })
-  .listen(port, "0.0.0.0", () =>
-    console.log(
-      `ZIMONS: servidor iniciado na porta ${port}. Ctrl+C para encerrar.`,
-    ),
-  );
+  .on("error",error=>{
+    console.error(error.code==='EADDRINUSE'
+      ? `A porta ${port} já está em uso. Feche a outra janela do jogo e tente novamente.`
+      : `Não foi possível iniciar ZIMONS: ${error.message}`);
+    process.exitCode=1;
+  })
+  .listen(port, "0.0.0.0", () => {
+    console.log(`ZIMONS: http://localhost:${port} — mantenha esta janela aberta. Ctrl+C para encerrar.`);
+    if(process.platform==='win32'&&process.env.ZIMONS_OPEN_BROWSER==='1'){
+      const browser=spawn('cmd.exe',['/c','start','',`http://localhost:${port}`],{stdio:'ignore',windowsHide:true});
+      browser.on('error',()=>console.log(`Abra http://localhost:${port} no navegador.`));
+    }
+  });

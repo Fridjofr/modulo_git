@@ -27,3 +27,21 @@ export function drawHumanGait(g, source, direction, index = 0) {
     }
   }
 }
+
+// Supine/prone rest uses the selected character's own pixels. Shoulder and hip
+// joints relax independently; hair, clothing and body scale are never replaced.
+export function relaxedHumanFrame(source) {
+  const c=Object.assign(document.createElement('canvas'),{width:192,height:192});
+  const g=c.getContext('2d');g.imageSmoothingEnabled=false;g.drawImage(source,0,0);
+  g.clearRect(60,100,72,92);
+  g.drawImage(source,76,100,40,36,76,100,40,36);
+  for(const [x,pivot,angle] of [[60,76,.26],[116,116,-.26]]){
+    g.save();g.translate(pivot,102);g.rotate(angle);
+    g.drawImage(source,x,100,16,42,x-pivot,-2,16,42);g.restore();
+  }
+  for(const [x,pivot,angle] of [[76,86,.08],[96,106,-.08]]){
+    g.save();g.translate(pivot,136);g.rotate(angle);
+    g.drawImage(source,x,136,20,56,x-pivot,0,20,56);g.restore();
+  }
+  return c;
+}

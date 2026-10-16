@@ -1,0 +1,27 @@
+import {test,expect} from '@playwright/test';
+import {start,snap,drive,move,navigate,door,select,fight,recover,practice} from './helpers.js';
+test('exibição livre pode ser encerrada; participantes saem humanos e alojamento incompleto fica trancado',async({page})=>{
+ test.setTimeout(360000);page.fastStory=true;page.reviewScreenshots=false;
+ const errors=[];page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
+ await start(page,{brief:true});
+ await move(page,'y',600);await move(page,'x',1160);await move(page,'y',500);await move(page,'x',1420);
+ await drive(page,s=>s.state.quest==='entrance');await navigate(page,768,270);await drive(page,s=>s.state.quest==='choose',120000);
+ await select(page,'fire');await fight(page);await recover(page);await practice(page);
+ await navigate(page,1070,520);await page.keyboard.press('e');await drive(page,s=>s.scene==='battle'&&s.battle.phase==='player');
+ await fight(page);await page.locator('#return-world').click();await drive(page,s=>s.state.quest==='complete');
+ const previous=(await snap(page)).state.xp;
+ await navigate(page,1070,520);await page.keyboard.press('e');
+ await page.getByRole('button',{name:'Batalha de exibição',exact:true}).click();
+ await drive(page,s=>s.scene==='battle'&&s.battle.phase==='player');
+ expect((await snap(page)).battle.mandatory).toBe(false);
+ await page.locator('[data-battle-tab="exit"]').click();await page.locator('#leave-training').click();
+ await page.getByRole('button',{name:'Voltar à Academia',exact:true}).click();
+ await drive(page,s=>s.scene==='world'&&!s.state.story.flags.arenaOccupied);
+ let s=await snap(page);expect(s.state.xp).toBe(previous);expect(s.battle.player.transformed).toBe(false);expect(s.battle.opponent.transformed).toBe(false);
+ expect(s.state.health).toBe(s.battle.player.maxHP);expect(s.state.energy).toBe(s.battle.player.maxEnergy);
+ expect(s.actors.every(n=>n.x<250||n.x>1000)).toBe(true);
+ await door(page,'gym-corridor');await navigate(page,1112,215);await page.keyboard.press('e');
+ await expect(page.locator('#dialogue')).toBeVisible();s=await snap(page);expect(s.state.world).toBe('corridor');expect(s.story.active).toBe(false);
+ const progress=await page.evaluate(async()=>{const {doorProgress}=await import('/src/doors.js');return doorProgress('corridor','corridor-dorm');});expect(progress).toBe(0);
+ expect(errors).toEqual([]);
+});

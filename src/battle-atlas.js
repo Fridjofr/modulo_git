@@ -84,6 +84,24 @@ export class BattleAtlas {
   if(flash){ctx.globalAlpha*=flash*.3;ctx.globalCompositeOperation='lighter';ctx.drawImage(f.canvas,-f.anchor*scale,-f.baseline*scale,512*scale,512*scale);}
   ctx.restore();
  }
+ drawCollapsed(ctx,key,x,y,height,progress=1,{flip=false}={}){
+  const actor=this.actors[key],f=actor.frames[5],scale=height/actor.referenceHeight;
+  if(!f.closed){
+    f.closed=canvas(512,512);const g=f.closed.getContext('2d');g.drawImage(f.canvas,0,0);
+    for(const [cx,cy,rx,ry] of eyeShapes[key][5]){
+      const pixel=g.getImageData(cx,Math.max(0,cy-ry-5),1,1).data;
+      g.fillStyle=pixel[3]?`rgb(${pixel[0]},${pixel[1]},${pixel[2]})`:'#334957';
+      g.beginPath();g.ellipse(cx,cy,rx,ry,0,0,Math.PI*2);g.fill();
+      g.strokeStyle='#15212b';g.lineWidth=3;g.beginPath();g.moveTo(cx-rx*.75,cy);g.quadraticCurveTo(cx,cy+3,cx+rx*.75,cy);g.stroke();
+    }
+  }
+  const cut=Math.round(f.top+(f.bottom-f.top)*.64),fold=1-.65*progress;
+  const drop=(f.baseline-cut)*(1-fold),image=progress>.55?f.closed:f.canvas;
+  ctx.save();ctx.translate(x,y);if(flip)ctx.scale(-1,1);ctx.imageSmoothingEnabled=false;
+  ctx.drawImage(image,0,0,512,cut,-f.anchor*scale,(-f.baseline+drop)*scale,512*scale,cut*scale);
+  ctx.drawImage(image,0,cut,512,512-cut,-f.anchor*scale,(cut-f.baseline+drop)*scale,512*scale,(512-cut)*scale*fold);
+  ctx.restore();
+ }
  point(key,pose,height,point,flip=false){const a=this.actors[key],f=a.frames[pose%6],s=height/a.referenceHeight;return {x:(point[0]-f.anchor)*s*(flip?-1:1),y:(point[1]-f.baseline)*s};}
  reach(key,pose,height){const a=this.actors[key],f=a.frames[pose%6];return (key==='lira'?f.anchor-f.left:f.right-f.anchor)*height/a.referenceHeight;}
  stats(){return {mode:'sprite-atlases',webgl:false,poses:6,actors:Object.keys(this.actors),lastDraws:this.lastDraws};}

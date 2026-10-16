@@ -1,0 +1,51 @@
+
+Running 1 test using 1 worker
+
+(node:283662) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+FLOW corridor entrance 242 463.3281999999977 242 115.00999999999968 { active: true, motion: { x: 242, y: 115.00999999999968 } } null
+FLOW clinic medical 266 225 112.38188524590164 259.36 { active: true, motion: null } {
+  kind: 'bed-lie',
+  to: undefined,
+  duration: 2100,
+  progress: 0.4285238095238102
+}
+FLOW clinic medical 266 225 112.38188524590164 259.36 { active: true, motion: null } {
+  kind: 'lira-stand',
+  to: undefined,
+  duration: 1300,
+  progress: 0.4358461538461583
+}
+FLOW corridor medical 242 242 318.2436000000002 335 { active: true, motion: { x: 318.2436000000002, y: 335 } } null
+FLOW lab prepare 640 500 868 391.4999999999999 { active: true, motion: { x: 868, y: 391.4999999999999 } } null
+female fire LAB
+FLOW lab crisis 640 497.83288450887466 868 369 { active: true, motion: null } {
+  kind: 'rampage',
+  to: undefined,
+  duration: 8200,
+  progress: 0.10975609756097561
+}
+FLOW lab crisis 902 430 802 425 { active: true, motion: null } {
+  kind: 'partial-world',
+  to: undefined,
+  duration: 3100,
+  progress: 0.8816774193548425
+}
+FLOW clinic recovery 186 220 384 516.4949999999982 { active: true, motion: { x: 384, y: 516.4949999999982 } } null
+female fire RECOVERED
+FLOW lab recalibrate 640 500 868 465.00499999999744 { active: true, motion: { x: 868, y: 465.00499999999744 } } null
+FLOW lab tour 640 734 640 734 { active: true, motion: null } null
+FLOW gym tour 877.479999999976 590 1010.0150000000008 590 { active: true, motion: { x: 1010.0150000000008, y: 590 } } null
+FLOW gym tour 1015 600 1105 600 { active: true, motion: null } {
+  kind: 'exhibition',
+  to: undefined,
+  duration: 11000,
+  progress: 0.4848272727272733
+}
+FLOW gym tour 1018.5 600 1105 600 { active: true, motion: { x: 1018.5, y: 600 } } null
+female fire GYM
+FLOW gym challenge 400 465 1105 600 { active: true, motion: null } null
+female fire COMPLETE
+  ✓  1 tests/browser-v11/final-playthrough.spec.js:12:56 › female-fire: capítulo completo e vitória no ginásio (4.9m)
+
+  1 passed (4.9m)

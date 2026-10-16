@@ -1,4 +1,4 @@
-import { battleEnvironment } from "./battle-environment.js";
+import { drawBattleArena, battleEnvironment } from "./battle-environment.js";
 import { MAPS } from "./maps.js";
 import { drawLabDamage } from "./scene-staging.js";
 import { WORLD_SIZE, FOREST_POINTS, questTarget } from "./world.js";
@@ -107,7 +107,6 @@ export class Renderer {
     ctx.scale(zoom, zoom);
     ctx.translate(-camera.x, -camera.y);
     this.assets.tiles.draw(ctx, state, now);
-    if (state.world === "clinic") this.assets.clinic.furniture(ctx, state);
     if (state.world === "forest" && state.quest === "forest") {
       const point = questTarget(state);
       if (point)
@@ -117,31 +116,14 @@ export class Renderer {
     const demo = state.story.demo;
     const demoActors = worldNpcs(state.world).map((n) => {
       if (demo === undefined || !["nina", "caio"].includes(n.id)) return n;
-      const smooth = (t) => {
-          t = Math.max(0, Math.min(1, t));
-          return t * t * (3 - 2 * t);
-        },
-        left = n.id === "nina",
-        home = { x: n.x, y: n.y },
-        station = left ? { x: 400, y: 465 } : { x: 875, y: 350 };
-      const enter = smooth(demo / 0.18),
-        leave = smooth((demo - 0.89) / 0.11),
-        mix = enter * (1 - leave),
-        phase = Math.max(0, Math.min(1, (demo - 0.3) / 0.3)),
-        travel =
-          phase < 0.68
-            ? smooth((phase - 0.12) / 0.56)
-            : 1 - smooth((phase - 0.68) / 0.32);
-      return {
-        ...n,
-        x: home.x + (station.x - home.x) * mix + (left ? travel * 370 : 0),
-        y: home.y + (station.y - home.y) * mix - (left ? travel * 85 : 0),
-        dir: left ? "right" : "left",
-        moving: demo < 0.18 || demo > 0.89,
-        frame: Math.floor(demo * 60) % 4,
-        demoForm: demo > 0.23 && demo < 0.86 ? (left ? "water" : "fire") : null,
-        demoPose: travel > 0.05 ? 2 : 0,
-      };
+      const left=n.id==='nina';
+      const phase=Math.max(0,Math.min(1,(demo-.3)/.3));
+      const travel=phase<.68?Math.max(0,(phase-.12)/.56):Math.max(0,1-(phase-.68)/.32);
+      const t=travel*travel*(3-2*travel);
+      return {...n,x:n.x+(left?t*370:0),y:n.y-(left?t*85:0),
+        dir:left?'right':'left',moving:false,
+        demoForm:demo>.137&&demo<.948?(left?'water':'fire'):null,
+        demoPose:travel>.05?2:0};
     });
     const entities = [
       { type: "player", x: state.x, y: state.y },
@@ -182,6 +164,7 @@ export class Renderer {
         const partialProgress =
           fx?.kind === "partial-world"
             ? Math.min(1, (now - fx.start) / fx.duration)
+            : fx?.kind === "partial-recede" ? 1-Math.min(1,(now-fx.start)/fx.duration)
             : e.partial
               ? 1
               : 0;
@@ -257,9 +240,7 @@ export class Renderer {
         const human = e.human || ["male", "female"].includes(e.sprite);
         const idle = e.moving
           ? this.assets.walkIndex(e.sprite, e.dir, e.frame)
-          : human
-            ? 0
-            : Math.floor(now / 420) % 3;
+          : 0;
         if (e.demoForm)
           this.assets.battle.draw(ctx, e.demoForm, e.demoPose, e.x, e.y, 82, {
             flip: e.id === "caio",
@@ -314,6 +295,13 @@ export class Renderer {
           (state.story.resting || state.story.bedPose !== undefined)
         ) {
           this.assets.clinic.patient(ctx, state);
+          continue;
+        }
+        if(state.story.down){
+          const p=fx?.kind==='transform'?(now-fx.start)/fx.duration:0;
+          const creature=state.transformed && !(fx?.kind==='transform'&&!fx.to&&p>=.5);
+          if(creature)this.assets.battle.drawCollapsed(ctx,state.starter,e.x,e.y,84,1,{flip:false});
+          else this.assets.prone(ctx,state.appearance,e.x,e.y,84,state.zlink);
           continue;
         }
         const fading =
@@ -383,7 +371,6 @@ export class Renderer {
       }
       ctx.restore();
     }
-    if (state.world === "clinic") this.assets.clinic.blanketLayer(ctx, state);
     if (fx) this.drawFX(ctx, fx, now, reducedMotion);
     ctx.restore();
     this.drawMinimap(
@@ -549,6 +536,9 @@ export class Renderer {
           192 * scale,
         );
       }
+      // A single shared handhold connects the two authored human silhouettes.
+      ctx.strokeStyle='#b7cfd0';ctx.lineWidth=6;ctx.lineCap='round';
+      ctx.beginPath();ctx.moveTo(622,374);ctx.quadraticCurveTo(638,382,654,377);ctx.stroke();
       ctx.restore();
     }
     ctx.restore();
@@ -825,6 +815,7 @@ export class Renderer {
       battleEnvironment(battle.world, state.story.flags)
     ];
     ctx.drawImage(environment, 0, 0, 1280, 720);
+    drawBattleArena(ctx);
     this.battlePoints = BATTLE_MARKS;
     const actors = ["opponent", "player"].map((side) => {
       const transformed = battleForm(battle, side, fx, now);
@@ -874,11 +865,7 @@ export class Renderer {
       const { side, player, transformed, pose, key, height } = actor;
       this.shadow(ctx, pose.x, pose.ground, player ? 61 : 49);
       ctx.save();
-      if (pose.fallProgress) {
-        ctx.translate(pose.x, pose.ground - 18);
-        ctx.rotate((-Math.PI / 2) * pose.fallProgress);
-        ctx.translate(0, height * 0.46 * pose.fallProgress);
-      } else ctx.translate(pose.x, pose.y);
+      ctx.translate(pose.x, pose.y);
       ctx.rotate(pose.tilt);
       ctx.scale(pose.scaleX, pose.scaleY);
       const appearance = transformed
@@ -908,7 +895,9 @@ export class Renderer {
           true,
           1 - partialFade,
         );
-      if (transformed || partial) {
+      if(transformed && pose.fallProgress){
+        this.assets.battle.drawCollapsed(ctx,key,0,0,height,pose.fallProgress,{flip:!player});
+      } else if (transformed || partial) {
         this.assets.battle.draw(
           ctx,
           partial ? "lira" : key,

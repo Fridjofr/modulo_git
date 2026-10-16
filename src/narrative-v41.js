@@ -703,26 +703,10 @@ export const SCENES={
     }
   ],
   "8": [
-    {
-      "speaker": "player",
-      "text": "Onde estou...?"
-    },
-    {
-      "speaker": "player",
-      "text": "Ei! Quem é você?"
-    },
-    {
-      "speaker": "player",
-      "text": "Por que sinto que conheço você...?"
-    },
-    {
-      "speaker": "player",
-      "text": "Espera!"
-    },
-    {
-      "speaker": "player",
-      "text": "NÃO!"
-    }
+    {"speaker":"player","text":"Aquelas duas pessoas... de novo."},
+    {"speaker":"player","text":"Continuam de mãos dadas. Eu queria conseguir ver seus rostos."},
+    {"speaker":"player","text":"Por que sinto tanta falta de alguém de quem não consigo lembrar?"},
+    {"speaker":"player","text":"Esperem... só mais um pouco."}
   ],
   "9": [
     {

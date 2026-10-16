@@ -1,0 +1,18 @@
+ZIMONS 0.12.0 — COMO JOGAR
+
+1. Extraia TODO o ZIP antes de abrir o jogo.
+2. Instale Node.js LTS (20 ou superior): https://nodejs.org
+3. Abra INICIAR.bat e mantenha a janela aberta.
+4. O navegador abre automaticamente. Se necessário: http://localhost:4173
+
+Não precisa instalar dependências nem compilar.
+Não abra index.html diretamente.
+
+Setas: andar. E/Enter: conversar. Esc: menu. T: Sincro quando permitida.
+R: avançar a etapa atual. V: velocidade da batalha (1x, 2x, 3x).
+
+O trecho termina após Nico; depois há exibições no ginásio.
+Recarregar a página reinicia a sessão.
+Para parar, feche a janela do servidor ou pressione Ctrl+C.
+
+Mais detalhes: README.md e PROBLEMAS_CONHECIDOS.md.

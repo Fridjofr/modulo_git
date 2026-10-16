@@ -101,9 +101,7 @@ test("percurso v11, escolta física, descanso, possessão e encerramento no gin�
   await page.locator("#dex-button").click();
   await capture("12-zimondex");
   await page.keyboard.press("Escape");
-  await door(page, "lab-corridor");
-  await capture("13-corredor");
-  await door(page, "corridor-gym");
+  expect((await snap(page)).state.world).toBe("gym");
   console.log("GYM");
   await capture("14-ginasio");
   s = await snap(page);

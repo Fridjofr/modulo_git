@@ -5,13 +5,26 @@ import {createHash} from 'node:crypto';
 import {MAPS,mapStand} from '../src/maps.js';
 import {updateDoors,doorProgress,setDoorProgress,resetDoorStates,crossingPoint} from '../src/doors.js';
 import {sceneRoute,clearSegment} from '../src/actor-path.js';
-test('os dois PNGs finais são preservados byte a byte e conservam a proporção',async()=>{
+test('móveis da nova enfermaria bloqueiam a base e possuem interação acessível no piso',async()=>{
+ const {objectNear}=await import('../src/maps.js');
+ for(const object of MAPS.clinic.objects){
+  assert.equal(mapStand('clinic',object.x,object.y-1,1),false,object.id+' sem colisão');
+  const [x,y]=object.interaction;
+  assert.ok(mapStand('clinic',x,y,11),object.id+' interação dentro de um móvel');
+  assert.equal(objectNear({world:'clinic',x,y},25)?.id,object.id);
+ }
+});
+test('não é possível andar sobre o assento nem passar pela faixa superior dos equipamentos',()=>{
+ for(const [x,y] of [[94,230],[80,150],[620,155]])assert.equal(mapStand('clinic',x,y,11),false);
+});
+test('os três PNGs finais são preservados byte a byte e conservam a proporção',async()=>{
  for(const [file,hash] of [
   ['ZIMONS_Laboratorio_Base_Final_Aprovada.png','c14bf12983d4c969462bec1a34674f37d0bff91fc175fc754423cbcbc38951c9'],
-  ['ZIMONS_Salao_Academia_Base_Final_Aprovada.png','cacb83aec53ec32f711ffeac8039c3baa7a27ed57f9b344f2754aaf26fc785b1']]){
+  ['ZIMONS_Salao_Academia_Base_Final_Aprovada.png','cacb83aec53ec32f711ffeac8039c3baa7a27ed57f9b344f2754aaf26fc785b1'],
+  ['ZIMONS_Enfermaria_Final_Aprovada.png','634046ffc162e6cf58bba8cabe2303d1f89b512826345bc7952ef6fb8d989855']]){
   const bytes=await readFile(new URL('../assets/world/approved-final/'+file,import.meta.url));
   assert.equal(createHash('sha256').update(bytes).digest('hex'),hash);
-  const map=file.includes('Salao')?MAPS.corridor:MAPS.lab;
+  const map=file.includes('Salao')?MAPS.corridor:file.includes('Enfermaria')?MAPS.clinic:MAPS.lab;
   assert.ok(Math.abs(map.size[1]-map.size[0]*bytes.readUInt32BE(20)/bytes.readUInt32BE(16))<.5);
  }
 });
@@ -91,4 +104,34 @@ test('ao sair de outra sala, a rota entra no corredor antes de alinhar com a pr�
  const {doorPath}=await import('../src/doors.js');const m=MAPS.corridor,e=m.exits.find(e=>e.to==='lab');
  const goals=doorPath(m,{x:290,y:285},e);
  assert.deepEqual(goals,[[290,335],[e.x,335],[e.x,e.y]]);
+});
+test('Lira atravessa imediatamente se a porta já abriu durante a aproximação',async()=>{
+ const {OpeningStory}=await import('../src/story.js');
+ const map=MAPS.corridor,exit=map.exits[0];
+ const actor={world:map.id,x:exit.x,y:exit.y};
+ const state={world:map.id,story:{lira:actor}},events=[];
+ const story=new OpeningStory({state:()=>state,stage:async()=>{throw Error('Espera temporizada redundante');}});
+ story.walk=async(a,goals)=>{events.push('aproximou');Object.assign(a,{x:goals.at(-1)[0],y:goals.at(-1)[1]});};
+ story.crossDoor=async()=>{assert.equal(doorProgress(map.id,exit.id),1);events.push('atravessou');};
+ resetDoorStates();setDoorProgress(map.id,exit.id,1);
+ await story.leaveDoor(actor,exit);
+ assert.deepEqual(events,['aproximou','atravessou']);
+ assert.equal(state.story.openDoor,exit.id);
+ resetDoorStates();
+});
+test('retirar a pausa extra não permite atravessar uma porta ainda parcialmente aberta',async()=>{
+ const {OpeningStory}=await import('../src/story.js');
+ const map=MAPS.corridor,exit=map.exits[0],state={world:map.id,story:{}};
+ const story=new OpeningStory({state:()=>state,stage:async()=>{throw Error('Temporizador não deve controlar folhas');}});
+ const previous=globalThis.requestAnimationFrame;let frame,finished=false;
+ globalThis.requestAnimationFrame=cb=>{frame=cb;};
+ resetDoorStates();setDoorProgress(map.id,exit.id,.6);
+ try{
+  const opening=story.openDoor(exit).then(()=>{finished=true;});
+  await Promise.resolve();assert.equal(finished,false);assert.equal(typeof frame,'function');
+  setDoorProgress(map.id,exit.id,1);frame();await opening;assert.equal(finished,true);
+ }finally{
+  if(previous===undefined)delete globalThis.requestAnimationFrame;else globalThis.requestAnimationFrame=previous;
+  resetDoorStates();
+ }
 });

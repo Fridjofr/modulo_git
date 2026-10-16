@@ -381,8 +381,8 @@ test("a plataforma permanece livre e as bancadas e os aparelhos desenhados têm 
 });
 
 test('união do piso e da soleira não cria uma parede invisível nos corredores das portas',()=>{
- for(const world of ['clinic','gym'])for(let y=575;y<=680;y++)assert.ok(canStand(world,640,y),world+' '+y);
- for(const world of ['corridor','lab']){
+ for(const world of ['gym'])for(let y=575;y<=680;y++)assert.ok(canStand(world,640,y),world+' '+y);
+ for(const world of ['corridor','lab','clinic']){
   const map=MAPS[world];
   for(const d of map.doorSpecs){
    assert.equal(canStand(world,d.x+d.w/2,d.y+d.h/2),false,world+' porta fechada');

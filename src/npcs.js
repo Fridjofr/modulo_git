@@ -200,8 +200,13 @@ export function updateNpcs(
   focusId = null,
   paused = false,
   intent = null,
+  controlledActor = null,
 ) {
   for (const n of worldNpcs(state.world)) {
+    if(paused){
+      if(n!==controlledActor){n.moving=false;n.frame=0;}
+      continue;
+    }
     n.moving = false;
     const near = Math.hypot(n.x - state.x, n.y - state.y) < 85;
     if (near && !paused && intent && n.patrol && !n.yieldTarget) {

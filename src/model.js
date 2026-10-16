@@ -264,7 +264,7 @@ export function validateSave(input) {
     const spawn = {
       forest: [FOREST_POINTS.spawn.x, FOREST_POINTS.spawn.y],
       gardens: [80, 395],
-      clinic: [640, 560],
+      clinic: [384, 440],
       lab: [640, 580],
       plaza: [640, 640],
     }[s.world];

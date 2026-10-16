@@ -2,17 +2,25 @@
 // Navigation ends on the floor. Transfer onto a mattress is a local articulated
 // pose, never a walking route through the bed collider.
 export const CLINIC = Object.freeze({
-  bed: { x: 306, y: 150, w: 108, h: 174 },
-  blanket: { x: 321, y: 213, w: 78, h: 56 },
-  mattress: { x: 320, y: 174, w: 82, h: 95 },
-  chair: { x: 184, y: 243, w: 52, h: 70 },
-  seat: { x: 212, y: 283 },
-  playerApproach: [438, 263],
-  playerRest: [360, 240],
-  liraApproach: [248, 303],
-  liraRest: [230, 303],
-  bedCollision: [306, 150, 108, 174],
-  chairCollision: [184, 243, 52, 58],
+  // Uniform 768/1444 scale: a bed remains about two human sprite heights.
+  size: [768, 579],
+  bed: { x: 133, y: 128, w: 106, h: 180 },
+  mattress: { x: 144, y: 146, w: 84, h: 119 },
+  chair: { x: 78, y: 219, w: 34, h: 49 },
+  seat: { x: 94, y: 240 },
+  playerApproach: [266, 225],
+  playerRest: [186, 220],
+  sideHip: [230, 208],
+  // Sole contact of the unmodified approved seated frame, at scale .11.
+  liraApproach: [112.38188524590164, 259.36],
+  liraRest: [112.38188524590164, 259.36],
+  bedCollision: [133, 128, 106, 180],
+  chairCollision: [78, 219, 23, 49],
+  monitorCollision: [59, 128, 63, 72],
+  workstationCollision: [516, 130, 208, 87],
+  entry: [384, 440],
+  liraEntry: [384, 400],
+  door: { id: "clinic-corridor", x: 338, y: 474, w: 91, h: 61, upper: false },
 });
 export const smooth = (t) => {
   t = Math.max(0, Math.min(1, t));

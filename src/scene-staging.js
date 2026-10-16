@@ -33,7 +33,7 @@ export function stageUpdate(state, fx, now) {
             ? CLINIC.playerApproach
             : CLINIC.playerRest;
     [state.x, state.y] = point;
-    state.dir = "left";
+    state.dir = fx.kind === "bed-rise" && q === 0 ? "down" : "left";
     state.moving = false;
     return;
   }
