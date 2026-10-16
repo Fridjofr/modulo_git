@@ -1,3 +1,4 @@
+import { doorBlocks } from "./doors.js";
 import { CLINIC } from "./clinic-layout.js";
 // Art, collision and thresholds share world coordinates. Original resources remain archived.
 export const TILE = 32;
@@ -49,8 +50,8 @@ export const MAPS = {
         768,
         174,
         "corridor",
-        640,
-        640,
+        652,
+        790,
         "Entrada principal",
       ),
       door("plaza-forest", 768, 825, "forest", 1410, 480, "Clareira"),
@@ -58,31 +59,29 @@ export const MAPS = {
   },
   corridor: {
     name: "Academia Zimons · Átrio",
-    size: [1280, 720],
-    art: "corridorV11",
-    indoor: true,
-    bounds: [76, 145, 1128, 555],
+    // Uniform 1280/1446 scale. Do not squash the approved 1446×1087 art.
+    size: [1280, 962], art: "corridorV11", indoor: true,
+    bounds: [52, 78, 1176, 874],
     walkZones: [
-      [90, 174, 1100, 423],
-      [584, 580, 112, 120],
-      ...[[210, 496, 788, 1070]].flatMap((xs) =>
-        xs.map((x) => [x - 42, 145, 84, 65]),
-      ),
+      [76, 218, 1128, 560],
+      ...[242,551,824,1112].map(x => [x-48,78,96,164]),
+      [600,756,104,196],
     ],
     objects: [],
     exits: [
-      door("corridor-clinic", 210, 171, "clinic", 640, 640, "Enfermaria"),
-      door("corridor-lab", 496, 171, "lab", 640, 640, "Laboratório"),
-      door("corridor-gym", 788, 171, "gym", 640, 640, "Ginásio"),
-      door(
-        "corridor-plaza",
-        640,
-        680,
-        "plaza",
-        768,
-        275,
-        "Praça da Convergência",
-      ),
+      door("corridor-clinic",242,215,"clinic",640,640,"Enfermaria"),
+      door("corridor-lab",551,215,"lab",640,600,"Laboratório"),
+      door("corridor-gym",824,215,"gym",640,640,"Ginásio"),
+      door("corridor-dorm",1112,215,"dorm",640,580,"Alojamentos"),
+      door("corridor-plaza",652,776,"plaza",768,275,"Praça da Convergência"),
+    ],
+    doorSpecs: [
+      // The first opening uses the unchanged glass leaves sampled from door 2.
+      {id:"corridor-clinic",x:180,y:106,w:124,h:79,source:{x:499,y:106,w:111,h:79},openSource:{x:180,y:106,w:124,h:79},upper:true},
+      {id:"corridor-lab",x:499,y:106,w:111,h:79,openSource:{x:180,y:106,w:124,h:79},upper:true},
+      {id:"corridor-gym",x:766,y:106,w:116,h:79,openSource:{x:180,y:106,w:124,h:79},upper:true},
+      {id:"corridor-dorm",x:1054,y:106,w:116,h:79,openSource:{x:180,y:106,w:124,h:79},upper:true},
+      {id:"corridor-plaza",x:598,y:800,w:110,h:84,openSource:{x:180,y:106,w:124,h:79},upper:false},
     ],
   },
   clinic: {
@@ -101,35 +100,22 @@ export const MAPS = {
       solid(...CLINIC.chairCollision, "clinic-chair"),
       solid(783, 152, 217, 118, "clinic-workstation"),
     ],
-    exits: [door("clinic-corridor", 640, 674, "corridor", 210, 230, "Átrio")],
+    exits: [door("clinic-corridor", 640, 674, "corridor", 242, 242, "Átrio")],
   },
   lab: {
-    name: "Laboratório de Lira",
-    size: [1280, 720],
-    art: "labApproved",
-    indoor: true,
-    bounds: [85, 150, 1110, 545],
-    walkZones: [
-      [95, 150, 1090, 463],
-      [584, 600, 112, 95],
-    ],
+    name: "Laboratório de Lira", size: [1280, 722], art: "labApproved", indoor: true,
+    bounds: [55, 142, 1170, 605],
+    walkZones: [[65,142,1150,482],[575,610,130,137]],
     objects: [
-      solid(105, 174, 245, 125, "lab-bench-left"),
-      solid(470, 174, 345, 125, "lab-bench-2"),
-      solid(920, 174, 235, 125, "lab-bench"),
-      solid(110, 420, 140, 130),
-      solid(1030, 420, 135, 130),
-      {
-        type: 12,
-        x: 640,
-        y: 415,
-        w: 192,
-        h: 105,
-        id: "sync-platform",
-        embedded: true,
-      },
+      solid(102,142,176,97,"lab-bench-left"),
+      solid(457,160,365,139,"lab-bench-2"),
+      solid(619,277,42,40,"lab-chair-central"),
+      solid(934,175,266,126,"lab-bench"),
+      solid(1048,277,44,40,"lab-chair-right"),
+      {type:12,x:640,y:390,w:140,h:87,id:"sync-platform",embedded:true},
     ],
-    exits: [door("lab-corridor", 640, 674, "corridor", 496, 230, "Átrio")],
+    exits: [door("lab-corridor",640,626,"corridor",551,242,"Átrio")],
+    doorSpecs: [{id:"lab-corridor",x:566,y:642,w:147,h:80,upper:false}],
   },
   gym: {
     name: "Ginásio de Sincro",
@@ -142,7 +128,7 @@ export const MAPS = {
       [584, 600, 112, 95],
     ],
     objects: [],
-    exits: [door("gym-corridor", 640, 674, "corridor", 788, 230, "Átrio")],
+    exits: [door("gym-corridor", 640, 674, "corridor", 824, 242, "Átrio")],
   },
   dorm: {
     name: "Alojamento",
@@ -151,7 +137,7 @@ export const MAPS = {
     indoor: true,
     bounds: [64, 176, 1152, 480],
     objects: [],
-    exits: [door("dorm-corridor", 640, 640, "corridor", 1070, 230, "Átrio")],
+    exits: [door("dorm-corridor", 640, 640, "corridor", 1112, 242, "Átrio")],
   },
   gardens: {
     name: "Pátio de descanso",
@@ -177,6 +163,7 @@ export const FOREST_POINTS = {
 export function mapStand(world, x, y, radius = 9) {
   const m = MAPS[world];
   if (!m) return false;
+  if (doorBlocks(m, x, y, radius)) return false;
   const [a, b, w, h] = m.bounds;
   if (
     x - radius < a ||

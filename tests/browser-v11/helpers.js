@@ -73,7 +73,8 @@ export async function toLab(page) {
   return snap(page);
 }
 export async function select(page, key) {
-  await navigate(page, 640, 470);
+  const target=await page.evaluate(async()=>{const {MAPS}=await import("/src/maps.js");const o=MAPS.lab.objects.find(o=>o.id==="sync-platform");return {x:o.x,y:o.y+45};});
+  await navigate(page, target.x, target.y);
   await page.keyboard.press("e");
   await drive(page, (s) => s.scene === "starters");
   if (key === "fire")

@@ -1,4 +1,4 @@
-import { doorway, doorStep, drawSlidingDoor } from "./doors.js";
+import { doorway, doorProgress, drawSlidingDoor } from "./doors.js";
 import { MAPS } from "./maps.js";
 const create = (w, h) =>
   Object.assign(document.createElement("canvas"), { width: w, height: h });
@@ -236,24 +236,9 @@ export class TileWorld {
       this.texture(g, 12 + (Math.floor(now / 500) % 3), ...water, 64);
     }
     if (m.art) {
-      this.doorStates ||= new Map();
-      const dt = Math.max(0, Math.min(100, now - (this.lastDoorTime ?? now)));
-      this.lastDoorTime = now;
       for (const e of m.exits) {
-        const rect = doorway(m, e);
-        if (!rect) continue;
-        const key = state.world + ":" + e.id;
-        const actors = [state, state.story.lira].filter(
-          (a) => a && a.visible !== false && a.world === state.world,
-        );
-        const target =
-          state.story.openDoor === e.id ||
-          actors.some((a) => Math.hypot(a.x - e.x, a.y - e.y) < 110)
-            ? 1
-            : 0;
-        const p = doorStep(this.doorStates.get(key) || 0, target, dt);
-        this.doorStates.set(key, p);
-        drawSlidingDoor(g, this.terrain(state.world), rect, p);
+        const rect=doorway(m,e);
+        if(rect)drawSlidingDoor(g,this.terrain(state.world),rect,doorProgress(state.world,e.id));
       }
     }
     if (state.world === "forest") {
@@ -300,6 +285,13 @@ export class TileWorld {
           g.restore();
           this.object(g, { type: 19, x, y: 344, w: w * 0.85, h: 68 });
         }
+    }
+  }
+  doorForeground(g,state) {
+    const m=MAPS[state.world];
+    for(const e of m.exits) {
+      const d=m.doorSpecs?.find(d=>d.id===e.id);
+      if(d)drawSlidingDoor(g,this.terrain(state.world),d,doorProgress(state.world,e.id),true);
     }
   }
   drawObjects(g, state) {

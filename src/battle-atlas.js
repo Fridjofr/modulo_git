@@ -1,3 +1,4 @@
+import { contactCentre } from "./battle-contacts.js";
 // Production battle atlases: six independently authored poses per actor.
 // Originals stay unchanged; transparent margins are normalized once at loading.
 export const BATTLE_POSES = ['ready','anticipation','leap','elemental','recovery','hurt'];
@@ -66,7 +67,12 @@ export class BattleAtlas {
     const anchor=mass[Math.floor(mass.length/2)] || (left+right)/2;
     frames.push({canvas:c,red,left,right,top,bottom,anchor,baseline:bottom,opaque:count});
    }
-   this.actors[key]={frames,referenceHeight:frames[0].bottom-frames[0].top+1};
+   const contact=contactCentre(key);
+   if(contact){
+    const dx=contact.x-frames[0].anchor,dy=contact.y-frames[0].baseline;
+    for(const f of frames){f.anchor+=dx;f.baseline+=dy;}
+   }
+   this.actors[key]={frames,referenceHeight:frames[0].bottom-frames[0].top+1,contact};
   }
  }
  draw(ctx,key,pose,x,y,height,{flip=false,possessed=false,alpha=1,flash=0}={}){

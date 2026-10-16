@@ -1,5 +1,5 @@
 import { extractSprite } from "./character-atlas.js";
-import { CLINIC, bedPhase, chairPhase, mix, smooth } from "./clinic-layout.js";
+import { CLINIC, bedPhase, mix, smooth } from "./clinic-layout.js";
 
 export class ClinicRenderer {
   constructor(assets) {
@@ -17,6 +17,13 @@ export class ClinicRenderer {
         pose.height,
       ]),
     );
+    this.soles = this.lira.map(f => {
+      const d=f.canvas.getContext("2d").getImageData(0,0,f.canvas.width,f.canvas.height).data;
+      const xs=[];
+      for(let y=f.b-10;y<=f.b;y++)for(let x=f.l;x<=f.r;x++)
+        if(d[(y*f.canvas.width+x)*4+3]>=224)xs.push(x);
+      return {x:xs.reduce((a,b)=>a+b,0)/xs.length,y:f.b+1};
+    });
   }
   prop(g, p, r) {
     g.imageSmoothingEnabled = false;
@@ -58,12 +65,16 @@ export class ClinicRenderer {
     this.prop(g, this.chair, CLINIC.chair);
   }
   blanketLayer(g, state) {
-    const p = state.story.bedPose;
-    const lift = p === undefined ? 0 : Math.sin(p * Math.PI) * 3;
-    this.prop(g, this.blanket, {
-      ...CLINIC.blanket,
-      y: CLINIC.blanket.y - lift,
-    });
+    const p=state.story.bedPose;
+    const lift=p===undefined?0:Math.sin(p*Math.PI)*2;
+    const m=CLINIC.mattress;
+    g.save();
+    g.beginPath();
+    g.moveTo(m.x,m.y);g.lineTo(m.x+m.w,m.y);
+    g.lineTo(m.x+m.w-2,m.y+m.h);g.lineTo(m.x+1,m.y+m.h);
+    g.closePath();g.clip();
+    this.prop(g,this.blanket,{...CLINIC.blanket,y:CLINIC.blanket.y-lift});
+    g.restore();
   }
   chairForeground(g) {
     // Reuse the exact near armrest from the same chair, with the same transform.
@@ -80,32 +91,32 @@ export class ClinicRenderer {
     g.restore();
   }
   seatedLira(g, q) {
-    const p = chairPhase(q),
-      seat = CLINIC.seat;
-    if (q < 0.18) {
-      const phase = Math.floor(p.back * 3) % 4;
-      this.assets.draw(
-        g,
-        "lira",
-        "right",
-        this.assets.walkIndex("lira", "right", phase),
-        mix(260, 246, p.back),
-        303,
-        84,
-        null,
-        false,
-      );
+    const unit=0.11, finalHip=[580,670], sole=this.soles[0];
+    // This is exactly the already approved final seated transform.
+    const planted={
+      x:CLINIC.seat.x+(finalHip[0]-sole.x)*unit,
+      y:CLINIC.seat.y+(sole.y-finalHip[1])*unit,
+    };
+    if(q<0.38){
+      const step=smooth((q-0.1)/0.28);
+      const phase=q<0.1?0:Math.floor(step*4)%4;
+      this.assets.draw(g,"lira","right",this.assets.walkIndex("lira","right",phase),
+        mix(CLINIC.liraApproach[0],planted.x,step),
+        mix(CLINIC.liraApproach[1],planted.y,step),84,null,false);
       return;
     }
-    const index = p.bend < 0.6 ? 1 : 0,
-      hip = index ? [413, 639] : [580, 670],
-      f = this.lira[index],
-      unit = 0.11;
-    g.save();
-    g.imageSmoothingEnabled = false;
-    g.translate(mix(238, seat.x, p.back), mix(275, seat.y, p.bend));
-    g.scale(-unit, unit);
-    g.drawImage(f.canvas, -hip[0], -hip[1]);
+    const index=q<0.72?1:0, f=this.lira[index], contact=this.soles[index];
+    // The feet stay planted through both approved poses. No interpolation of
+    // the hip's x coordinate, and no lateral slide when a pose is selected.
+    g.save();g.imageSmoothingEnabled=false;
+    if(index===0){
+      // Preserve the approved final matrix bit for bit, including raster rounding.
+      g.translate(CLINIC.seat.x,CLINIC.seat.y);g.scale(-unit,unit);
+      g.drawImage(f.canvas,-finalHip[0],-finalHip[1]);
+    }else{
+      g.translate(planted.x,planted.y);g.scale(-unit,unit);
+      g.drawImage(f.canvas,-contact.x,-contact.y);
+    }
     g.restore();
     this.chairForeground(g);
   }

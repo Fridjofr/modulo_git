@@ -154,6 +154,10 @@ export class Renderer {
     if (lira.visible !== false && lira.world === state.world)
       entities.push({ type: "lira", ...lira });
     for (const e of entities.sort((a, b) => a.y - b.y)) {
+      ctx.save();
+      const portal=MAPS[state.world].doorSpecs?.find(d=>d.upper && e.type!=="object" && Math.abs(e.x-(d.x+d.w/2))<d.w/2 && e.y<d.y+d.h);
+      if(portal){ctx.beginPath();ctx.rect(portal.x,portal.y,portal.w,height-portal.y);ctx.clip();}
+      try {
       if (e.type === "object") {
         this.assets.tiles.object(ctx, { ...e, type: e.propType }, state);
         continue;
@@ -357,7 +361,9 @@ export class Renderer {
             state.zlink,
           );
       }
+      } finally {ctx.restore();}
     }
+    this.assets.tiles.doorForeground(ctx,state);
     if (state.world === "plaza" && state.quest === "lab")
       this.marker(ctx, 640, 105, reducedMotion ? 0 : now, "↑");
     if (state.story?.presenceUntil > now) {

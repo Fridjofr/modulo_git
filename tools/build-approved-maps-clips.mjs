@@ -1,0 +1,28 @@
+import {readFile,mkdir,writeFile} from 'node:fs/promises';
+import {execFile} from 'node:child_process';
+import {promisify} from 'node:util';
+const run=promisify(execFile),root=new URL('../docs/review/lote01/marco-a-r4/',import.meta.url).pathname;
+const tag='approved-final',log=await readFile('/tmp/zimons-review-a4/'+tag+'.log','utf8');
+if(!log.includes('DONE []'))throw Error('A gravação precisa terminar sem erros.');
+const source=[...log.matchAll(/^VIDEO (.+)$/gm)].at(-1)?.[1];
+const {timeline,errors}=JSON.parse(await readFile(root+'runs/'+tag+'/timeline.json','utf8'));
+if(errors.length||!source)throw Error('Origem incompleta.');
+const at=name=>{const t=timeline.find(x=>x.name===name)?.time;if(t===undefined)throw Error(name);return t;};
+await mkdir(root+'videos',{recursive:true});await mkdir(root+'images',{recursive:true});
+const encode=async(name,start,end)=>{
+ await run('ffmpeg',['-y','-loglevel','error','-threads','2','-ss',String(start),'-i',source,'-t',String(end-start),'-an','-c:v','libx264','-threads','2','-preset','fast','-crf','21','-pix_fmt','yuv420p','-movflags','+faststart',root+'videos/'+name+'.mp4']);
+ return {name,start,end,source,speed:1,note:'Quadros reais. Sem interpolação ou mudança de velocidade. Áudio não capturado.'};
+};
+const records=[];
+records.push(await encode('porta-salao-1x',at('08b-porta-passagem')-1.5,at('08-porta-abrindo')+4));
+records.push(await encode('circulacao-laboratorio-1x',at('inicio-movimento-laboratorio'),at('fim-movimento-laboratorio')+.1));
+const a=await encode('enfermaria-deitar-sentar-1x',at('09a-lateral')-1.7,at('10-enfermaria-sentada')+.7);
+const b=await encode('enfermaria-levantar-1x',at('11c-lira-levantando')-2,at('11c-lira-levantando')+3);
+await writeFile('/tmp/zimons-review-a4/clinic-concat.txt',`file '${root}videos/${a.name}.mp4'\nfile '${root}videos/${b.name}.mp4'\n`);
+await run('ffmpeg',['-y','-loglevel','error','-f','concat','-safe','0','-i','/tmp/zimons-review-a4/clinic-concat.txt','-c','copy','-movflags','+faststart',root+'videos/enfermaria-1x.mp4']);
+records.push({name:'enfermaria-1x',segments:[a,b],speed:1,note:'Somente a conversa entre sentar e levantar foi retirada; movimentos em velocidade normal.'});
+await run('ffmpeg',['-y','-loglevel','error','-i',root+'videos/porta-salao-1x.mp4','-vf','crop=390:275:80:60,fps=12,split[a][b];[a]palettegen[p];[b][p]paletteuse','-loop','0',root+'videos/porta-salao.gif']);
+await run('ffmpeg',['-y','-loglevel','error','-i',root+'videos/enfermaria-1x.mp4','-vf','crop=350:245:165:115,fps=12,split[a][b];[a]palettegen[p];[b][p]paletteuse','-loop','0',root+'videos/enfermaria.gif']);
+await run('ffmpeg',['-y','-loglevel','error','-i',root+'videos/porta-salao-1x.mp4','-vf','crop=390:275:80:60,fps=2,tile=4x3','-frames:v','1',root+'images/sequencia-porta.png']);
+await writeFile(root+'videos/ORIGEM.json',JSON.stringify({records,recording:'Playwright, página real 1366×768, 25 quadros/s. A captura geral do salão foi feita em 1366×1028 para mostrar o mapa inteiro; esse ajuste de viewport não está no clipe da porta.'},null,2));
+console.log(records.map(r=>r.name));

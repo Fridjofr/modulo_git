@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="review-a.css" />
     <link rel="stylesheet" href="review-a2.css" />
     <link rel="stylesheet" href="review-a3.css" />
+    <link rel="stylesheet" href="review-a4.css" />
   </head>
   <body>
     <main id="app" aria-label="Zimons">
@@ -346,12 +347,9 @@
             ><span id="combat-player-form"></span>
           </div>
           <span class="stat-level" id="combat-level">NV 1</span>
-          <div class="hp-track"><i id="player-hp-fill"></i></div>
-          <div class="stat-numbers">
-            <span id="player-hp"></span><span id="player-status"></span>
-          </div>
-          <div class="energy-track"><i id="energy-fill"></i></div>
-          <small id="energy-label"></small>
+          <div class="resource-row"><span class="resource-label">HP</span><div class="hp-track"><i id="player-hp-fill"></i></div><span id="player-hp"></span></div>
+          <div class="resource-row"><span class="resource-label">MP</span><div class="energy-track"><i id="energy-fill"></i></div><small id="energy-label"></small></div>
+          <span class="combat-condition" id="player-status"></span>
           <div class="experience-line">
             <span id="experience-label"></span>
             <div class="xp-track"><i id="experience-fill"></i></div>
@@ -363,20 +361,17 @@
             ><span id="combat-enemy-form">Forma humana</span>
           </div>
           <span class="stat-level" id="combat-enemy-level">NV 5</span>
-          <div class="hp-track"><i id="enemy-hp-fill"></i></div>
-          <div class="stat-numbers">
-            <span id="enemy-hp"></span><span id="enemy-status"></span>
-          </div>
-          <div class="energy-track"><i id="enemy-energy-fill"></i></div>
-          <small id="enemy-energy-label"></small>
+          <div class="resource-row"><span class="resource-label">HP</span><div class="hp-track"><i id="enemy-hp-fill"></i></div><span id="enemy-hp"></span></div>
+          <div class="resource-row"><span class="resource-label">MP</span><div class="energy-track"><i id="enemy-energy-fill"></i></div><small id="enemy-energy-label"></small></div>
+          <span class="combat-condition" id="enemy-status"></span>
         </div>
         <div class="battle-bottom">
-          <div class="combat-log panel">
+          <div class="combat-log panel" aria-label="Aviso de combate">
             <span class="tiny" id="phase-label">SINCRONIZANDO</span>
             <p id="next-move" class="next-move"></p>
             <p id="battle-message" role="status"></p>
             <button id="battle-history" class="quiet">
-              Ver histórico e elementos
+              Histórico
             </button>
           </div>
           <div class="battle-actions panel" id="command-dock">
@@ -419,7 +414,7 @@
                       d="m12 3 9 9-9 9-9-9 9-9ZM7 12h10m-5-5v10"
                     /></svg></span
                 ><span
-                  ><strong>Troca</strong><small>Suas formas Zimon</small></span
+                  ><strong>Zimons</strong><small>Suas formas Zimon</small></span
                 ><kbd>Z</kbd>
               </button>
               <button data-battle-tab="exit">
@@ -433,17 +428,22 @@
             </nav>
             <div id="fight-panel" class="command-grid" hidden>
               <button data-action="attack" class="move-card">
+                <span class="move-glyph" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 2 10 10-10 10L2 12Z"/></svg></span>
                 <span>Impacto</span><small id="attack-details"></small
                 ><kbd>1</kbd>
               </button>
               <button data-action="skill" class="move-card elemental" hidden>
+                <span class="move-glyph" id="skill-glyph" aria-hidden="true"></span>
                 <span id="skill-name"></span><small id="skill-details"></small
                 ><kbd>2</kbd>
               </button>
               <button data-action="special" class="move-card primal" hidden>
+                <span class="move-glyph" id="special-glyph" aria-hidden="true"></span>
                 <span id="special-name"></span
                 ><small id="special-details"></small><kbd>3</kbd>
               </button>
+              <button id="locked-technique-three" class="move-card locked-technique" disabled aria-label="Terceira técnica ainda não aprendida"><span>—</span><small>???</small></button>
+              <button class="move-card locked-technique" disabled aria-label="Quarto espaço de técnica indisponível"><span>—</span><small>???</small></button>
             </div>
             <div id="bag-panel" class="bag-command" hidden>
               <div>

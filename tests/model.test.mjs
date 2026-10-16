@@ -1,3 +1,4 @@
+import {setDoorProgress} from "../src/doors.js";
 import {MAPS,mapStand} from "../src/maps.js";
 import { FOREST_POINTS } from "../src/world.js";
 import test from "node:test";
@@ -113,12 +114,12 @@ test("colisões não permitem cruzar água, paredes, bancadas ou limites, mesmo 
   s.x = 640;
   s.y = 460;
   for (let i = 0; i < 100; i++) movePlayer(s, "up", 1);
-  assert.ok(s.y >= 310);
-  assert.ok(s.y < 315);
+  assert.ok(s.y >= 326);
+  assert.ok(s.y < 330);
   s.x = 870;
   s.y = 580;
   for (let i = 0; i < 100; i++) movePlayer(s, "down", 1);
-  assert.ok(s.y <= 604 && s.y > 601);
+  assert.ok(s.y <= 615 && s.y > 612);
 });
 test("cada direção move apenas um eixo e usa a animação correspondente", () => {
   for (const dir of ["up", "down", "left", "right"]) {
@@ -375,12 +376,23 @@ test("Lira tenta contato e não revida no primeiro turno da contenção",()=>{
  b.turn=2;assert.notEqual(chooseEnemyAction(b),"hold");assert.equal(resolveMove(b,"opponent","hold").error,"Ação inválida.");
 });
 test("a plataforma permanece livre e as bancadas e os aparelhos desenhados têm colisão",()=>{
- for(const [x,y] of [[640,380],[400,490],[900,490],[640,640]])assert.equal(canStand("lab",x,y),true);
- for(const [x,y] of [[200,240],[640,240],[1050,240],[180,490],[1080,490]])assert.equal(canStand("lab",x,y),false);
+ for(const [x,y] of [[640,380],[400,490],[900,490],[640,626],[180,490],[1080,490]])assert.equal(canStand("lab",x,y),true);
+ for(const [x,y] of [[200,220],[640,240],[1050,240],[640,300],[1070,300]])assert.equal(canStand("lab",x,y),false);
 });
 
 test('união do piso e da soleira não cria uma parede invisível nos corredores das portas',()=>{
- for(const world of ['corridor','clinic','lab','gym'])for(let y=575;y<=680;y++)assert.ok(canStand(world,640,y),world+' '+y);
+ for(const world of ['clinic','gym'])for(let y=575;y<=680;y++)assert.ok(canStand(world,640,y),world+' '+y);
+ for(const world of ['corridor','lab']){
+  const map=MAPS[world];
+  for(const d of map.doorSpecs){
+   assert.equal(canStand(world,d.x+d.w/2,d.y+d.h/2),false,world+' porta fechada');
+   setDoorProgress(world,d.id,1);
+   const x=map.exits.find(e=>e.id===d.id).x;
+   const start=d.upper?d.y+12:d.y-20,end=d.upper?242:d.y+d.h+12;
+   for(let y=start;y<=end;y++)assert.ok(canStand(world,x,y),world+' '+d.id+' '+y);
+   setDoorProgress(world,d.id,0);
+  }
+ }
  assert.equal(MAPS.forest.exits[0].to,'plaza');assert.equal('road' in MAPS,false);
 });
 test('MP máximo cresce com o nível sem ser truncado na recuperação física',()=>{

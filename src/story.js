@@ -1,3 +1,4 @@
+import { crossingPoint, doorProgress, doorAuthorized } from "./doors.js";
 import { CLINIC } from "./clinic-layout.js";
 import { sceneRoute, actorCanStand } from "./actor-path.js";
 import { FOREST_POINTS } from "./world.js";
@@ -323,6 +324,12 @@ export class OpeningStory {
       this.api.travel(guidedDoor);
       return;
     }
+    const portal=MAPS[s.world].doorSpecs?.find(d=>{
+      const exit=MAPS[s.world].exits.find(e=>e.id===d.id);
+      return doorAuthorized(s,exit) && Math.abs(s.x-exit.x)<28 &&
+        (d.upper?s.y<d.y+d.h+10:s.y>d.y-15) && doorProgress(s.world,d.id)>=.96;
+    });
+    if(portal){this.api.travel(MAPS[s.world].exits.find(e=>e.id===portal.id));return;}
     if (s.quest === "practice" && s.transformed) {
       s.story.flags.steps =
         (s.story.flags.steps || 0) +
@@ -406,8 +413,9 @@ export class OpeningStory {
   async guideExit(exit) {
     const s = this.state,
       l = s.story.lira;
-    s.story.openDoor = exit.id;
-    await this.api.stage("door-open");
+    const authored=!!MAPS[s.world].doorSpecs;
+    if(authored)s.story.headingDoor=exit.id;
+    else {s.story.openDoor=exit.id;await this.api.stage("door-open");}
     if (Math.hypot(s.x - exit.x, s.y - exit.y) < 55) {
       const point = [
         [exit.x - 78, exit.y + 70],
@@ -451,8 +459,28 @@ export class OpeningStory {
     this.following = { actor: s, trail, distance: 0 };
     await this.walk(l, [[exit.x, exit.y]], 154);
     this.following = null;
+    if(authored){s.story.openDoor=exit.id;await this.api.stage("door-open");}
+    await this.crossDoor(l,exit,false);
     l.visible = false;
     s.moving = false;
+  }
+  async leaveDoor(actor,exit) {
+    await this.walk(actor,[[exit.x,exit.y]],150);
+    this.state.story.openDoor=exit.id;
+    await this.api.stage("door-open");
+    await this.crossDoor(actor,exit);
+  }
+  async crossDoor(actor,exit,close=true) {
+    const map=MAPS[this.state.world];
+    if(!map.doorSpecs)return;
+    await this.walk(actor,[crossingPoint(map,exit)],150);
+    if(close) {
+      this.state.story.closingDoor=exit.id;
+      await this.api.stage("door-open");
+      delete this.state.story.closingDoor;
+      this.state.story.openDoor=null;
+      delete this.state.story.headingDoor;
+    }
   }
   async beforeDoor(exit) {
     const s = this.state,
@@ -468,7 +496,7 @@ export class OpeningStory {
     }
   }
   enterWithLira(to) {
-    const [x, y] = { plaza: [768, 700], corridor: [640, 570] }[to];
+    const [x, y] = { plaza: [768, 700], corridor: [652, 750] }[to];
     Object.assign(this.state.story.lira, {
       world: to,
       x,
@@ -481,6 +509,7 @@ export class OpeningStory {
   async guidedTransition(exit, lx, ly) {
     await this.guideExit(exit);
     await this.walk(this.state, [[exit.x, exit.y]], 150);
+    await this.crossDoor(this.state,exit);
     await this.api.transition("", () => {
       Object.assign(this.state, {
         world: exit.to,
@@ -544,7 +573,7 @@ export class OpeningStory {
         await this.api.talk([
           L("Melhor? Então vamos. Sem pressa, eu acompanho você."),
         ]);
-        await this.guidedTransition(MAPS.clinic.exits[0], 250, 285);
+        await this.guidedTransition(MAPS.clinic.exits[0], 290, 285);
         await this.guidedTransition(
           MAPS.corridor.exits.find((e) => e.to === "lab"),
           720,
@@ -738,10 +767,11 @@ export class OpeningStory {
           [
             [868, 520],
             [640, 520],
-            [640, 674],
+            [640, 520],
           ],
           150,
         );
+        await this.leaveDoor(this.state.story.lira,MAPS.lab.exits[0]);
         Object.assign(this.state.story.lira, {
           world: "gym",
           x: 1105,
@@ -804,10 +834,10 @@ export class OpeningStory {
         [
           [868, 480],
           [640, 480],
-          [640, 640],
         ],
         120,
       );
+      await this.leaveDoor(this.state.story.lira,MAPS.lab.exits[0]);
       Object.assign(this.state.story.lira, {
         world: "dorm",
         x: 530,

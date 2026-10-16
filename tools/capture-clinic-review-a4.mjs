@@ -1,0 +1,248 @@
+import { startMetrics, stopMetrics } from "./review-performance.mjs";
+import { chromium } from "playwright-core";
+import { fileURLToPath } from "node:url";
+import { existsSync } from "node:fs";
+const root = fileURLToPath(new URL("..", import.meta.url));
+const gender = process.env.ZIMONS_REVIEW_GENDER || "female",
+  starter = process.env.ZIMONS_REVIEW_STARTER || "fire",
+  tag = process.env.ZIMONS_REVIEW_TAG || gender + "-" + starter;
+import { navigate, move } from "../tests/browser-v11/helpers.js";
+import { mkdir, writeFile } from "node:fs/promises";
+const dir = root + "/docs/review/lote01/marco-a-r4/runs/" + tag;
+await mkdir(dir + "/images", { recursive: true });
+await mkdir("/tmp/zimons-review-a4/" + tag + "/video", { recursive: true });
+const b = await chromium.launch({
+  ...(existsSync("/usr/bin/chromium")
+    ? { executablePath: "/usr/bin/chromium" }
+    : {}),
+  args: ["--no-sandbox", "--enable-unsafe-swiftshader"],
+});
+const ctx = await b.newContext({
+  viewport: { width: 1366, height: 768 },
+  recordVideo: {
+    dir: "/tmp/zimons-review-a4/" + tag + "/video",
+    size: { width: 1366, height: 768 },
+  },
+});
+const p = await ctx.newPage();
+let errors = [];
+p.on("pageerror", (e) => {
+  errors.push(e.message);
+  console.log("ERROR", e.message);
+});
+p.on("response", (r) => {
+  if (r.status() >= 400) errors.push(r.status() + " " + r.url());
+});
+const snap = () => p.evaluate(() => window.zimonsDebug.snapshot());
+const captured = new Set(),
+  timeline = [];
+const origin = Date.now();
+const cap = async (name) => {
+  if (captured.has(name)) return;
+  captured.add(name);
+  if(name==="08a-corredor") {
+    await p.setViewportSize({width:1366,height:1028});
+    await p.waitForTimeout(120);
+  }
+  await p.screenshot({ path: dir + "/images/" + name + ".png" });
+  if(name==="08a-corredor")await p.setViewportSize({width:1366,height:768});
+  timeline.push({ name, time: (Date.now() - origin) / 1000 });
+  console.log("CAP", name);
+};
+let observed = "";
+async function drive(pred, ms = 180000) {
+  let deadline = Date.now() + ms;
+  while (Date.now() < deadline) {
+    let s = await snap();
+    if (pred(s) && !s.dialogue && !s.story.active) return s;
+    if (s.effect?.kind === "bed-lie") {
+      if (s.effect.progress > 0.08 && !captured.has("09a-lateral"))
+        await cap("09a-lateral");
+      if (s.effect.progress > 0.32 && !captured.has("09b-sentar-na-cama"))
+        await cap("09b-sentar-na-cama");
+      if (s.effect.progress > 0.72 && !captured.has("09c-reclinar"))
+        await cap("09c-reclinar");
+    }
+    if (
+      s.effect?.kind === "lira-sit" &&
+      s.effect.progress > 0.45 &&
+      !captured.has("09d-lira-sentando")
+    )
+      await cap("09d-lira-sentando");
+    if (
+      s.state?.world === "clinic" &&
+      s.lira?.seated &&
+      s.dialogue &&
+      !captured.has("10-enfermaria-sentada")
+    ) {
+      await p.waitForTimeout(1400);
+      await cap("10-enfermaria-sentada");
+      await p.screenshot({
+        path: dir + "/images/10-lencol-detalhe.png",
+        clip: {x:315,y:140,width:150,height:220},
+      });
+    }
+    if (
+      s.effect?.kind === "door-open" &&
+      s.state.world === "corridor" &&
+      s.effect.progress > 0.5 &&
+      !captured.has("08-porta-abrindo")
+    )
+      await cap("08-porta-abrindo");
+    if(s.state?.world==="corridor" && s.lira?.x<310 && s.lira?.y<240 && s.lira?.visible!==false && !captured.has("08b-porta-passagem")) await cap("08b-porta-passagem");
+    if (
+      s.state?.world === "clinic" &&
+      s.effect?.kind === "wake" &&
+      s.effect.progress > 0.85 &&
+      !captured.has("11-acordar")
+    )
+      await cap("11-acordar");
+    if (
+      s.state?.world === "corridor" &&
+      !s.dialogue &&
+      s.lira?.y < 430 &&
+      !captured.has("08a-corredor") &&
+      (await p.locator("#scene-fade").isHidden())
+    )
+      await cap("08a-corredor");
+    if (
+      s.state?.world === "clinic" &&
+      s.effect?.kind === "bed-rise" &&
+      s.effect.progress > 0.45 &&
+      !captured.has("11b-levantar")
+    )
+      await cap("11b-levantar");
+    if (
+      s.state?.world === "clinic" &&
+      s.effect?.kind === "lira-stand" &&
+      s.effect.progress > 0.45 &&
+      !captured.has("11c-lira-levantando")
+    )
+      await cap("11c-lira-levantando");
+    if (
+      s.state?.world === "clinic" &&
+      s.story.motion &&
+      s.lira?.y > 450 &&
+      !captured.has("11d-saida-caminhando")
+    )
+      await cap("11d-saida-caminhando");
+    const tag = s.state?.world + ":" + s.state?.quest + ":" + s.effect?.kind;
+    if (tag !== observed) {
+      console.log("FLOW", tag, s.state?.x, s.state?.y, s.lira?.x, s.lira?.y);
+      observed = tag;
+    }
+    if (s.modal === "name") {
+      await p.locator("#story-name").fill("Nara");
+      await p.getByRole("button", { name: "Confirmar", exact: true }).click();
+    } else if (s.modal === "sync") {
+      // The normal UI handler decides whether a pulse counts. Dispatch in the
+      // same frame as the visible cursor check, avoiding protocol latency.
+      await p.waitForFunction(() => {
+        const b = document.querySelector("#sync-pulse"),
+          v = parseFloat(
+            document.querySelector("#sync-cursor")?.style.left || "0",
+          );
+        if (!b) return true;
+        if (b.dataset.inRange === "true" && v >= 44 && v <= 56) {
+          b.click();
+          return true;
+        }
+        return false;
+      });
+      await p.waitForTimeout(400);
+    } else if (await p.locator("#dialogue-choices button").count())
+      await p.locator("#dialogue-choices button").first().click();
+    else if (s.dialogue) {
+      await p.locator("#dialogue-next").click();
+    } else await p.waitForTimeout(60);
+  }
+  throw Error("STALLED " + JSON.stringify(await snap()));
+}
+try {
+  await p.goto(
+    (process.env.ZIMONS_REVIEW_URL || "http://127.0.0.1:4173") + "/?debug=1",
+  );
+  await p.locator("#title.active").waitFor();
+  await cap("01-entrada-1366");
+  await p.setViewportSize({ width: 1920, height: 1080 });
+  await cap("02-entrada-1920");
+  await p.setViewportSize({ width: 1366, height: 768 });
+  await p.locator("#title-new").click();
+  await cap("03-personalizacao-feminina");
+  await p.locator("[data-gender=male]").click();
+  await cap("04-personalizacao-masculina");
+  await p.locator("[data-gender=female]").click();
+  await p.locator('[data-gender="' + gender + '"]').click();
+  if (gender === "male") {
+    await p
+      .getByRole("button", { name: "Penteado: Undercut", exact: true })
+      .click();
+    await p
+      .getByRole("button", { name: "Modelo da roupa: Uniforme", exact: true })
+      .click();
+  }
+  await cap("04b-aparencia-escolhida");
+  await p.locator("#start").click();
+  await drive((s) => s.state.quest === "forest");
+  await p.waitForTimeout(650);
+  await cap("05-floresta");
+  await p.locator("#quest-toggle").click();
+  await p.waitForTimeout(400);
+  await cap("05b-missao-recolhida");
+  await p.locator("#quest-toggle").click();
+  await p.waitForTimeout(400);
+  await cap("05c-protagonista-e-lira");
+  timeline.push({
+    name: "inicio-caminhada-humana",
+    time: (Date.now() - origin) / 1000,
+  });
+  for (let cycle = 0; cycle < 2; cycle++)
+    for (const [axis, target, name] of [
+      ["y", 650, "frente"],
+      ["x", 560, "direita"],
+      ["y", 550, "costas"],
+      ["x", 460, "esquerda"],
+    ]) {
+      const walking = move(p, axis, target);
+      await p.waitForTimeout(150);
+      await cap("06-caminhada-" + name);
+      await walking;
+      await p.waitForTimeout(120);
+    }
+  timeline.push({
+    name: "fim-caminhada-humana",
+    time: (Date.now() - origin) / 1000,
+  });
+  await move(p, "y", 600);
+  await move(p, "x", 1160);
+  await move(p, "y", 500);
+  await move(p, "x", 1420);
+  await drive((s) => s.state.quest === "entrance");
+  await cap("07-academia");
+  await navigate(p, 768, 270);
+  await drive((s) => s.state.quest === "choose");
+  await cap("12-fim-marco-a-laboratorio");
+  timeline.push({name:"inicio-movimento-laboratorio",time:(Date.now()-origin)/1000});
+  await move(p,"y",500);await move(p,"x",430);await move(p,"y",350);
+  await move(p,"x",810);await cap("13-circulacao-bancada");
+  await move(p,"y",500);await move(p,"x",640);
+  timeline.push({name:"fim-movimento-laboratorio",time:(Date.now()-origin)/1000});
+} catch (e) {
+  console.log(e.stack);
+  await writeFile(
+    dir + "/failure-state.json",
+    JSON.stringify(await snap(), null, 2),
+  );
+  await p.screenshot({ path: dir + "/images/failure.png" });
+  errors.push(e.stack);
+  process.exitCode = 1;
+}
+await writeFile(
+  dir + "/timeline.json",
+  JSON.stringify({ timeline, errors }, null, 2),
+);
+const video = p.video();
+await ctx.close();
+console.log("VIDEO", await video.path());
+await b.close();
+console.log("DONE", errors);

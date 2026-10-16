@@ -22,7 +22,7 @@ test('Lira deixa o alojamento contornando o protagonista que ouviu a apresentaç
 });
 
 test('Lira alcança a saída física de cada etapa da escolta sem atravessar o protagonista',()=>{
- for(const [world,start,goal,player] of [['forest',[1400,480],[1430,430],[1360,525]],['plaza',[768,260],[768,174],[768,330]],['corridor',[640,570],[210,171],[640,640]]]){
+ for(const [world,start,goal,player] of [['forest',[1400,480],[1430,430],[1360,525]],['plaza',[768,260],[768,174],[768,330]],['corridor',[652,750],[242,215],[652,790]]]){
   const actor={world,x:start[0],y:start[1]},other={world,x:player[0],y:player[1],visible:true},route=sceneRoute(world,actor,[goal],[other]);let {x,y}=actor;
   for(const [tx,ty] of route){while(Math.abs(tx-x)+Math.abs(ty-y)>.01){if(Math.abs(tx-x)>.01)x+=Math.sign(tx-x)*Math.min(1,Math.abs(tx-x));else y+=Math.sign(ty-y)*Math.min(1,Math.abs(ty-y));assert.ok(actorCanStand(world,x,y,actor,[other]),world+' '+x+','+y);}}
   assert.equal(x,goal[0]);assert.equal(y,goal[1]);
@@ -32,5 +32,5 @@ test('Lira alcança a saída física de cada etapa da escolta sem atravessar o p
 test('a soleira física de todas as portas admite os pés do personagem antes da transição',()=>{
  for(const [world,map] of Object.entries(MAPS))for(const exit of map.exits)assert.ok(mapStand(world,exit.x,exit.y,11),world+': '+exit.id);
  const player={world:'lab',x:560,y:560,visible:true},lira={world:'lab',x:868,y:369};
- assert.ok(sceneRoute('lab',lira,[[868,480],[640,480],[640,640]],[player]).length>0);
+ assert.ok(sceneRoute('lab',lira,[[868,480],[640,480],[640,626]],[player]).length>0);
 });

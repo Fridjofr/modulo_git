@@ -1,3 +1,4 @@
+import { updateDoors, doorAuthorized, resetDoorStates } from "./doors.js";
 import { ACTOR_SEPARATION } from "./actor-path.js";
 import { MAPS, objectNear } from "./maps.js";
 import { stageUpdate } from "./scene-staging.js";
@@ -46,6 +47,7 @@ const assets = new Assets();
 const music = new Music();
 let folder = "home",
   lastOpponent = null,
+  battleNoticeTimer = 0,
   introSkip = false,
   introResume = null;
 let renderer,
@@ -311,6 +313,7 @@ function startJourney() {
   state = newGame(appearance, "Alex");
   closeModal();
   resetNpcs();
+  resetDoorStates();
   renderer.liraState = null;
   setScene("world");
   story.begin();
@@ -780,6 +783,7 @@ async function useDoor(e) {
       s.story.lira.visible === false && s.story.lira.world === from;
     if (escorted) s.story.lira.visible = false;
     await story.walk(s, [[e.x, e.y]], 135);
+    await story.crossDoor(s,e);
     await story.api.transition(MAPS[e.to].name, () => {
       Object.assign(s, {
         world: e.to,
@@ -1553,6 +1557,9 @@ function updateGender() {
 
 function message(text) {
   $("battle-message").textContent = text;
+  $("battle").classList.add("has-battle-notice");
+  clearTimeout(battleNoticeTimer);
+  battleNoticeTimer = setTimeout(() => $("battle").classList.remove("has-battle-notice"), 3200);
   battle.log.push(text);
   if (battle.log.length > 100) battle.log.shift();
 }
@@ -1603,6 +1610,8 @@ function updateBattleUI() {
   $("experience-fill").style.width =
     `${Math.min(100, (progress.xp / xpToNext(p.level)) * 100)}%`;
   $("skill-name").textContent = info.skill;
+  $("skill-glyph").innerHTML = typeBadge(info.element);
+  $("special-glyph").innerHTML = typeBadge(info.element);
   $("special-name").textContent = info.special;
   for (const action of ["attack", "skill", "special"]) {
     const mult =
@@ -1614,6 +1623,7 @@ function updateBattleUI() {
       !knowsMove(p.level, action) ||
       (battle.storyBattle && action === "special");
   }
+  $("locked-technique-three").hidden = !document.querySelector('[data-action="special"]').hidden;
   $("next-move").hidden = true;
   $("tonic-count").textContent = `+40 HP · ${state.inventory.tonic} restantes`;
   $("transform-label").textContent = p.transformed
@@ -1648,10 +1658,13 @@ function updateBattleUI() {
       battle.phase !== "player" ||
       !!battle.result ||
       b.dataset.form === battle.starter;
-  document.querySelector('[data-battle-tab="exit"]').hidden = battle.mandatory;
-  for (const name of ["bag", "swap"])
-    document.querySelector(`[data-battle-tab="${name}"]`).hidden =
-      battle.storyBattle;
+  for (const name of ["fight", "bag", "swap", "exit"]) {
+    const button=document.querySelector(`[data-battle-tab="${name}"]`);
+    button.hidden=false;
+    const locked=(name==="exit" && battle.mandatory) || (["bag","swap"].includes(name) && battle.storyBattle);
+    button.disabled ||= locked;
+    button.title=locked ? "Indisponível durante este duelo obrigatório" : "";
+  }
   $("turn-label").textContent = battle.storyBattle
     ? `CONTENÇÃO · INSTINTO PRIMORDIAL · TURNO ${battle.turn}`
     : `TURNO ${battle.turn}`;
@@ -1690,14 +1703,18 @@ function renderForms() {
 }
 function setBattleTab(tab, force = false) {
   if (!force && (battle.phase !== "player" || battle.result)) return;
+  if (tab === "home") tab="fight";
   if (tab === "exit" && battle.mandatory) return;
   if (battle.storyBattle && ["swap", "bag"].includes(tab)) return;
   folder = tab;
-  for (const name of ["home", "fight", "bag", "swap", "exit"])
+  $("home-panel").hidden=false;
+  for (const name of ["fight", "bag", "swap", "exit"])
     $(`${name}-panel`).hidden = name !== tab;
-  $("folder-heading").hidden = tab === "home";
+  for (const button of document.querySelectorAll("[data-battle-tab]"))
+    button.setAttribute("aria-pressed",String(button.dataset.battleTab===tab));
+  $("folder-heading").hidden=false;
   $("folder-title").textContent =
-    { fight: "BATALHA", bag: "BOLSA", swap: "TROCA", exit: "SAIR" }[tab] || "";
+    { fight:"Selecione um golpe", bag:"Bolsa", swap:"Zimons", exit:"Encerrar o duelo" }[tab] || "";
 }
 async function animateBattle(result, side, token) {
   if (token !== runToken) return;
@@ -2308,6 +2325,7 @@ function update(realTime) {
   $("story-skip").hidden =
     scene !== "world" || !story.active || !!modal || !!dialogue?.choices;
   if (scene === "world") {
+    updateDoors(MAPS[state.world],state,dt);
     story.update(dt);
     stageUpdate(state, fx, time);
     updateNpcs(
@@ -2365,7 +2383,7 @@ function update(realTime) {
       if (moving) walkTime += Math.hypot(state.x - beforeX, state.y - beforeY);
       state.story.openDoor =
         MAPS[state.world].exits.find(
-          (e) => Math.hypot(state.x - e.x, state.y - e.y) < 105,
+          (e) => doorAuthorized(state,e) && Math.hypot(state.x - e.x, state.y - e.y) < 100,
         )?.id || null;
       const target = nearbyInteraction();
       $("interaction").hidden = !target;
@@ -2681,7 +2699,7 @@ function installEvents() {
         return;
       }
       if (key === "escape") {
-        setBattleTab(folder === "home" ? "exit" : "home");
+        setBattleTab(folder === "fight" ? "exit" : "fight");
         return;
       }
     }

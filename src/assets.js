@@ -26,9 +26,9 @@ export class Assets {
     for (const [key, file] of Object.entries({
       forestV11: "assets/world/v11/forest.png",
       gymV11: "assets/world/review-a3/gym-map.png",
-      corridorV11: "assets/world/review-a2/corridor.png",
+      corridorV11: "assets/world/approved-final/ZIMONS_Salao_Academia_Base_Final_Aprovada.png",
       academyApproved: "assets/world/academy.png",
-      labApproved: "assets/world/review-a3/laboratory-map.png",
+      labApproved: "assets/world/approved-final/ZIMONS_Laboratorio_Base_Final_Aprovada.png",
       battleLab: "assets/world/review-a3/laboratory-battle.png",
       battleLabDamaged: "assets/world/review-a3/laboratory-battle-damaged.png",
       battleGym: "assets/world/review-a3/gym-battle.png",

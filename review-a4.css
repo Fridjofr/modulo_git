@@ -1,0 +1,113 @@
+/* Approved battle direction: navy, cyan and gold. Functional HTML, no mock UI. */
+#battle { --combat-ink:#edf8ff; --combat-muted:#a2c9df; }
+#battle .combat-stat, #battle .battle-bottom {
+ border:10px solid transparent;
+ border-image: url("assets/ui/review-a4/panel-border.svg") 22 / 17px / 0 stretch;
+ background:linear-gradient(130deg,#031a35fa,#062644f5 55%,#02152bf5);
+ box-shadow:0 5px 16px #02132b80;
+ color:#eaf6ff;
+}
+#battle .combat-stat { padding:7px 11px 8px; top:27px; width:29%; max-width:450px; border-radius:0; }
+#battle .player-stat {left:27px;} #battle .enemy-stat {right:27px;}
+#battle .combat-stat::before {display:none;}
+#battle .combat-stat strong {color:#f0f6ff;text-shadow:none;font:750 clamp(13px,1.55vw,23px)/1.3 Manrope;}
+#battle .combat-stat .stat-level {background:#06233b !important;color:#f5d47e !important;border:1px solid #cfac55 !important;top:6px;right:8px; font-size:11px;}
+#battle .combat-stat > div:first-child {gap:5px; margin-bottom:9px;}
+#battle .combat-stat > div:first-child > span {gap:7px;}
+#battle .combat-stat > div:first-child .type-pill {background:#052947;color:#b9eeff;border-color:#40b8dc;font-size:11px;}
+#battle .combat-stat > div:first-child .form-state {color:#99e5f5;letter-spacing:0;font-size:9px;}
+#battle .combat-stat > div:first-child .form-state.possessed {background:#2a1738;color:#ffb6d0;border-color:#d0769c;}
+#battle .combat-stat .resource-row {display:grid;grid-template-columns:24px minmax(0,1fr) 91px;align-items:center;gap:8px;margin-top:7px;}
+#battle .resource-label {color:#9df3ff;font:750 11px Manrope;}
+#battle .combat-stat .resource-row > span:last-child, #battle .combat-stat .resource-row small {color:#e9f5ff;font:650 11px Manrope;white-space:nowrap; margin:0;text-align:right;}
+#battle .combat-stat .hp-track, #battle .combat-stat .energy-track {height:9px !important;margin:0;border:1px solid #48c9e7 !important;background:#031525 !important;border-radius:7px;box-shadow:none;}
+#battle .hp-track i {background:linear-gradient(180deg,#56f29d,#08b979);}
+#battle .energy-track i {background:linear-gradient(180deg,#66eaff,#0789cb);}
+#battle .combat-condition {display:block;color:#ffd58f;font:600 9px Manrope;margin-top:4px;min-height:0;}
+#battle .combat-condition:empty {display:none;}
+#battle .arena-header {left:34%;right:34%;top:23px;}
+#battle .arena-header .eyebrow, #battle #turn-label {background:#041d36df;border:1px solid #ad955675;color:#d2eaf2;}
+#battle .combat-log {display:contents;}
+#battle #phase-label, #battle #next-move {display:none;}
+#battle #battle-message {position:absolute;z-index:12;bottom:calc(25% + 55px);left:50%;transform:translate(-50%,6px);margin:0;padding:8px 18px;border:1px solid #bda56385;border-radius:4px;background:#041b34ed;color:#e5f8ff;font:550 clamp(10px,1vw,15px)/1.5 Manrope;text-align:center;max-width:66%;width:max-content;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;}
+#battle.has-battle-notice #battle-message {opacity:1;transform:translate(-50%,0);}
+#battle #battle-history {position:absolute;bottom:calc(25% + 15px);right:28px;padding:7px 12px;color:#cce5ef;background:#06213ce8;border:1px solid #bca26199;border-radius:4px;font:600 10px Manrope;z-index:13;}
+#battle .battle-bottom {display:block;left:22px;right:22px;bottom:15px;width:auto;height:25%;max-height:25%;padding:6px 9px;gap:0;}
+#battle #command-dock {display:grid;grid-template-columns:clamp(150px,18vw,260px) minmax(0,1fr);grid-template-rows:23px minmax(0,1fr);column-gap:20px;row-gap:5px;padding:3px 3px 4px;background:none;border:0;box-shadow:none;height:100%;width:100%;}
+#battle #home-panel {grid-column:1;grid-row:1/3;display:grid;grid-template-columns:1fr;grid-template-rows:repeat(4,minmax(0,1fr));height:100%;gap:5px;padding-right:18px;border-right:1px solid #b79a56;}
+#battle #home-panel button {display:flex;flex-direction:row;justify-content:flex-start;align-items:center;gap:10px;min-height:0;height:100%;padding:4px 9px;border:1px solid #607c9e;border-radius:6px;background:linear-gradient(110deg,#082c50,#031c35);color:#e4f1ff;box-shadow:none;}
+#battle #home-panel button[aria-pressed="true"] {background:linear-gradient(100deg,#067cc3,#064685);border-color:#7deaff;box-shadow:inset 0 0 0 1px #3bbbe3,0 0 6px #339de14d;}
+#battle #home-panel button:disabled {opacity:.45;}
+#battle #home-panel strong {font:700 clamp(12px,1.3vw,20px) Manrope !important;color:#f0f6ff;}
+#battle #home-panel small {display:none;}
+#battle #home-panel kbd {display:none;}
+#battle #home-panel .menu-icon {width:25px;color:#abddeb;}
+#battle #home-panel [data-battle-tab="bag"] .menu-icon {color:#f2cf67;}
+#battle #home-panel .menu-icon svg {width:24px;height:24px;}
+#battle #folder-heading {grid-column:2;grid-row:1;height:23px;min-height:0;margin:0;padding:0 2px 5px;justify-content:flex-start;border-bottom:1px solid #2b6f94;}
+#battle #folder-title {font:550 12px Manrope;color:#a8dbee;letter-spacing:0;}
+#battle #folder-back, #battle .folder-path {display:none;}
+#battle #fight-panel, #battle #bag-panel, #battle #swap-panel, #battle #exit-panel {grid-column:2;grid-row:2;height:100%;min-height:0;margin:0;}
+#battle #fight-panel {grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:7px;}
+#battle #command-dock .move-card {position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;min-height:0;height:100%;padding:6px 13px 6px 63px;border:1px solid #61bdd9;border-radius:7px;background:linear-gradient(110deg,#092e50,#021a32);box-shadow:inset 0 0 0 3px #16476666;color:#e9f5ff;}
+#battle #command-dock .move-card::before {content:"◆";position:absolute;left:7px;top:7px;bottom:7px;width:43px;display:grid;place-items:center;font:600 26px Manrope;color:#f6f7ff;background:linear-gradient(135deg,#173c62,#092645);border:1px solid #527eaa;border-radius:5px;}
+#battle #command-dock .move-card.elemental::before {content:"✦";color:var(--battle-element);}
+#battle #command-dock .move-card > span {color:#f0f6ff;font:650 clamp(11px,1.1vw,17px) Manrope !important;}
+#battle #command-dock .move-card small {display:flex;align-items:center;flex-wrap:nowrap;gap:8px;width:100%;margin:0;font:550 9px Manrope;color:#b6dae9;}
+#battle #command-dock .move-card .type-pill {font-size:9px;color:#a9dcef;border-color:#4a86aa;background:#082b49;padding:2px 5px;}
+#battle #command-dock .move-card .move-cost {margin-left:auto;color:#a7efff;white-space:nowrap;}
+#battle #command-dock .move-card .affinity {font-size:8px;white-space:nowrap;color:#a4c8d8;}
+#battle #command-dock .move-card .affinity.advantage {color:#8ee9a5;}
+#battle #command-dock .move-card .affinity.resisted {color:#edb391;}
+#battle #command-dock .move-card kbd {display:none;}
+#battle #command-dock .move-card.locked-technique {border-color:#637086;background:#101e33;color:#8a9cb3;opacity:.7;}
+#battle #command-dock .move-card.locked-technique::before {content:"▣";color:#97a9bf;background:#1b2d43;border-color:#405775;}
+#battle #command-dock .locked-technique > span {font-size:12px !important;color:#8c9eb5;}
+#battle #command-dock .locked-technique small {color:#7f91a8;}
+#battle #command-dock button:hover:not(:disabled) {border-color:#f1d786;background:linear-gradient(110deg,#12517a,#082c4d);}
+#battle #command-dock button:focus-visible {outline:2px solid #f4d581;outline-offset:2px;}
+#battle #battle-speed {bottom:calc(25% + 14px);left:24px;background:#05213b;color:#f8d77d;border:1px solid #d3b566;}
+#battle .form-options button {background:#062b46;color:#e7f5ff;border-color:#6084a0;}
+#battle .bag-command, #battle .exit-command {color:#d5eafa;font:550 12px Manrope;}
+@media(max-width:1000px),(max-height:600px) {
+ #battle .combat-stat {top:12px;padding:3px 5px 5px;border-width:8px;border-image-width:14px;width:29%;}
+ #battle .player-stat {left:13px;}#battle .enemy-stat {right:13px;}
+ #battle .combat-stat strong {font-size:12px;padding-right:40px;}
+ #battle .combat-stat .stat-level {font-size:8px;top:2px;right:3px;padding:2px 4px;}
+ #battle .combat-stat > div:first-child {gap:4px;margin-bottom:5px;}
+ #battle .combat-stat > div:first-child .type-pill {font-size:8px;padding:2px 4px;}
+ #battle .combat-stat > div:first-child .form-state {font-size:6px;}
+ #battle .combat-stat .resource-row {grid-template-columns:17px minmax(0,1fr) 67px;gap:4px;margin-top:4px;}
+ #battle .combat-stat .resource-row > span:last-child,#battle .combat-stat .resource-row small,#battle .resource-label {font-size:8px;}
+ #battle .combat-stat .hp-track,#battle .combat-stat .energy-track {height:6px !important;}
+ #battle .battle-bottom {left:9px;right:9px;bottom:7px;height:26%;max-height:26%;padding:2px 4px;border-width:8px;border-image-width:13px;}
+ #battle #command-dock {grid-template-columns:130px minmax(0,1fr);grid-template-rows:17px minmax(0,1fr);gap:3px 11px;padding:0;}
+ #battle #home-panel {padding-right:9px;gap:3px;}
+ #battle #home-panel button {gap:6px;padding:1px 6px;}
+ #battle #home-panel strong {font-size:11px !important;}
+ #battle #home-panel .menu-icon,#battle #home-panel .menu-icon svg {width:17px;height:17px;}
+ #battle #folder-heading {height:17px;padding-bottom:3px;}
+ #battle #folder-title {font-size:9px;}
+ #battle #fight-panel {gap:4px;}
+ #battle #command-dock .move-card {padding:3px 6px 3px 35px;gap:0;}
+ #battle #command-dock .move-card::before {left:4px;top:4px;bottom:4px;width:24px;font-size:17px;}
+ #battle #command-dock .move-card > span {font-size:9px !important;}
+ #battle #command-dock .move-card small {font-size:7px;gap:4px;}
+ #battle #command-dock .move-card .type-pill {font-size:7px;padding:1px 3px;}
+ #battle #command-dock .move-card .affinity {font-size:6px;}
+ #battle #battle-message {bottom:calc(26% + 43px);font-size:10px;padding:5px 10px;}
+ #battle #battle-speed,#battle #battle-history {bottom:calc(26% + 11px);}
+ #battle #battle-speed {left:12px;}
+ #battle #battle-history {right:13px;padding:5px 8px;font-size:9px;}
+}
+#battle #command-dock .move-card::before,#battle #command-dock .move-card.elemental::before {content:"";}
+#battle #command-dock .move-card .move-glyph {position:absolute;left:7px;top:50%;width:43px;height:30px;transform:translateY(-50%);display:grid;place-items:center;color:#edf8ff;font-size:0 !important;}
+#battle #command-dock .move-glyph > svg {width:26px;height:26px;fill:currentColor;}
+#battle #command-dock .move-glyph .type-pill {border:0;padding:0;background:none;font-size:0 !important;color:var(--battle-element);}
+#battle #command-dock .move-glyph .type-pill svg {width:27px;height:27px;}
+#battle #command-dock .move-card.locked-technique::before {content:"";background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238da3bd' stroke-width='2'%3E%3Crect x='5' y='10' width='14' height='12' rx='2'/%3E%3Cpath d='M8 10V6a4 4 0 0 1 8 0v4m-4 5v3'/%3E%3C/svg%3E");background-size:23px;background-repeat:no-repeat;background-position:center;}
+@media(max-width:1000px),(max-height:600px) {
+ #battle #command-dock .move-card .move-glyph {left:4px;width:24px;height:20px;}
+ #battle #command-dock .move-glyph > svg,#battle #command-dock .move-glyph .type-pill svg {width:18px;height:18px;}
+ #battle #command-dock .move-card.locked-technique::before {background-size:17px;}
+}
