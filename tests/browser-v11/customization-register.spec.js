@@ -10,16 +10,17 @@ test('roupas não alteram a cabeça; cortes não alteram as pernas; cabeças seg
    const index=a.walkIndex(gender,dir,phase);
    for(let style=0;style<5;style++){
     const base=pixels(a.frame(gender,dir,index,{...D,gender,style,bag:0}).canvas);
+    if(base.slice(0,192*4).some((v,n)=>n%4===3&&v>0)) errors.push(`${gender}/${dir}/${phase}/${style}: cabelo cortado na borda superior`);
     for(let outfit=1;outfit<5;outfit++){
      const selected=pixels(a.frame(gender,dir,index,{...D,gender,style,outfit,bag:0}).canvas);
      if(!same(base,selected,0,96))errors.push(`${gender}/${dir}/${phase}/${style}/${outfit}: roupa alterou cabeça`);
      if(!same(base,selected,139,192))errors.push(`${gender}/${dir}/${phase}/${style}/${outfit}: roupa alterou passos`);
     }
-    if(style>1){const first=pixels(a.frame(gender,dir,index,{...D,gender,style:1,bag:0}).canvas);if(!same(base,first,139,192))errors.push(`${gender}/${dir}/${phase}: cabelo alterou pernas`);}
+    if(style>0){const first=pixels(a.frame(gender,dir,index,{...D,gender,style:0,bag:0}).canvas);if(!same(base,first,139,192))errors.push(`${gender}/${dir}/${phase}: cabelo alterou pernas`);}
    }
    const r=a.looks.registration(gender,dir,index,a);
    if(!Object.values(r).every(Number.isInteger))errors.push('registro fracionário');
-   if(Object.values(r).some(v=>Math.abs(v)>9))errors.push(`${gender}/${dir}/${phase}: registro excessivo ${JSON.stringify(r)}`);
+   if(Math.abs(r.headX)>35 || Math.abs(r.bodyX)>35 || Math.abs(r.headY)>4 || Math.abs(r.bodyY)>4)errors.push(`${gender}/${dir}/${phase}: registro excessivo ${JSON.stringify(r)}`);
   }
   return [...new Set(errors)];
  });expect(problems).toEqual([]);

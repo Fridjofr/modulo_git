@@ -55,6 +55,24 @@ const clean = (image, rect) => {
   g.putImageData(data, 0, 0);
   return { canvas: c, l, r, t, b };
 };
+// Remove only tiny disconnected remnants of the replaced hair outline near the
+// collar. Large body/limb components are never hidden by this cleanup.
+function collarFringes(canvas) {
+  const g=canvas.getContext("2d"), pixels=g.getImageData(0,0,192,192), d=pixels.data,
+    seen=new Uint8Array(192*192);
+  for(let seed=0;seed<seen.length;seed++) {
+    if(seen[seed]||!d[seed*4+3])continue;
+    const group=[seed];seen[seed]=1;let collar=true;
+    for(let k=0;k<group.length;k++) {
+      const p=group[k],x=p%192,y=Math.floor(p/192);
+      if(y<94||y>=139)collar=false;
+      for(const next of [x?p-1:-1,x<191?p+1:-1,y?p-192:-1,y<191?p+192:-1])
+        if(next>=0&&!seen[next]&&d[next*4+3]){seen[next]=1;group.push(next);}
+    }
+    if(collar&&group.length<12)for(const p of group)d[p*4+3]=0;
+  }
+  g.putImageData(pixels,0,0);
+}
 export class CharacterAtlas {
   constructor(images) {
     this.cache = new Map();
@@ -151,6 +169,13 @@ export class CharacterAtlas {
             hg.scale(-1, 1);
             hg.drawImage(this.heads[gender][look][1], 0, 0);
             hg.restore();
+          }
+          const headPixels = hg.getImageData(0, 0, 192, 192).data;
+          hc.spriteTop = 191;
+          for(let y=0;y<192;y++) {
+            if(headPixels.slice(y*192*4,(y+1)*192*4).some((v,n)=>n%4===3&&v>=224)) {
+              hc.spriteTop=y; break;
+            }
           }
           this.heads[gender][look].push(hc);
           const bc = make(),
@@ -262,24 +287,34 @@ export class CharacterAtlas {
     return c;
   }
   registration(gender, dir, index, assets) {
-    const key = [gender,dir,index%4].join(":");
+    const key = [gender, dir, index % 4].join(":");
     if (this.registrations.has(key)) return this.registrations.get(key);
-    const meta=assets.meta[gender], source=assets.images[gender+":skin"];
-    const landmark=(frame) => {
-      const r=meta.directions[dir][frame], c=make(), g=c.getContext("2d");
-      g.drawImage(source,r[0],r[1],192,192,0,0,192,192);
-      const d=g.getImageData(0,0,192,192).data;
-      let x=0,y=0,n=0;
-      for(let py=94;py<107;py++)for(let px=80;px<113;px++)if(d[(py*192+px)*4+3]>220){x+=px;y+=py;n++;}
-      const head={x:n?x/n:96,y:n?y/n:103};
-      return {head};
+    const landmark = (sourceKey) => {
+      const rect = assets.meta[sourceKey].directions[dir][index % 4];
+      const c = make(), g = c.getContext("2d");
+      g.drawImage(assets.images[sourceKey + ":skin"], rect[0], rect[1], 192, 192, 0, 0, 192, 192);
+      const d = g.getImageData(0, 0, 192, 192).data;
+      let x = 0, y = 0, count = 0;
+      for (let py = 99; py < 107; py++) for (let px = 40; px < 150; px++)
+        if (d[(py * 192 + px) * 4 + 3] > 220) { x += px; y += py; count++; }
+      if (count >= 20) return { x: x / count, y: y / count };
+      // A rear-facing collar can be covered by hair. Locate the shirt's spine.
+      g.clearRect(0, 0, 192, 192);
+      g.drawImage(assets.images[sourceKey + ":top"], rect[0], rect[1], 192, 192, 0, 0, 192, 192);
+      const top = g.getImageData(0, 0, 192, 192).data; x = 0; count = 0;
+      for (let py = 108; py < 117; py++) for (let px = 40; px < 150; px++)
+        if (top[(py * 192 + px) * 4 + 3] > 220) { x += px; count++; }
+      return { x: count ? x / count : 96, y: 103 };
     };
-    const origin=landmark(0), current=landmark(index%4), result={
-      headX:Math.round(current.head.x-origin.head.x),headY:Math.round(current.head.y-origin.head.y),
-      // Source frames are already registered by the torso at x96 / feet180.
-      bodyX:0,bodyY:0,
+    const joint = landmark(gender), hidden = landmark(gender + "-short");
+    // The approved female profiles are intentionally offset from the cell's
+    // centre. Register at the actual collar, not at the atlas cell centre.
+    const result = {
+      headX: Math.round(joint.x - 96), headY: Math.round(joint.y - 103),
+      bodyX: Math.round(joint.x - 96), bodyY: Math.round(joint.y - 103),
+      underlayX: Math.round(joint.x - hidden.x), underlayY: Math.round(joint.y - hidden.y),
     };
-    this.registrations.set(key,result);
+    this.registrations.set(key, result);
     return result;
   }
   frame(gender, dir, index, a, zlink, assets) {
@@ -287,7 +322,7 @@ export class CharacterAtlas {
     if (this.cache.has(key)) return this.cache.get(key);
     // Keep the complete approved animated body and its own limbs. Costumes are
     // material overlays; neither legs nor boots come from a different anatomy.
-    const originalKey = a.style && assets.meta[gender + "-short"] ? gender + "-short" : gender;
+    const originalKey = gender;
     const meta = assets.meta[originalKey],
       rect = meta.directions[dir][index % 4];
     const c = make(),
@@ -329,12 +364,40 @@ export class CharacterAtlas {
         if (["skin", "top", "bottom", "hair"].includes(material))
           layers[material] = layer;
       }
-      base = { canvas, layers };
+      const hairUnderlay = make(), ug = hairUnderlay.getContext("2d");
+      const shortKey = gender + "-short", shortMeta = assets.meta[shortKey],
+        shortRect = shortMeta.directions[dir][index % 4];
+      const registration = this.registration(gender, dir, index, assets);
+      ug.save(); ug.translate(registration.underlayX, registration.underlayY);
+      ug.drawImage(assets.images[shortKey], ...shortRect, 0, 0, 192, 192);
+      for (const material of ["skin", "top", "bottom", "accent", "hair"])
+        ug.drawImage(assets.images[shortKey + ":" + material],
+          shortRect[0] + shortMeta.strideWidth * (a[material] || 0), shortRect[1],
+          192, 192, 0, 0, 192, 192);
+      // Only reveal shoulders that were hidden by the original long hair.
+      // Never substitute the short sheet's arms, legs, boots or gait.
+      const hairMask = make(), mg = hairMask.getContext("2d");
+      for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++)mg.drawImage(layers.hair,dx,dy);
+      mg.clearRect(0,0,192,94); mg.clearRect(0,139,192,53);
+      mg.globalCompositeOperation="destination-out";
+      for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++){
+        mg.drawImage(layers.skin,dx,dy);
+        mg.drawImage(layers.top,dx,dy);
+      }
+      ug.restore();
+      ug.globalCompositeOperation="destination-in"; ug.drawImage(hairMask,0,0);
+      base = { canvas, layers, hairMask, hairUnderlay };
       this.baseCache.set(baseKey, base);
       if (this.baseCache.size > 96)
         this.baseCache.delete(this.baseCache.keys().next().value);
     }
     g.drawImage(base.canvas, 0, 0);
+    if (a.style) {
+      g.globalCompositeOperation = "destination-out";
+      g.drawImage(base.hairMask, 0, 0);
+      g.globalCompositeOperation = "source-over";
+      g.drawImage(base.hairUnderlay, 0, 0);
+    }
     if (a.legwear)
       drawClothing(g, { ...a, outfit: 0 }, dir, index, base.layers);
     if (a.outfit) {
@@ -393,13 +456,15 @@ export class CharacterAtlas {
       const head = this.tint(this.heads[gender][a.style][DIRS.indexOf(dir)], a, true, dir);
       // Each authored head is fitted uniformly around the chin, then follows
       // the approved walking frame's head landmark. No limb is stretched.
-      const scale = gender === "male" ? 1.12 : 1.08;
+      const sourceTop = this.heads[gender][a.style][DIRS.indexOf(dir)].spriteTop;
+      const scale = Math.min(gender === "male" ? 1.12 : 1.08, 102 / Math.max(1, 106 - sourceTop));
       g.clearRect(0, 0, 192, 96);
       g.drawImage(head,
         Math.round(96 - 96 * scale + registration.headX),
         Math.round(106 - 106 * scale + registration.headY),
         Math.round(192 * scale), Math.round(192 * scale));
     }
+    if (a.style) collarFringes(c);
     assets.drawBag(g, dir, a);
     if (zlink) {
       g.save();

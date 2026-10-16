@@ -131,6 +131,22 @@ async function drive(pred, ms = 180000) {
     if (s.modal === "name") {
       await p.locator("#story-name").fill("Nara");
       await p.getByRole("button", { name: "Confirmar", exact: true }).click();
+    } else if (s.modal === "sync") {
+      // The normal UI handler decides whether a pulse counts. Dispatch in the
+      // same frame as the visible cursor check, avoiding protocol latency.
+      await p.waitForFunction(() => {
+        const b = document.querySelector("#sync-pulse"),
+          v = parseFloat(
+            document.querySelector("#sync-cursor")?.style.left || "0",
+          );
+        if (!b) return true;
+        if (b.dataset.inRange === "true" && v >= 44 && v <= 56) {
+          b.click();
+          return true;
+        }
+        return false;
+      });
+      await p.waitForTimeout(400);
     } else if (await p.locator("#dialogue-choices button").count())
       await p.locator("#dialogue-choices button").first().click();
     else if (s.dialogue) {
@@ -178,17 +194,16 @@ try {
     time: (Date.now() - origin) / 1000,
   });
   for (let cycle = 0; cycle < 2; cycle++)
-    for (const [key, name] of [
-      ["ArrowDown", "frente"],
-      ["ArrowRight", "direita"],
-      ["ArrowUp", "costas"],
-      ["ArrowLeft", "esquerda"],
+    for (const [axis, target, name] of [
+      ["y", 650, "frente"],
+      ["x", 560, "direita"],
+      ["y", 550, "costas"],
+      ["x", 460, "esquerda"],
     ]) {
-      await p.keyboard.down(key);
-      await p.waitForTimeout(300);
+      const walking = move(p, axis, target);
+      await p.waitForTimeout(150);
       await cap("06-caminhada-" + name);
-      await p.waitForTimeout(420);
-      await p.keyboard.up(key);
+      await walking;
       await p.waitForTimeout(120);
     }
   timeline.push({
@@ -213,13 +228,6 @@ try {
   await cap("13-escolha-" + starter);
   await p.locator("#confirm-starter").click();
   await drive((s) => s.modal === "sync");
-  for (let i = 0; i < 3; i++) {
-    await p.waitForFunction(
-      () => document.querySelector("#sync-pulse")?.dataset.inRange === "true",
-    );
-    await p.locator("#sync-pulse").click();
-    await p.waitForTimeout(370);
-  }
   await drive((s) => s.scene === "battle" && s.battle.phase === "player");
   await cap("14-batalha-" + starter);
   timeline.push({ name: "inicio-ataques", time: (Date.now() - origin) / 1000 });
@@ -227,7 +235,8 @@ try {
     ["attack", "fisico"],
     ["skill", "elemental"],
   ]) {
-    await p.locator('[data-battle-tab="fight"]').click();
+    if (!(await p.locator("#fight-panel").isVisible()))
+      await p.locator('[data-battle-tab="fight"]').click();
     await p.locator('[data-action="' + action + '"]').click();
     await p.waitForFunction(() => {
       const s = window.zimonsDebug.snapshot();
@@ -254,7 +263,8 @@ try {
       await p.waitForTimeout(100);
       continue;
     }
-    await p.locator('[data-battle-tab="fight"]').click();
+    if (!(await p.locator("#fight-panel").isVisible()))
+      await p.locator('[data-battle-tab="fight"]').click();
     await p.locator('[data-action="attack"]').click();
     await p.waitForFunction(
       () => {
@@ -279,24 +289,24 @@ try {
   await drive((s) => s.state.transformed);
   await navigate(p, 760, 500);
   await drive((s) => s.state.quest === "return");
+  await navigate(p, 760, 500);
   await cap("16-zimon-em-repouso-" + starter);
   timeline.push({
     name: "inicio-caminhada-zimon",
     time: (Date.now() - origin) / 1000,
   });
   for (let cycle = 0; cycle < 2; cycle++)
-    for (const [key, name] of [
-      ["ArrowDown", "frente"],
-      ["ArrowRight", "direita"],
-      ["ArrowUp", "costas"],
-      ["ArrowLeft", "esquerda"],
+    for (const [axis, target, name] of [
+      ["y", 580, "frente"],
+      ["x", 870, "direita"],
+      ["y", 500, "costas"],
+      ["x", 760, "esquerda"],
     ]) {
-      await p.keyboard.down(key);
-      await p.waitForTimeout(260);
+      const walking = move(p, axis, target);
+      await p.waitForTimeout(150);
       await cap("17-zimon-" + name + "-" + starter);
-      await p.waitForTimeout(410);
-      await p.keyboard.up(key);
-      await p.waitForTimeout(110);
+      await walking;
+      await p.waitForTimeout(120);
     }
   timeline.push({
     name: "fim-caminhada-zimon",
@@ -307,6 +317,10 @@ try {
     throw Error("Forma inesperada na evidência");
 } catch (e) {
   console.log(e.stack);
+  await writeFile(
+    dir + "/failure-state.json",
+    JSON.stringify(await snap(), null, 2),
+  );
   await p.screenshot({ path: dir + "/images/failure.png" });
   errors.push(e.stack);
   process.exitCode = 1;

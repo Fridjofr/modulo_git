@@ -43,7 +43,9 @@ try {
     }
     const out = {};
     for (const gender of ["female", "male"]) {
-      let [c, g] = sheet(
+      let c, g;
+      for (const custom of [false, true]) {
+      [c, g] = sheet(
         1040,
         980,
         gender === "female"
@@ -63,6 +65,8 @@ try {
           a.draw(g, gender, dir, a.walkIndex(gender, dir, phase), x, y, 174, {
             ...DEFAULT_APPEARANCE,
             gender,
+            style: custom ? 3 : 0,
+            outfit: custom ? 2 : 0,
             bag: 0,
           });
           g.fillStyle = "#d2e4ee";
@@ -73,7 +77,8 @@ try {
         a.draw(g, "lira", dir, a.walkIndex("lira", dir, 0), x, y, 174);
         g.fillText("Lira · proporção", x - 60, y + 24);
       });
-      out[gender + "-caminhada.png"] = c.toDataURL();
+      out[gender + (custom ? "-personalizado" : "") + "-caminhada.png"] = c.toDataURL();
+      }
       for (const [key, label] of [
         ["style", "Cinco cortes"],
         ["outfit", "Cinco roupas"],

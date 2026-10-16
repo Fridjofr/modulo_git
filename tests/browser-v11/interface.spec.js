@@ -71,11 +71,12 @@ test("personalização: cinco cabelos e roupas, quatro direções, pernas ligada
                 );
               // Profile knees move off-centre in the approved source. Inspect the full
               // leg envelope, while neck and torso must still join at the centre.
+              const joint = 96 + a.looks.registration(gender, dir, frame, a).bodyX;
               for (const y of [104, 112, 125, 138, 147, 156, 166]) {
                 let filled = 0;
                 for (
-                  let x = y >= 138 ? 55 : 87;
-                  x < (y >= 138 ? 138 : 106);
+                  let x = y >= 138 ? 55 : joint - 10;
+                  x < (y >= 138 ? 138 : joint + 10);
                   x++
                 )
                   if (d[(y * 192 + x) * 4 + 3] > 220) filled++;

@@ -83,13 +83,22 @@ export async function select(page, key) {
   await page.locator(`[data-starter='${key}']`).click();
   await page.locator("#confirm-starter").click();
   await drive(page, (s) => s.modal === "sync");
-  for (let i = 0; i < 3; i++) {
-    await page.waitForFunction(
-      () => document.querySelector("#sync-pulse")?.dataset.inRange === "true",
-    );
-    await page.locator("#sync-pulse").click();
-    await page.waitForTimeout(370);
+  for (let i = 0; i < 8 && (await snap(page)).modal === "sync"; i++) {
+    // Click in the SAME visible cursor frame. A protocol round trip between
+    // observing the moving needle and clicking could miss under recording load.
+    await page.waitForFunction(() => {
+      const button = document.querySelector("#sync-pulse"),
+        value = parseFloat(document.querySelector("#sync-cursor")?.style.left || "0");
+      if (!button || button.closest("[hidden]")) return true;
+      if (button.dataset.inRange === "true" && value >= 44 && value <= 56) {
+        button.click();
+        return true;
+      }
+      return false;
+    });
+    await page.waitForTimeout(400);
   }
+  expect((await snap(page)).modal).not.toBe("sync");
   return drive(
     page,
     (s) => s.scene === "battle" && s.battle.phase === "player",

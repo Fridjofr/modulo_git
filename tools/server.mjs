@@ -10,6 +10,7 @@ const mime = {
   ".js": "text/javascript; charset=utf-8",
   ".json": "application/json; charset=utf-8",
   ".png": "image/png",
+  ".gif": "image/gif",
   ".ttf": "font/ttf",
   ".woff2": "font/woff2",
   ".mp4": "video/mp4",

@@ -116,6 +116,23 @@ test("percurso v11, escolta física, descanso, possessão e encerramento no gin�
   await page.keyboard.press("e");
   await drive(page, (s) => s.scene === "battle" && s.battle.phase === "player");
   await capture("15-batalha-ginasio");
+  // Review A3: live values and one active folder, at desktop and compact sizes.
+  for (const viewport of [{width:1366,height:768},{width:800,height:450}]) {
+    await page.setViewportSize(viewport);
+    for (const tab of ["home","fight","bag","swap"]) {
+      await page.keyboard.press("Escape");
+      if(tab!=="home") await page.locator(`[data-battle-tab="${tab}"]`).click();
+      const visible=await page.locator("#home-panel,#fight-panel,#bag-panel,#swap-panel,#exit-panel").evaluateAll(nodes=>nodes.filter(n=>!n.hidden).map(n=>n.id));
+      expect(visible).toEqual([tab+"-panel"]);
+      const overflow=await page.locator(`#${tab}-panel button:visible`).evaluateAll(nodes=>nodes.filter(n=>{const r=n.getBoundingClientRect();return r.left<0||r.right>innerWidth+1||r.top<0||r.bottom>innerHeight+1;}).map(n=>n.textContent));
+      expect(overflow).toEqual([]);
+    }
+    const model=(await snap(page)).battle;
+    await expect(page.locator("#enemy-energy-label")).toHaveText(`${model.opponent.energy} / ${model.opponent.maxEnergy || 60} MP`);
+    await expect(page.locator("#combat-level")).toHaveText(`NV ${model.player.level}`);
+  }
+  await page.setViewportSize({width:1440,height:900});
+  await page.keyboard.press("Escape");
   await fight(page);
   await page.locator("#return-world").click();
   await drive(page, (s) => s.state.quest === "complete");

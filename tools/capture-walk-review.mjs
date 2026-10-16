@@ -178,6 +178,10 @@ try {
       .getByRole("button", { name: "Modelo da roupa: Uniforme", exact: true })
       .click();
   }
+  if (gender === "female") {
+    await p.getByRole("button", {name:"Penteado: Coques duplos",exact:true}).click();
+    await p.getByRole("button", {name:"Modelo da roupa: Uniforme",exact:true}).click();
+  }
   await cap("04b-aparencia-escolhida");
   await p.locator("#start").click();
   await drive((s) => s.state.quest === "forest");
