@@ -1,3 +1,4 @@
+import { CHARACTER_SCALE } from './official-characters.js';
 import { FOREST_POINTS, forestStand } from "./world.js";
 import { MAPS, mapStand } from "./maps.js";
 import { STORY_QUESTS, openingState } from "./story.js";
@@ -97,7 +98,7 @@ export const DEFAULT_APPEARANCE = {
   bottom: 0,
   skin: 0,
   accent: 0,
-  bag: 1,
+  bag: 0,
 };
 export function canLinkHere(state) {
   if (!state?.zlink || !state.starter) return false;
@@ -147,7 +148,7 @@ export const OBSTACLES = Object.fromEntries(
     m.objects.filter((o) => o.solid).map((o) => o.solid),
   ]),
 );
-export const canStand = (world, x, y, radius = 9) =>
+export const canStand = (world, x, y, radius = CHARACTER_SCALE.radius) =>
   mapStand(world, x, y, radius);
 export function movePlayer(state, direction, seconds) {
   const velocity = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] }[

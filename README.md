@@ -1,4 +1,6 @@
-# ZIMONS — versão jogável 0.12.0
+# ZIMONS — revisão visual 0.13.0
+
+Esta revisão foi entregue como imagens e vídeos a pedido do usuário. A validação completa do próximo ZIP ainda está pendente; consulte `docs/review/official-v013/VALIDACAO.md`.
 
 Trecho do Capítulo 1: criação do personagem, despertar na floresta, Academia, enfermaria, primeira essência, possessão, recuperação, treino de Sincro e duelo com Nico. Depois do duelo, ficam disponíveis as exibições no ginásio. Escolha **um** inicial: Pyron, Marivon ou Verdrax.
 
@@ -32,7 +34,7 @@ Há controles de toque em orientação horizontal e suporte a controle. Música,
 
 - Enfermaria usa o PNG final aprovado, sem redesenho, cama extra ou lençol sobreposto. Cama, cadeira, monitor e porta têm coordenadas próprias; poses de repouso preservam a aparência selecionada.
 - Salão, laboratório e wallpaper aprovados foram preservados. Portas têm destinos próprios, abertura sincronizada com colisões e aproximação alinhada. Escoltas percorrem rotas físicas.
-- Cinco cabelos e cinco roupas por protagonista, cores, tons de pele e bolsas. O nome é escolhido dentro da história; o Z-Link aparece somente depois da entrega.
+- Novas bases oficiais masculina e feminina, sem corpos ou peças antigos. As categorias do criador permanecem; variações sem arte compatível ficam indicadas como pendentes. O nome é escolhido dentro da história; o Z-Link aparece somente depois da entrega.
 - Cada holograma é apresentado uma vez. A primeira crise mantém o protagonista sob controle do jogador; a derrota ocorre ainda em forma Zimon. A reversão acontece no laboratório, antes do segundo sonho com as mesmas duas silhuetas.
 - Combate com piso azul liso, dois círculos diagonais, apoio das patas centralizado, HUD azul-marinho/dourada e pastas Batalha, Bolsa, Zimons e Sair. Mensagens são transitórias; o histórico fica acessível sem painel narrativo permanente à direita.
 - Golpes físicos e elementais preservados; sem Defender. As duas técnicas iniciais estão disponíveis no nível 5; outra técnica é aprendida no nível 8, com aviso. HP/MP e parâmetros crescem por nível e são recuperados depois dos duelos.
@@ -48,3 +50,11 @@ Consulte `PROBLEMAS_CONHECIDOS.md` para os limites desta versão. A sessão rein
 Para desenvolvimento, instale as dependências com `npm ci`. Execute `npm run check`, `npm test` e `npm run test:e2e`. O Playwright precisa de Chromium (`npx playwright install chromium`, ou `CHROMIUM_PATH` para uma instalação existente).
 
 A suíte atual está em `tests/browser-v11/`. `final-playthrough.spec.js` percorre as seis combinações de protagonista/inicial e cobre vitória e derrota no ginásio. Os testes mais antigos permanecem como histórico. `npm run package` gera o ZIP jogável na pasta acima do projeto e verifica sua integridade.
+
+## Atualização 0.13.0
+
+Os protagonistas e Lira em pé usam exclusivamente a folha oficial enviada na revisão. Foram preparados 48 quadros transparentes, com escala comum e pés alinhados. As poses especiais aprovadas de Lira foram preservadas. O criador mantém suas categorias, mas variações sem arte compatível ficam sinalizadas como pendentes.
+
+A câmera mantém a mesma escala entre os ambientes; salas menores ficam centralizadas em vez de ampliar personagens e móveis. As correções adicionais de travessia de portas ficaram para a próxima etapa, conforme a última orientação.
+
+Fonte, recortes e método de preparo: [assets/characters/official/README.md](assets/characters/official/README.md).

@@ -9,7 +9,7 @@ export const CLINIC = Object.freeze({
   chair: { x: 78, y: 219, w: 34, h: 49 },
   seat: { x: 94, y: 240 },
   playerApproach: [266, 225],
-  playerRest: [186, 220],
+  playerRest: [186, 224],
   sideHip: [230, 208],
   // Sole contact of the unmodified approved seated frame, at scale .11.
   liraApproach: [112.38188524590164, 259.36],

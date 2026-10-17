@@ -90,19 +90,18 @@ export class Renderer {
           Math.sin(Math.min(1, (now - fx.start) / fx.duration) * Math.PI) * 0.12
         : 1;
     if (reducedMotion) zoom = 1;
-    zoom *= Math.max(1, viewW / width, viewH / height);
+    // A smaller room must not magnify its people and furniture. Keep the same
+    // world-unit camera scale, centring rooms smaller than the viewport instead.
+    const axis = (extent, viewport, focus) => extent < viewport
+      ? (extent - viewport) / 2 : Math.max(0, Math.min(extent - viewport, focus - viewport / 2));
     const camera = {
-      x: Math.max(
-        0,
-        Math.min(width - viewW / zoom, state.x - viewW / (2 * zoom)),
-      ),
-      y: Math.max(
-        0,
-        Math.min(height - viewH / zoom, state.y - viewH / (2 * zoom)),
-      ),
+      x: axis(width, viewW / zoom, state.x),
+      y: axis(height, viewH / zoom, state.y),
       zoom,
     };
     this.camera = camera;
+    ctx.fillStyle = "#071526";
+    ctx.fillRect(0, 0, viewW, viewH);
     ctx.save();
     ctx.scale(zoom, zoom);
     ctx.translate(-camera.x, -camera.y);

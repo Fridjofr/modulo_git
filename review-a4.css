@@ -111,3 +111,5 @@
  #battle #command-dock .move-glyph > svg,#battle #command-dock .move-glyph .type-pill svg {width:18px;height:18px;}
  #battle #command-dock .move-card.locked-technique::before {background-size:17px;}
 }
+
+.palette-board > .appearance-pending {grid-column:1 / -1; margin-top:.25rem}

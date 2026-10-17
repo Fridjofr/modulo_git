@@ -19,7 +19,7 @@ for p in candidates:
  if rel.as_posix().startswith(media_prefixes) or rel.as_posix()=='INTEGRIDADE.sha256':continue
  if p.suffix in {'.log','.pyc','.zip'}:continue
  files.append(p)
-required=['index.html','INICIAR.bat','LEIA-ME-WINDOWS.txt','PROBLEMAS_CONHECIDOS.md','tools/server.mjs','assets/world/approved-final/ZIMONS_Enfermaria_Final_Aprovada.png']
+required=['index.html','INICIAR.bat','LEIA-ME-WINDOWS.txt','PROBLEMAS_CONHECIDOS.md','tools/server.mjs','assets/characters/official/source.png','assets/characters/official/female.png','assets/characters/official/male.png','assets/characters/official/lira.png','src/official-characters.js','assets/world/approved-final/ZIMONS_Enfermaria_Final_Aprovada.png']
 selected={p.relative_to(root).as_posix() for p in files}
 missing=set(required)-selected
 if missing:raise RuntimeError('Arquivos não incluídos no índice Git: '+str(sorted(missing)))

@@ -34,7 +34,7 @@ export async function drive(page, predicate, timeout = 110000) {
   }
   throw Error("Story stalled " + JSON.stringify(await snap(page)));
 }
-export async function start(page, { gender = "female", brief = true, style="Curto", outfit="Uniforme" } = {}) {
+export async function start(page, { gender = "female", brief = true, style="Oficial", outfit="Oficial" } = {}) {
   await page.goto("/?debug=1");
   await expect(page.locator("#title")).toHaveClass(/active/, {timeout:30000});
   await page.locator("#title-settings").click();
@@ -45,10 +45,10 @@ export async function start(page, { gender = "female", brief = true, style="Curt
   await page.locator("#title-new").click();
   await page.locator(`[data-gender='${gender}']`).click();
   await page
-    .getByRole("button", { name: `Penteado: ${style}`, exact: true })
+    .getByRole("button", { name: `Penteado: Oficial`, exact: true })
     .click();
   await page
-    .getByRole("button", { name: `Modelo da roupa: ${outfit}`, exact: true })
+    .getByRole("button", { name: `Modelo da roupa: Oficial`, exact: true })
     .click();
   await page.locator("#start").click();
   return drive(page, (s) => s.state.quest === "forest");

@@ -114,8 +114,10 @@ test("colisões não permitem cruzar água, paredes, bancadas ou limites, mesmo 
   s.x = 640;
   s.y = 460;
   for (let i = 0; i < 100; i++) movePlayer(s, "up", 1);
-  assert.ok(s.y >= 326);
-  assert.ok(s.y < 330);
+  // The shared 11-unit foot radius stops at the chair edge (317 + 11),
+  // with at most one 2.5-unit integration step of clearance.
+  assert.ok(s.y >= 328);
+  assert.ok(s.y < 331);
   s.x = 870;
   s.y = 580;
   for (let i = 0; i < 100; i++) movePlayer(s, "down", 1);

@@ -1,6 +1,7 @@
+import { CHARACTER_SCALE } from './official-characters.js';
 import { mapStand } from "./maps.js";
-export const ACTOR_SEPARATION = 32;
-export function actorCanStand(world, x, y, actor, others, radius = 11) {
+export const ACTOR_SEPARATION = CHARACTER_SCALE.separation;
+export function actorCanStand(world, x, y, actor, others, radius = CHARACTER_SCALE.radius) {
   return (
     mapStand(world, x, y, radius) &&
     others.every(

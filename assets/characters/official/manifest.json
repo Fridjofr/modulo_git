@@ -1,0 +1,1204 @@
+{
+  "source": "assets/characters/official/source.png",
+  "sha256": "647544389a5c42e90c53212e0b55229206748b88129464e36c4717eb234c8c4a",
+  "canvas": 192,
+  "baseline": 180,
+  "anchor": 96,
+  "referenceHeight": 174,
+  "uniformScale": 0.78,
+  "directions": [
+    "down",
+    "up",
+    "left",
+    "right"
+  ],
+  "characters": {
+    "lira": {
+      "down": [
+        {
+          "frame": 0,
+          "sourceFrame": 0,
+          "sourceBounds": [
+            15,
+            56,
+            144,
+            220
+          ],
+          "sourceFeet": [
+            86.0,
+            276
+          ],
+          "placement": [
+            41,
+            8
+          ],
+          "visibleBounds": [
+            41,
+            8,
+            112,
+            172
+          ]
+        },
+        {
+          "frame": 1,
+          "sourceFrame": 1,
+          "sourceBounds": [
+            150,
+            56,
+            137,
+            220
+          ],
+          "sourceFeet": [
+            213.0,
+            276
+          ],
+          "placement": [
+            47,
+            8
+          ],
+          "visibleBounds": [
+            47,
+            8,
+            107,
+            172
+          ]
+        },
+        {
+          "frame": 2,
+          "sourceFrame": 2,
+          "sourceBounds": [
+            279,
+            56,
+            135,
+            220
+          ],
+          "sourceFeet": [
+            340.5,
+            276
+          ],
+          "placement": [
+            48,
+            8
+          ],
+          "visibleBounds": [
+            48,
+            8,
+            105,
+            172
+          ]
+        },
+        {
+          "frame": 3,
+          "sourceFrame": 3,
+          "sourceBounds": [
+            407,
+            56,
+            137,
+            220
+          ],
+          "sourceFeet": [
+            469.0,
+            276
+          ],
+          "placement": [
+            48,
+            8
+          ],
+          "visibleBounds": [
+            48,
+            8,
+            107,
+            172
+          ]
+        }
+      ],
+      "up": [
+        {
+          "frame": 0,
+          "sourceFrame": 0,
+          "sourceBounds": [
+            13,
+            287,
+            136,
+            211
+          ],
+          "sourceFeet": [
+            83.0,
+            498
+          ],
+          "placement": [
+            41,
+            15
+          ],
+          "visibleBounds": [
+            41,
+            15,
+            106,
+            165
+          ]
+        },
+        {
+          "frame": 1,
+          "sourceFrame": 1,
+          "sourceBounds": [
+            146,
+            287,
+            134,
+            211
+          ],
+          "sourceFeet": [
+            210.0,
+            498
+          ],
+          "placement": [
+            46,
+            15
+          ],
+          "visibleBounds": [
+            46,
+            15,
+            105,
+            165
+          ]
+        },
+        {
+          "frame": 2,
+          "sourceFrame": 2,
+          "sourceBounds": [
+            273,
+            287,
+            131,
+            211
+          ],
+          "sourceFeet": [
+            337.0,
+            498
+          ],
+          "placement": [
+            46,
+            15
+          ],
+          "visibleBounds": [
+            46,
+            15,
+            102,
+            165
+          ]
+        },
+        {
+          "frame": 3,
+          "sourceFrame": 3,
+          "sourceBounds": [
+            401,
+            288,
+            135,
+            210
+          ],
+          "sourceFeet": [
+            464.0,
+            498
+          ],
+          "placement": [
+            47,
+            16
+          ],
+          "visibleBounds": [
+            47,
+            16,
+            105,
+            164
+          ]
+        }
+      ],
+      "left": [
+        {
+          "frame": 0,
+          "sourceFrame": 0,
+          "sourceBounds": [
+            24,
+            521,
+            136,
+            197
+          ],
+          "sourceFeet": [
+            76.0,
+            718
+          ],
+          "placement": [
+            55,
+            26
+          ],
+          "visibleBounds": [
+            55,
+            26,
+            106,
+            154
+          ]
+        },
+        {
+          "frame": 1,
+          "sourceFrame": 1,
+          "sourceBounds": [
+            151,
+            521,
+            137,
+            195
+          ],
+          "sourceFeet": [
+            191.0,
+            716
+          ],
+          "placement": [
+            65,
+            28
+          ],
+          "visibleBounds": [
+            65,
+            28,
+            107,
+            152
+          ]
+        },
+        {
+          "frame": 2,
+          "sourceFrame": 2,
+          "sourceBounds": [
+            279,
+            521,
+            138,
+            196
+          ],
+          "sourceFeet": [
+            319.0,
+            717
+          ],
+          "placement": [
+            65,
+            27
+          ],
+          "visibleBounds": [
+            65,
+            27,
+            108,
+            153
+          ]
+        },
+        {
+          "frame": 3,
+          "sourceFrame": 3,
+          "sourceBounds": [
+            409,
+            521,
+            139,
+            195
+          ],
+          "sourceFeet": [
+            451.0,
+            716
+          ],
+          "placement": [
+            63,
+            28
+          ],
+          "visibleBounds": [
+            63,
+            28,
+            108,
+            152
+          ]
+        }
+      ],
+      "right": [
+        {
+          "frame": 0,
+          "sourceFrame": 0,
+          "sourceBounds": [
+            0,
+            743,
+            143,
+            211
+          ],
+          "sourceFeet": [
+            94.0,
+            954
+          ],
+          "placement": [
+            23,
+            15
+          ],
+          "visibleBounds": [
+            23,
+            15,
+            112,
+            165
+          ]
+        },
+        {
+          "frame": 1,
+          "sourceFrame": 1,
+          "sourceBounds": [
+            126,
+            745,
+            145,
+            209
+          ],
+          "sourceFeet": [
+            227.0,
+            954
+          ],
+          "placement": [
+            17,
+            17
+          ],
+          "visibleBounds": [
+            17,
+            17,
+            113,
+            163
+          ]
+        },
+        {
+          "frame": 2,
+          "sourceFrame": 2,
+          "sourceBounds": [
+            257,
+            744,
+            141,
+            210
+          ],
+          "sourceFeet": [
+            355.0,
+            954
+          ],
+          "placement": [
+            20,
+            16
+          ],
+          "visibleBounds": [
+            20,
+            16,
+            110,
+            164
+          ]
+        },
+        {
+          "frame": 3,
+          "sourceFrame": 3,
+          "sourceBounds": [
+            385,
+            746,
+            141,
+            208
+          ],
+          "sourceFeet": [
+            483.0,
+            954
+          ],
+          "placement": [
+            20,
+            18
+          ],
+          "visibleBounds": [
+            20,
+            18,
+            110,
+            162
+          ]
+        }
+      ]
+    },
+    "female": {
+      "down": [
+        {
+          "frame": 0,
+          "sourceFrame": 2,
+          "sourceBounds": [
+            784,
+            83,
+            116,
+            192
+          ],
+          "sourceFeet": [
+            830.0,
+            275
+          ],
+          "placement": [
+            60,
+            30
+          ],
+          "visibleBounds": [
+            60,
+            30,
+            90,
+            150
+          ]
+        },
+        {
+          "frame": 1,
+          "sourceFrame": 0,
+          "sourceBounds": [
+            560,
+            82,
+            134,
+            194
+          ],
+          "sourceFeet": [
+            617.0,
+            276
+          ],
+          "placement": [
+            52,
+            29
+          ],
+          "visibleBounds": [
+            52,
+            29,
+            105,
+            151
+          ]
+        },
+        {
+          "frame": 2,
+          "sourceFrame": 1,
+          "sourceBounds": [
+            682,
+            82,
+            109,
+            194
+          ],
+          "sourceFeet": [
+            722.0,
+            276
+          ],
+          "placement": [
+            65,
+            29
+          ],
+          "visibleBounds": [
+            65,
+            29,
+            85,
+            151
+          ]
+        },
+        {
+          "frame": 3,
+          "sourceFrame": 3,
+          "sourceBounds": [
+            888,
+            83,
+            109,
+            193
+          ],
+          "sourceFeet": [
+            927.0,
+            276
+          ],
+          "placement": [
+            66,
+            29
+          ],
+          "visibleBounds": [
+            66,
+            29,
+            85,
+            151
+          ]
+        }
+      ],
+      "up": [
+        {
+          "frame": 0,
+          "sourceFrame": 1,
+          "sourceBounds": [
+            669,
+            298,
+            111,
+            198
+          ],
+          "sourceFeet": [
+            726.0,
+            496
+          ],
+          "placement": [
+            52,
+            26
+          ],
+          "visibleBounds": [
+            52,
+            26,
+            87,
+            154
+          ]
+        },
+        {
+          "frame": 1,
+          "sourceFrame": 0,
+          "sourceBounds": [
+            559,
+            298,
+            116,
+            199
+          ],
+          "sourceFeet": [
+            626.0,
+            497
+          ],
+          "placement": [
+            44,
+            25
+          ],
+          "visibleBounds": [
+            44,
+            25,
+            90,
+            155
+          ]
+        },
+        {
+          "frame": 2,
+          "sourceFrame": 2,
+          "sourceBounds": [
+            774,
+            298,
+            110,
+            199
+          ],
+          "sourceFeet": [
+            834.0,
+            497
+          ],
+          "placement": [
+            49,
+            25
+          ],
+          "visibleBounds": [
+            49,
+            25,
+            86,
+            155
+          ]
+        },
+        {
+          "frame": 3,
+          "sourceFrame": 3,
+          "sourceBounds": [
+            875,
+            298,
+            123,
+            199
+          ],
+          "sourceFeet": [
+            942.0,
+            497
+          ],
+          "placement": [
+            44,
+            25
+          ],
+          "visibleBounds": [
+            44,
+            25,
+            96,
+            155
+          ]
+        }
+      ],
+      "left": [
+        {
+          "frame": 0,
+          "sourceFrame": 0,
+          "sourceBounds": [
+            570,
+            526,
+            122,
+            190
+          ],
+          "sourceFeet": [
+            606.0,
+            716
+          ],
+          "placement": [
+            68,
+            32
+          ],
+          "visibleBounds": [
+            68,
+            32,
+            95,
+            148
+          ]
+        },
+        {
+          "frame": 1,
+          "sourceFrame": 1,
+          "sourceBounds": [
+            679,
+            527,
+            120,
+            189
+          ],
+          "sourceFeet": [
+            718.0,
+            716
+          ],
+          "placement": [
+            66,
+            33
+          ],
+          "visibleBounds": [
+            66,
+            33,
+            94,
+            147
+          ]
+        },
+        {
+          "frame": 2,
+          "sourceFrame": 2,
+          "sourceBounds": [
+            785,
+            527,
+            119,
+            189
+          ],
+          "sourceFeet": [
+            821.0,
+            716
+          ],
+          "placement": [
+            68,
+            33
+          ],
+          "visibleBounds": [
+            68,
+            33,
+            93,
+            147
+          ]
+        },
+        {
+          "frame": 3,
+          "sourceFrame": 3,
+          "sourceBounds": [
+            891,
+            527,
+            120,
+            189
+          ],
+          "sourceFeet": [
+            928.0,
+            716
+          ],
+          "placement": [
+            67,
+            33
+          ],
+          "visibleBounds": [
+            67,
+            33,
+            94,
+            147
+          ]
+        }
+      ],
+      "right": [
+        {
+          "frame": 0,
+          "sourceFrame": 0,
+          "sourceBounds": [
+            540,
+            765,
+            124,
+            187
+          ],
+          "sourceFeet": [
+            626.0,
+            952
+          ],
+          "placement": [
+            29,
+            34
+          ],
+          "visibleBounds": [
+            29,
+            34,
+            97,
+            146
+          ]
+        },
+        {
+          "frame": 1,
+          "sourceFrame": 1,
+          "sourceBounds": [
+            650,
+            765,
+            120,
+            189
+          ],
+          "sourceFeet": [
+            731.0,
+            954
+          ],
+          "placement": [
+            33,
+            33
+          ],
+          "visibleBounds": [
+            33,
+            33,
+            94,
+            147
+          ]
+        },
+        {
+          "frame": 2,
+          "sourceFrame": 2,
+          "sourceBounds": [
+            756,
+            765,
+            119,
+            188
+          ],
+          "sourceFeet": [
+            835.0,
+            953
+          ],
+          "placement": [
+            34,
+            33
+          ],
+          "visibleBounds": [
+            34,
+            33,
+            93,
+            147
+          ]
+        },
+        {
+          "frame": 3,
+          "sourceFrame": 3,
+          "sourceBounds": [
+            865,
+            764,
+            119,
+            189
+          ],
+          "sourceFeet": [
+            945.0,
+            953
+          ],
+          "placement": [
+            34,
+            33
+          ],
+          "visibleBounds": [
+            34,
+            33,
+            93,
+            147
+          ]
+        }
+      ]
+    },
+    "male": {
+      "down": [
+        {
+          "frame": 0,
+          "sourceFrame": 2,
+          "sourceBounds": [
+            1231,
+            74,
+            108,
+            202
+          ],
+          "sourceFeet": [
+            1275.5,
+            276
+          ],
+          "placement": [
+            61,
+            22
+          ],
+          "visibleBounds": [
+            61,
+            22,
+            84,
+            158
+          ]
+        },
+        {
+          "frame": 1,
+          "sourceFrame": 0,
+          "sourceBounds": [
+            999,
+            77,
+            110,
+            198
+          ],
+          "sourceFeet": [
+            1044.0,
+            275
+          ],
+          "placement": [
+            61,
+            26
+          ],
+          "visibleBounds": [
+            61,
+            26,
+            86,
+            154
+          ]
+        },
+        {
+          "frame": 2,
+          "sourceFrame": 1,
+          "sourceBounds": [
+            1115,
+            76,
+            107,
+            199
+          ],
+          "sourceFeet": [
+            1159.0,
+            275
+          ],
+          "placement": [
+            62,
+            25
+          ],
+          "visibleBounds": [
+            62,
+            25,
+            83,
+            155
+          ]
+        },
+        {
+          "frame": 3,
+          "sourceFrame": 3,
+          "sourceBounds": [
+            1335,
+            77,
+            105,
+            198
+          ],
+          "sourceFeet": [
+            1380.0,
+            275
+          ],
+          "placement": [
+            61,
+            26
+          ],
+          "visibleBounds": [
+            61,
+            26,
+            82,
+            154
+          ]
+        }
+      ],
+      "up": [
+        {
+          "frame": 0,
+          "sourceFrame": 2,
+          "sourceBounds": [
+            1228,
+            297,
+            105,
+            203
+          ],
+          "sourceFeet": [
+            1284.0,
+            500
+          ],
+          "placement": [
+            52,
+            22
+          ],
+          "visibleBounds": [
+            52,
+            22,
+            82,
+            158
+          ]
+        },
+        {
+          "frame": 1,
+          "sourceFrame": 0,
+          "sourceBounds": [
+            1002,
+            298,
+            104,
+            201
+          ],
+          "sourceFeet": [
+            1057.0,
+            499
+          ],
+          "placement": [
+            53,
+            23
+          ],
+          "visibleBounds": [
+            53,
+            23,
+            81,
+            157
+          ]
+        },
+        {
+          "frame": 2,
+          "sourceFrame": 1,
+          "sourceBounds": [
+            1113,
+            297,
+            105,
+            201
+          ],
+          "sourceFeet": [
+            1167.0,
+            498
+          ],
+          "placement": [
+            54,
+            23
+          ],
+          "visibleBounds": [
+            54,
+            23,
+            82,
+            157
+          ]
+        },
+        {
+          "frame": 3,
+          "sourceFrame": 3,
+          "sourceBounds": [
+            1332,
+            299,
+            106,
+            202
+          ],
+          "sourceFeet": [
+            1390.0,
+            501
+          ],
+          "placement": [
+            51,
+            22
+          ],
+          "visibleBounds": [
+            51,
+            22,
+            83,
+            158
+          ]
+        }
+      ],
+      "left": [
+        {
+          "frame": 0,
+          "sourceFrame": 0,
+          "sourceBounds": [
+            1004,
+            526,
+            110,
+            190
+          ],
+          "sourceFeet": [
+            1053.0,
+            716
+          ],
+          "placement": [
+            58,
+            32
+          ],
+          "visibleBounds": [
+            58,
+            32,
+            86,
+            148
+          ]
+        },
+        {
+          "frame": 1,
+          "sourceFrame": 1,
+          "sourceBounds": [
+            1113,
+            528,
+            109,
+            185
+          ],
+          "sourceFeet": [
+            1163.0,
+            713
+          ],
+          "placement": [
+            57,
+            36
+          ],
+          "visibleBounds": [
+            57,
+            36,
+            85,
+            144
+          ]
+        },
+        {
+          "frame": 2,
+          "sourceFrame": 2,
+          "sourceBounds": [
+            1224,
+            528,
+            108,
+            187
+          ],
+          "sourceFeet": [
+            1272.5,
+            715
+          ],
+          "placement": [
+            58,
+            34
+          ],
+          "visibleBounds": [
+            58,
+            34,
+            84,
+            146
+          ]
+        },
+        {
+          "frame": 3,
+          "sourceFrame": 3,
+          "sourceBounds": [
+            1329,
+            529,
+            108,
+            187
+          ],
+          "sourceFeet": [
+            1373.0,
+            716
+          ],
+          "placement": [
+            62,
+            34
+          ],
+          "visibleBounds": [
+            62,
+            34,
+            84,
+            146
+          ]
+        }
+      ],
+      "right": [
+        {
+          "frame": 0,
+          "sourceFrame": 0,
+          "sourceBounds": [
+            997,
+            763,
+            110,
+            190
+          ],
+          "sourceFeet": [
+            1056.0,
+            953
+          ],
+          "placement": [
+            50,
+            32
+          ],
+          "visibleBounds": [
+            50,
+            32,
+            86,
+            148
+          ]
+        },
+        {
+          "frame": 1,
+          "sourceFrame": 1,
+          "sourceBounds": [
+            1108,
+            765,
+            110,
+            190
+          ],
+          "sourceFeet": [
+            1151.0,
+            955
+          ],
+          "placement": [
+            62,
+            32
+          ],
+          "visibleBounds": [
+            62,
+            32,
+            86,
+            148
+          ]
+        },
+        {
+          "frame": 2,
+          "sourceFrame": 2,
+          "sourceBounds": [
+            1217,
+            763,
+            110,
+            192
+          ],
+          "sourceFeet": [
+            1262.0,
+            955
+          ],
+          "placement": [
+            61,
+            30
+          ],
+          "visibleBounds": [
+            61,
+            30,
+            86,
+            150
+          ]
+        },
+        {
+          "frame": 3,
+          "sourceFrame": 3,
+          "sourceBounds": [
+            1327,
+            762,
+            109,
+            191
+          ],
+          "sourceFeet": [
+            1387.0,
+            953
+          ],
+          "placement": [
+            49,
+            31
+          ],
+          "visibleBounds": [
+            49,
+            31,
+            85,
+            149
+          ]
+        }
+      ]
+    }
+  },
+  "notes": [
+    "Source is RGB on black. Exterior black is removed; enclosed dark details remain.",
+    "Adjacent hair silhouettes touch in the supplied flattened sheet; dark curved seams partition them. No hidden pixels are reconstructed.",
+    "All frames use one uniform scale, a shared sole baseline and independently measured foot centre. No old protagonist pixels are used."
+  ]
+}

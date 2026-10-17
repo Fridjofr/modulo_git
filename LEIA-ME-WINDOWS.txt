@@ -1,4 +1,4 @@
-ZIMONS 0.12.0 — COMO JOGAR
+ZIMONS 0.13.0 — COMO JOGAR
 
 1. Extraia TODO o ZIP antes de abrir o jogo.
 2. Instale Node.js LTS (20 ou superior): https://nodejs.org

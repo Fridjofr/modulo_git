@@ -159,12 +159,12 @@ export class ClinicRenderer {
     g.drawImage(relaxedHumanFrame(base.canvas), 0, 0);
     // Close only the authored eye pixels using cheek colour. Landmarks differ
     // for original and alternate heads, so the mask follows their actual face.
-    const eyeY = 74;
+    const eyes = base.anatomy?.eyes || [[84,74],[108,74]];
     const pixels = g.getImageData(0, 0, 192, 192).data;
-    for (const x of state.story.eyesClosed ? [84, 108] : []) {
+    for (const [x, eyeY] of state.story.eyesClosed ? eyes : []) {
       const k = ((eyeY + 10) * 192 + x) * 4;
       g.fillStyle = `rgb(${pixels[k]},${pixels[k + 1]},${pixels[k + 2]})`;
-      g.fillRect(x - 5, eyeY - 5, 11, 12);
+      g.fillRect(x - 5, eyeY - 6, 11, 14);
       g.strokeStyle = "#553a33";
       g.lineWidth = 1.5;
       g.beginPath();

@@ -1,97 +1,16 @@
 import { test, expect } from "@playwright/test";
 import { start, snap } from "./helpers.js";
-test("personalização: cinco cabelos e roupas, quatro direções, pernas ligadas e cores independentes", async ({
-  page,
-}) => {
-  await page.goto("/?debug=1");
-  await expect(page.locator("#title")).toHaveClass(/active/);
-  const failures = await page.evaluate(async () => {
-    const { Assets } = await import("/src/assets.js"),
-      { DEFAULT_APPEARANCE } = await import("/src/model.js");
-    const a = new Assets();
-    await a.load();
-    const failures = [];
-    const hash = (c) => {
-      let h = 2166136261;
-      for (const v of c.getContext("2d").getImageData(0, 0, 192, 192).data)
-        h = Math.imul(h ^ v, 16777619);
-      return h;
-    };
-    for (const gender of ["male", "female"])
-      for (const dir of ["up", "down", "left", "right"]) {
-        for (const [key, count] of [
-          ["style", 5],
-          ["outfit", 5],
-          ["legwear", 3],
-          ["hair", 4],
-          ["skin", 4],
-          ["top", 4],
-          ["bottom", 4],
-          ["bag", 3],
-        ]) {
-          const hashes = [];
-          for (let i = 0; i < count; i++)
-            hashes.push(
-              hash(
-                a.frame(gender, dir, 0, {
-                  ...DEFAULT_APPEARANCE,
-                  gender,
-                  [key]: i,
-                }).canvas,
-              ),
-            );
-          if (new Set(hashes).size !== count)
-            failures.push(`${gender}/${dir}/${key}: opções idênticas`);
-        }
-        for (let style = 0; style < 5; style++)
-          for (let outfit = 0; outfit < 5; outfit++)
-            for (let frame = 0; frame < 4; frame++) {
-              const c = a.frame(gender, dir, frame, {
-                  ...DEFAULT_APPEARANCE,
-                  gender,
-                  style,
-                  outfit,
-                  bag: 0,
-                }).canvas,
-                d = c.getContext("2d").getImageData(0, 0, 192, 192).data;
-              let top = 192,
-                bottom = 0;
-              for (let y = 0; y < 192; y++) {
-                let n = 0;
-                for (let x = 55; x < 138; x++)
-                  if (d[(y * 192 + x) * 4 + 3] > 220) n++;
-                if (n) {
-                  top = Math.min(top, y);
-                  bottom = Math.max(bottom, y);
-                }
-              }
-              if (bottom < 172 || top > 45)
-                failures.push(
-                  `${gender}/${dir}/${style}/${outfit}/${frame}: altura inválida ${top}-${bottom}`,
-                );
-              // Profile knees move off-centre in the approved source. Inspect the full
-              // leg envelope, while neck and torso must still join at the centre.
-              const joint = 96 + a.looks.registration(gender, dir, frame, a).bodyX;
-              for (const y of [104, 112, 125, 138, 147, 156, 166]) {
-                let filled = 0;
-                for (
-                  let x = y >= 138 ? 55 : joint - 10;
-                  x < (y >= 138 ? 138 : joint + 10);
-                  x++
-                )
-                  if (d[(y * 192 + x) * 4 + 3] > 220) filled++;
-                if (filled < 4)
-                  failures.push(
-                    `${gender}/${dir}/${style}/${outfit}/${frame}: articulação vazia em ${y}`,
-                  );
-              }
-            }
-      }
-    return failures.slice(0, 25);
-  });
-  expect(failures).toEqual([]);
-  await page.locator("#title-new").click();
-  await page.screenshot({ path: "docs/screenshots/v11/01-personalizacao.png" });
+test("criador usa as bases oficiais e sinaliza variações sem arte, sem oferecer partes antigas", async ({page}) => {
+ await page.goto('/?debug=1');await expect(page.locator('#title')).toHaveClass(/active/);
+ await page.locator('#title-new').click();
+ for(const gender of ['female','male']) {
+  await page.locator(`[data-gender="${gender}"]`).click();
+  await expect(page.getByRole('button',{name:'Penteado: Oficial',exact:true})).toBeEnabled();
+  await expect(page.getByRole('button',{name:'Modelo da roupa: Oficial',exact:true})).toBeEnabled();
+  await expect(page.locator('.appearance-choice')).toHaveCount(2);
+  expect(await page.locator('.swatch').evaluateAll(ns=>ns.every(n=>n.disabled))).toBe(true);
+  expect(await page.locator('.look-collection .appearance-pending').count()).toBe(2);
+ }
 });
 test("HUD, minimapa com zoom e menu preservam legibilidade e bloqueiam movimento ao abrir", async ({
   page,

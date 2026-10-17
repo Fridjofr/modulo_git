@@ -1,3 +1,4 @@
+import { OfficialCharacters, OFFICIAL_CHARACTERS } from './official-characters.js';
 import { CreatureAtlas } from "./creature-atlas.js";
 import { relaxedHumanFrame } from "./human-rig.js";
 import { ClinicRenderer } from "./clinic-renderer.js";
@@ -5,9 +6,8 @@ import { NpcAtlas } from "./npc-atlas.js";
 import { setAttackAtlas } from "./effects.js";
 import { PALETTES } from "./model.js";
 import { TileWorld } from "./tilemap.js";
-import { CharacterAtlas, extractSprite } from "./character-atlas.js";
+import { extractSprite } from "./character-atlas.js";
 import { BattleAtlas } from "./battle-atlas.js";
-import { drawHairBack, drawClothing } from "./appearance.js";
 export class Assets {
   constructor() {
     this.images = {};
@@ -19,9 +19,9 @@ export class Assets {
     if (!response.ok) throw new Error("Metadados dos sprites indisponíveis.");
     this.meta = await response.json();
     const files = new Map(
-      Object.entries(this.meta).map(([k, v]) => [k, v.file]),
+      Object.entries(this.meta).filter(([k]) => !["male","female","male-short","female-short","lira"].includes(k)).map(([k, v]) => [k, v.file]),
     );
-    for (const [key, data] of Object.entries(this.meta))
+    for (const [key, data] of Object.entries(this.meta).filter(([k]) => !["male","female","male-short","female-short","lira"].includes(k)))
       for (const [region, file] of Object.entries(data.layers || {}))
         files.set(`${key}:${region}`, file);
     for (const [key, file] of Object.entries({
@@ -40,8 +40,9 @@ export class Assets {
       liraSeated: "assets/characters/review-a/lira-seated.png",
       tileTerrain: "assets/tiles/v10/terrain.png",
       tileObjects: "assets/tiles/v10/objects.png",
-      heads: "assets/characters/v10/heads.png",
-      bodies: "assets/characters/v10/bodies.png",
+      "official:male": "assets/characters/official/male.png",
+      "official:female": "assets/characters/official/female.png",
+      "official:lira": "assets/characters/official/lira.png",
       bags: "assets/characters/v10/bags.png",
       npcs: "assets/characters/v10/npcs.png",
       attackEffects: "assets/battle/effects-v10.png",
@@ -70,7 +71,7 @@ export class Assets {
     setAttackAtlas(this.images.attackEffects);
     this.tiles = new TileWorld(this.images);
     this.battle = new BattleAtlas(this.images);
-    this.looks = new CharacterAtlas(this.images);
+    this.looks = new OfficialCharacters(this.images);
     this.creatures = new CreatureAtlas(this.images, this.meta);
     this.cast = new NpcAtlas(this.images.npcs, this.images);
     this.clinic = new ClinicRenderer(this);
@@ -85,7 +86,7 @@ export class Assets {
         ]),
       ),
     );
-    for (const [key, data] of Object.entries(this.meta))
+    for (const [key, data] of Object.entries(this.meta).filter(([key])=>this.images[key]))
       for (const [dir, frames] of Object.entries(data.directions))
         for (const [x, y, w, h] of frames)
           if (
@@ -165,129 +166,9 @@ export class Assets {
     if (["fire", "water", "plant"].includes(key))
       return this.creatures.frame(key, direction, index);
     if (key.startsWith("npc:")) return this.cast.frame(key, direction, index);
-    if (this.looks && appearance && ["male", "female"].includes(key))
+    if (OFFICIAL_CHARACTERS.includes(key))
       return this.looks.frame(key, direction, index, appearance, zlink, this);
-    if (appearance?.style >= 1 && ["male", "female"].includes(key))
-      key += "-short";
-    const cacheKey = `${key}:${direction}:${index}:${appearance ? JSON.stringify(appearance) : ""}:${zlink}`;
-    if (this.frames.has(cacheKey)) return this.frames.get(cacheKey);
-    const data = this.meta[key];
-    let dir = direction,
-      flip = false;
-    if (!data.directions[dir]) {
-      dir = "right";
-      flip = direction === "left";
-    }
-    if (data.mirrorSide && ["right", "left"].includes(direction)) flip = !flip;
-    const frameIndex = index % data.directions[dir].length;
-    const [x, y, w, h] = data.directions[dir][frameIndex];
-    const canvas = document.createElement("canvas");
-    canvas.width = w;
-    canvas.height = h;
-    const ctx = canvas.getContext("2d");
-    ctx.imageSmoothingEnabled = false;
-    if (flip) {
-      ctx.translate(w, 0);
-      ctx.scale(-1, 1);
-    }
-    if (appearance) drawHairBack(ctx, direction, appearance, frameIndex);
-    ctx.drawImage(this.images[key], x, y, w, h, 0, 0, w, h);
-    if (data.layers) {
-      const a = appearance || {
-        hair: 0,
-        skin: 0,
-        top: 0,
-        bottom: 0,
-        accent: 0,
-        style: 0,
-        bag: 1,
-      };
-      for (const region of ["skin", "top", "bottom", "accent"])
-        ctx.drawImage(
-          this.images[`${key}:${region}`],
-          x + data.strideWidth * a[region],
-          y,
-          w,
-          h,
-          0,
-          0,
-          w,
-          h,
-        );
-      if (a.outfit || a.legwear) {
-        const layers = {};
-        for (const region of ["skin", "top", "bottom"]) {
-          const layer = document.createElement("canvas");
-          layer.width = w;
-          layer.height = h;
-          layer
-            .getContext("2d")
-            .drawImage(
-              this.images[`${key}:${region}`],
-              x + data.strideWidth * a[region],
-              y,
-              w,
-              h,
-              0,
-              0,
-              w,
-              h,
-            );
-          layers[region] = layer;
-        }
-        drawClothing(ctx, a, direction, frameIndex, layers);
-      }
-      this.drawBag(ctx, direction, a);
-      ctx.drawImage(
-        this.images[`${key}:hair`],
-        x + data.strideWidth * a.hair,
-        y,
-        w,
-        h,
-        0,
-        0,
-        w,
-        h,
-      );
-      if (zlink) {
-        ctx.save();
-        ctx.translate(32, 0);
-        this.drawLink(ctx, direction);
-        ctx.restore();
-      }
-    }
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    const sourceAnchor = data.anchors?.[dir]?.[frameIndex] ?? w / 2;
-    const result = {
-      canvas,
-      w,
-      h,
-      anchor: flip ? w - sourceAnchor : sourceAnchor,
-      baseline: data.baseline ?? h,
-      referenceHeight:
-        key === "lira" ? this.liraHeight(dir) : (data.referenceHeight ?? h),
-    };
-    this.frames.set(cacheKey, result);
-    if (this.frames.size > 128)
-      this.frames.delete(this.frames.keys().next().value);
-    return result;
-  }
-  liraHeight(dir) {
-    this.liraHeights ||= {};
-    if (this.liraHeights[dir]) return this.liraHeights[dir];
-    const data = this.meta.lira,
-      [x, y, w, h] = data.directions[dir][0],
-      c = document.createElement("canvas");
-    c.width = w;
-    c.height = h;
-    const g = c.getContext("2d");
-    g.drawImage(this.images.lira, x, y, w, h, 0, 0, w, h);
-    const d = g.getImageData(0, 0, w, h).data;
-    let top = h;
-    for (let j = 0; j < h; j++)
-      for (let i = 0; i < w; i++)
-        if (d[(j * w + i) * 4 + 3] > 220) top = Math.min(top, j);
-    return (this.liraHeights[dir] = (data.baseline ?? h) - top);
+    throw new Error(`Sprite indisponível: ${key}/${direction}`);
   }
   drawSeatedLira(ctx, x, y, progress = 0) {
     this.seatedFrames ||= [0, 1].map((col) =>
@@ -499,6 +380,7 @@ export class Assets {
     ctx.fillRect(x - 1, y + 1, 2, 2);
   }
   walkIndex(key, dir, phase) {
+    if (OFFICIAL_CHARACTERS.includes(key)) return phase % 4;
     if (key.startsWith("npc:")) return [0, 1, 0, 3][phase % 4];
     if(key==='fire'||key==='plant')return phase%4;
     return (this.meta[key].walkFrames?.[dir] || [0, 1, 0, 2])[phase % 4];

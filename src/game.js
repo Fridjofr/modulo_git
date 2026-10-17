@@ -6,7 +6,7 @@ import { FOREST_POINTS, questDescription } from "./world.js";
 import { OpeningStory, SCRIPT, SOCIAL } from "./story.js";
 import { installGamepad } from "./input.js";
 import { Assets } from "./assets.js";
-import { HAIRSTYLES, OUTFITS, LEGWEAR } from "./appearance.js";
+import { LEGWEAR } from "./appearance.js";
 import { Renderer } from "./render.js";
 import { worldNpcs, updateNpcs, faceDirection, resetNpcs } from "./npcs.js";
 import { Music } from "./audio.js";
@@ -20,7 +20,6 @@ import {
   formProgress,
   xpToNext,
   switchBattleForm,
-  PALETTES,
   DEFAULT_APPEARANCE,
   SAVE_KEY,
   newGame,
@@ -112,8 +111,7 @@ const names = {
   skin: "Tom de pele",
   accent: "Acessórios",
 };
-const styleLabels = HAIRSTYLES;
-const bagLabels = ["Sem bolsa", "Bolsa lateral", "Mochila"];
+const bagLabels = ["Conjunto oficial"];
 $("reload").onclick = () => location.reload();
 reducedMotionQuery.addEventListener("change", (event) => {
   reduceMotion = event.matches;
@@ -153,11 +151,9 @@ function buildCustomization() {
     [
       "style",
       "Penteado",
-      appearance.gender === "male"
-        ? ["Original", "Curto", "Longo", "Undercut", "Rabo alto"]
-        : styleLabels,
+      ["Oficial"],
     ],
-    ["outfit", "Modelo da roupa", OUTFITS],
+    ["outfit", "Modelo da roupa", ["Oficial"]],
   ]) {
     const section = document.createElement("section");
     section.className = "look-collection";
@@ -213,7 +209,9 @@ function buildCustomization() {
       };
       grid.append(button);
     });
-    section.append(grid);
+    const pending=document.createElement("small");
+    pending.className="appearance-pending";pending.textContent="Novas variações aguardam arte compatível.";
+    section.append(grid,pending);
     root.append(section);
   }
   const palettes = document.createElement("section");
@@ -227,12 +225,15 @@ function buildCustomization() {
     swatches.className = "swatches";
     swatches.setAttribute("role", "group");
     swatches.setAttribute("aria-label", names[key]);
-    PALETTES[key].forEach((color, index) => {
+    const officialColor={hair:appearance.gender==='male'?'#c9bdb6':'#b79785',skin:'#f4cfb7',top:'#173f76',bottom:'#14325b',accent:'#d5ad4e'};
+    [officialColor[key]].forEach((color, index) => {
       const b = document.createElement("button");
       b.className = "swatch";
       b.style.setProperty("--swatch", color);
-      b.setAttribute("aria-label", `${names[key]} ${index + 1}`);
+      b.setAttribute("aria-label", `${names[key]} oficial`);
       b.setAttribute("aria-pressed", String(appearance[key] === index));
+      b.disabled = true;
+      b.title = "Variação pendente: requer arte compatível com a nova base oficial.";
       b.dataset.option = key;
       b.dataset.value = index;
       b.onclick = () => {
@@ -244,11 +245,14 @@ function buildCustomization() {
     group.append(title, swatches);
     palettes.append(group);
   }
+  const paletteNote=document.createElement("small");
+  paletteNote.className="appearance-pending";paletteNote.textContent="Cores oficiais preservadas. Outras cores aguardam arte compatível.";
+  palettes.append(paletteNote);
   root.append(palettes);
   const utilities = document.createElement("section");
   utilities.className = "utility-options";
   for (const [key, label, choices] of [
-    ["bag", "Bolsa", bagLabels],
+    ["bag", "Acessórios", bagLabels],
     ["legwear", "Calça", LEGWEAR],
   ]) {
     const group = document.createElement("div");
@@ -258,6 +262,8 @@ function buildCustomization() {
     group.append(h);
     choices.forEach((name, index) => {
       const b = document.createElement("button");
+      b.disabled = index !== 0;
+      if(index) b.title="Variação pendente: requer arte compatível com a nova base oficial.";
       b.setAttribute(
         "aria-label",
         `${key === "bag" ? "Bolsa / mochila" : "Modelo inferior"}: ${name}`,
@@ -311,6 +317,7 @@ function buildCustomization() {
 }
 function startJourney() {
   if (story.active) return;
+  appearance={...DEFAULT_APPEARANCE,gender:appearance.gender,bag:0};
   state = newGame(appearance, "Alex");
   closeModal();
   resetNpcs();

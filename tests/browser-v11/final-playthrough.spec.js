@@ -1,12 +1,12 @@
 import {test,expect} from '@playwright/test';
 import {start,snap,drive,navigate,move,door,select,recover,practice} from './helpers.js';
 const cases=[
- ['female','fire','Curto','Uniforme',false],
- ['male','fire','Original','Exploração',true],
- ['female','water','Longo','Campo',true],
- ['male','water','Rabo alto','Moletom',true],
- ['female','plant','Coques duplos','Jaqueta',true],
- ['male','plant','Curto','Uniforme',true],
+ ['female','fire','Oficial','Oficial',false],
+ ['male','fire','Oficial','Oficial',true],
+ ['female','water','Oficial','Oficial',true],
+ ['male','water','Oficial','Oficial',true],
+ ['female','plant','Oficial','Oficial',true],
+ ['male','plant','Oficial','Oficial',true],
 ];
 test.use({reducedMotion:'no-preference'});
 test.describe.configure({mode:'parallel'});

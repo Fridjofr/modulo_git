@@ -1914,3 +1914,8 @@ input {
     display: block;
   }
 }
+
+/* Only looks supplied for the new official anatomy may be selected. */
+.appearance-pending {display:block;color:#aec2d2;font-size:.73rem;line-height:1.4;margin-top:.5rem}
+.palette-board .swatch:disabled {opacity:.4;cursor:not-allowed;box-shadow:none}
+.utility-options button:disabled {opacity:.35;cursor:not-allowed}
